@@ -4,36 +4,201 @@
  */
 'use strict';
 
-var modulename = {};
+var GitStatusChecker = require('./lib/git-status-checker');
+var Promise = require('any-promise');   // eslint-disable-line no-shadow
+var TravisStatusChecker = require('./lib/travis-status-checker');
+var assert = require('assert');
+var extend = require('extend');
+var nodeify = require('promise-nodeify');
 
-modulename.func = function func(options, callback) {
+/** Checks that a build has an expected commit hash.
+ * @param {!{commit:!{sha: string}}} build Build (or branch) object returned
+ * by the Travis CI API.
+ * @param {!{sha: string, name: ?string}} localCommit Expected commit
+ * information.
+ * @return {!Object} <code>build</code>
+ * @throws AssertionError If <code>build.commit.sha</code> is not equal to
+ * <code>expected</code>.
+ */
+function checkBuildCommit(build, localCommit) {
+  var buildCommit = build.commit;
+  var message = 'Build commit ' + buildCommit.sha +
+    ' does not match ' + localCommit.sha;
+  if (localCommit.name) {
+    message += ' (' + localCommit.name + ')';
+  }
+  // assert gives us useful exception properties for callers
+  assert.strictEqual(
+      buildCommit.sha,
+      localCommit.sha,
+      message
+  );
+  return build;
+}
+
+/** Options for {@link travisStatus}.
+ *
+ * @typedef {{
+ *   apiEndpoint: string|undefined,
+ *   branch: string|boolean|undefined,
+ *   commit: string|undefined,
+ *   err: stream.Writable|undefined,
+ *   in: stream.Readable|undefined,
+ *   out: stream.Writable|undefined,
+ *   repo: string|undefined,
+ *   request: Object|undefined,
+ *   storeRepo: string|undefined,
+ *   token: string|undefined,
+ *   wait: number|undefined
+ * }} TravisStatusOptions
+ * @property {boolean=} interactive behave as if being run interactively
+ * @property {string=} apiEndpoint Travis API server to talk to
+ * @property {(string|boolean)=} branch query latest build for named branch,
+ * or the current branch
+ * @property {string=} commit require build to be for a specific commit
+ * @property {stream.Writable=} err Stream to which errors (and non-output
+ * status messages) are written. (default: <code>process.stderr</code>)
+ * @property {Object<string,string>=} headers Additional request headers for
+ * Travis CI API requests
+ * @property {stream.Readable=} in Stream from which input is read. (default:
+ * <code>process.stdin</code>)
+ * @property {stream.Writable=} out Stream to which output is written.
+ * (default: <code>process.stdout</code>)
+ * @property {string=} repo repository to use (default: will try to detect from
+ * current git clone)
+ * @property {Object=} request Options for Travis CI API requests (suitable for
+ * the {@link https://www.npmjs.com/package/request request module})
+ * @property {string=} storeRepo repository value (as described for
+ * <code>repo</code>) to store permanently for future use.  Is used for this
+ * invocation if <code>repo</code> is not set.
+ * @property {string=} token access token to use
+ * @property {number=} wait wait if build is pending (timeout in milliseconds)
+ */
+// var TravisStatusOptions;
+
+/** Gets the current Travis CI status of a repo/branch.
+ *
+ * @param {?TravisStatusOptions=} options Options.
+ * @param {?function(Error, Object=)=} callback Callback function called
+ * with the current build information from the Travis CI API, or an
+ * <code>Error</code> if it could not be retrieved.
+ * @return {!Promise<!Object>|undefined} If <code>callback</code> is not given,
+ * a <code>Promise</code> with the current build information from the Travis CI
+ * API, or <code>Error</code> if it could not be retrieved.
+ * Otherwise <code>undefined</code>.
+ */
+function travisStatus(options, callback) {
   if (!callback && typeof options === 'function') {
     callback = options;
     options = null;
   }
 
-  if (!callback && typeof Promise === 'function') {
-    // eslint-disable-next-line no-undef
-    return new Promise(function(resolve, reject) {
-      func(options, function(err, result) {
-        if (err) { reject(err); } else { resolve(result); }
-      });
-    });
-  }
-
-  if (typeof callback !== 'function') {
+  if (callback && typeof callback !== 'function') {
     throw new TypeError('callback must be a function');
   }
 
-  if (options && typeof options !== 'object') {
-    process.nextTick(function() {
-      callback(new TypeError('options must be an object'));
-    });
-    return undefined;
+  var gitChecker, travisChecker;
+  try {
+    if (options && typeof options !== 'object') {
+      throw new TypeError('options must be an object');
+    }
+    options = options || {};
+
+    if (options.repo) {
+      GitStatusChecker.checkSlugFormat(options.repo);
+    }
+    if (options.storeRepo) {
+      GitStatusChecker.checkSlugFormat(options.storeRepo);
+    }
+
+    gitChecker = new GitStatusChecker(options);
+    travisChecker = new TravisStatusChecker(options);
+  } catch (errOptions) {
+    var errResult = Promise.reject(errOptions);
+    return nodeify(errResult, callback);
   }
 
-  // Do stuff
-  return undefined;
-};
+  var repoSlugP;
+  if (options.storeRepo) {
+    var storedSlugP = gitChecker.tryStoreSlug(options.storeRepo);
+    // If both .repo and .storeRepo are present, store .storeRepo and use .repo
+    repoSlugP =
+      options.repo ? storedSlugP.then(function() { return options.repo; }) :
+      storedSlugP;
+  } else if (options.repo) {
+    repoSlugP = Promise.resolve(options.repo);
+  } else {
+    var foundSlugP = gitChecker.findSlug()
+      .then(GitStatusChecker.checkSlugFormat);
+    if (options.interactive) {
+      repoSlugP = foundSlugP.then(function(slug) {
+        return gitChecker.tryStoreSlug(slug);
+      });
+    } else {
+      repoSlugP = foundSlugP;
+    }
+  }
 
-module.exports = modulename;
+  var localCommitP;
+  if (options.commit) {
+    localCommitP = gitChecker.resolveHash(options.commit)
+      .then(function hashToTravisCommit(resolved) {
+        var localCommit = {sha: resolved};
+        if (resolved !== options.commit) {
+          localCommit.name = options.commit;
+        }
+        return localCommit;
+      });
+  }
+
+  // Before doing remote queries, ensure that there are no errors locally
+  var slugForQueryP = Promise.all([repoSlugP, localCommitP])
+    .then(function(slugAndHash) { return slugAndHash[0]; });
+
+  var resultP;
+  if (options.branch) {
+    var branchP = options.branch === true ? gitChecker.detectBranch() :
+      Promise.resolve(options.branch);
+    resultP = Promise.all([slugForQueryP, branchP])
+      .then(function queryBranchFor(results) {
+        var slug = results[0];
+        var branch = results[1];
+        return travisChecker.getBranch(slug, branch, options);
+      });
+  } else {
+    var repoP = slugForQueryP.then(function queryRepoFor(slug) {
+      return travisChecker.getRepo(slug, options);
+    });
+
+    if (localCommitP) {
+      // Add build information to result
+      resultP = repoP.then(function queryBuildForRepo(repo) {
+        return travisChecker.getBuild(repo.repo.slug, repo.repo.last_build_id)
+          .then(function(build) {
+            return extend({}, repo, build);
+          });
+      });
+    } else {
+      resultP = repoP;
+    }
+  }
+
+  var checkedResultP = resultP;
+  if (localCommitP) {
+    checkedResultP = Promise.all([resultP, localCommitP])
+      .then(function checkResultCommit(all) {
+        var result = all[0];
+        var localCommit = all[1];
+        checkBuildCommit(result, localCommit);
+        return result;
+      });
+  }
+
+  return nodeify(checkedResultP, callback);
+}
+
+module.exports = travisStatus;
+module.exports.ORG_URI = TravisStatusChecker.ORG_URI;
+module.exports.PRO_URI = TravisStatusChecker.PRO_URI;
+module.exports.GitStatusChecker = GitStatusChecker;
+module.exports.TravisStatusChecker = TravisStatusChecker;
