@@ -262,11 +262,12 @@ function travisStatusCmd(args, options, callback) {
       return;
     }
 
-    var state = build.last_build_state || build.branch.state;
+    var state = build.repo ? build.repo.last_build_state : build.branch.state;
 
     if (!command.quiet) {
       var color = stateInfo.colors[state] || 'yellow';
-      var number = build.last_build_number || build.branch.number;
+      var number =
+        build.repo ? build.repo.last_build_number : build.branch.number;
       options.out.write('build #' + number + ' ' + chalk[color](state) +
           '\n');
     }

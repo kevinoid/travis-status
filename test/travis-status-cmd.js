@@ -129,7 +129,7 @@ describe('travis-status command', function() {
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state: state}).repo
+        apiResponses.repo({state: state})
       );
     });
   }
@@ -243,7 +243,7 @@ describe('travis-status command', function() {
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state: 'failed'}).repo
+        apiResponses.repo({state: 'failed'})
       );
     });
   });
@@ -277,7 +277,7 @@ describe('travis-status command', function() {
         null,
         isBranch ?
           apiResponses.branch({number: buildNum, state: state}) :
-          apiResponses.repo({number: buildNum, state: state}).repo
+          apiResponses.repo({number: buildNum, state: state})
       );
     });
   });
@@ -306,7 +306,7 @@ describe('travis-status command', function() {
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state: state}).repo
+        apiResponses.repo({state: state})
       );
     });
   });
@@ -449,7 +449,7 @@ describe('travis-status command', function() {
     var result = travisStatusCmd(RUNTIME_ARGS, options);
     travisStatus.yield(
       null,
-      apiResponses.repo().repo
+      apiResponses.repo()
     );
     return result.then(function(code) {
       assert.strictEqual(code, 0);
