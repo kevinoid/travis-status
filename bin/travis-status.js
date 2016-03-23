@@ -235,8 +235,13 @@ function travisStatusCmd(args, options, callback) {
   command.out = options.out;
   command.err = options.err;
 
+  // Use HTTP keep-alive to avoid unnecessary reconnections
+  command.requestOpts = {
+    forever: true
+  };
+
   if (command.insecure) {
-    command.requestOpts = {strictSSL: false};
+    command.requestOpts.strictSSL = false;
   }
 
   travisStatus(command, function(err, build) {
