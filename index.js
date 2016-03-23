@@ -9,7 +9,10 @@ var Promise = require('any-promise');   // eslint-disable-line no-shadow
 var TravisStatusChecker = require('./lib/travis-status-checker');
 var assert = require('assert');
 var extend = require('extend');
+var http = require('http');
+var https = require('https');
 var nodeify = require('promise-nodeify');
+var url = require('url');
 
 /** Checks that a build has an expected commit hash.
  * @param {!{commit:!{sha: string}}} build Build (or branch) object returned
@@ -46,7 +49,7 @@ function checkBuildCommit(build, localCommit) {
  *   in: stream.Readable|undefined,
  *   out: stream.Writable|undefined,
  *   repo: string|undefined,
- *   request: Object|undefined,
+ *   requestOpts: Object|undefined,
  *   storeRepo: string|undefined,
  *   token: string|undefined,
  *   wait: number|undefined
@@ -58,16 +61,16 @@ function checkBuildCommit(build, localCommit) {
  * @property {string=} commit require build to be for a specific commit
  * @property {stream.Writable=} err Stream to which errors (and non-output
  * status messages) are written. (default: <code>process.stderr</code>)
- * @property {Object<string,string>=} headers Additional request headers for
- * Travis CI API requests
  * @property {stream.Readable=} in Stream from which input is read. (default:
  * <code>process.stdin</code>)
  * @property {stream.Writable=} out Stream to which output is written.
  * (default: <code>process.stdout</code>)
  * @property {string=} repo repository to use (default: will try to detect from
  * current git clone)
- * @property {Object=} request Options for Travis CI API requests (suitable for
- * the {@link https://www.npmjs.com/package/request request module})
+ * @property {Object=} requestOpts Options for Travis CI API requests (suitable
+ * for the {@link https://www.npmjs.com/package/request request module}).
+ * Callers are encouraged to pass the <code>agent</code> or
+ * <code>forever</code> options to leverage TCP keep-alive across requests.
  * @property {string=} storeRepo repository value (as described for
  * <code>repo</code>) to store permanently for future use.  Is used for this
  * invocation if <code>repo</code> is not set.
@@ -109,6 +112,25 @@ function travisStatus(options, callback) {
     }
     if (options.storeRepo) {
       GitStatusChecker.checkSlugFormat(options.storeRepo);
+    }
+
+    // If the caller didn't request an agent behavior, control it ourselves
+    // Each function call will use a single connection (if one is not already
+    // open) the connection will be closed when no calls are in progress.
+    var requestOpts = options.requestOpts;
+    if (!requestOpts ||
+        (requestOpts.agent === undefined &&
+         requestOpts.agentClass === undefined &&
+         requestOpts.agentOptions === undefined &&
+         requestOpts.forever === undefined &&
+         requestOpts.pool === undefined)) {
+      requestOpts = extend({}, requestOpts);
+      var apiUrl =
+        url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
+      var Agent = apiUrl.protocol === 'https:' ? https.Agent : http.Agent;
+      requestOpts.agent = new Agent({keepAlive: true});
+      options = extend({}, options);
+      options.requestOpts = requestOpts;
     }
 
     gitChecker = new GitStatusChecker(options);
