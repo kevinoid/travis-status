@@ -124,13 +124,20 @@ function travisStatus(options, callback) {
          requestOpts.agentOptions === undefined &&
          requestOpts.forever === undefined &&
          requestOpts.pool === undefined)) {
-      requestOpts = extend({}, requestOpts);
       var apiUrl =
         url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
-      var Agent = apiUrl.protocol === 'https:' ? https.Agent : http.Agent;
-      requestOpts.agent = new Agent({keepAlive: true});
-      options = extend({}, options);
-      options.requestOpts = requestOpts;
+      // Agent keep-alive introduced in 0.11.4 nodejs@9fc9b874
+      var nodeVer = process.version.replace(/^v/, '').split('.').map(Number);
+      if ((apiUrl.protocol === 'https:' || apiUrl.protocol === 'http:') &&
+          (nodeVer[0] > 0 ||
+           (nodeVer[0] === 0 && nodeVer[1] > 11) ||
+           (nodeVer[0] === 0 && nodeVer[1] === 11 && nodeVer[2] >= 4))) {
+        var Agent = apiUrl.protocol === 'https:' ? https.Agent : http.Agent;
+        requestOpts = extend({}, requestOpts);
+        requestOpts.agent = new Agent({keepAlive: true});
+        options = extend({}, options);
+        options.requestOpts = requestOpts;
+      }
     }
 
     gitChecker = new GitStatusChecker(options);
