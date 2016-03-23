@@ -18,6 +18,7 @@ describe('TravisStatusChecker', function() {
   // travis-ci and travis-status-http.  To use different mocks for each test
   // without re-injecting the module repeatedly, we use this shared variable.
   var TravisMock;
+  var travisHttpMock;
   var travisRequestMock;
   var TravisStatusChecker = proxyquire(
     '../lib/travis-status-checker',
@@ -27,9 +28,14 @@ describe('TravisStatusChecker', function() {
         return TravisMock.apply(travis, arguments) || travis;
       },
       './travis-status-http': function TravisStatusHttpInjected() {
-        var travisHttp = Object.create(TravisStatusHttp);
-        travisHttp =
-          TravisStatusHttp.apply(travisHttp, arguments) || travisHttp;
+        var travisHttp;
+        if (travisHttpMock) {
+          travisHttp = travisHttpMock;
+        } else {
+          travisHttp = Object.create(TravisStatusHttp);
+          travisHttp =
+            TravisStatusHttp.apply(travisHttp, arguments) || travisHttp;
+        }
         if (travisRequestMock) {
           travisHttp.request = travisRequestMock;
         }
@@ -64,6 +70,19 @@ describe('TravisStatusChecker', function() {
       apiEndpoint: TravisStatusChecker.PRO_URI
     });
     TravisMock.verify();
+  });
+
+  // This avoids the extra API call that travis-ci adds for .authenticate()
+  it('passes options.token to agent.setAccessToken', function() {
+    var testToken = '123456';
+    travisHttpMock = new TravisStatusHttp();
+    var mock = sinon.mock(travisHttpMock);
+    mock.expects('setAccessToken').once().withExactArgs(testToken);
+    // eslint-disable-next-line no-new
+    new TravisStatusChecker({
+      token: testToken
+    });
+    mock.verify();
   });
 
   function apiMethod(methodName, args, travisUrlRe, pendingResponse,
