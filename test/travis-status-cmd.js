@@ -143,7 +143,7 @@ describe('travis-status command', function() {
   expectArgsAs(['--debug'], match.object);
   expectArgsAs(['--debug-http'], match.object);
   expectArgsAs(['--explode'], match.object);
-  expectArgsAs(['--insecure'], match({request: match({strictSSL: false})}));
+  expectArgsAs(['--insecure'], match({requestOpts: match({strictSSL: false})}));
   expectArgsAs(['--interactive'], match({interactive: true}));
   expectArgsAs(['--org'], match({apiEndpoint: 'https://api.travis-ci.org/'}));
   expectArgsAs(['--pro'], match({apiEndpoint: 'https://api.travis-ci.com/'}));
@@ -158,7 +158,7 @@ describe('travis-status command', function() {
   expectArgsAs(['--wait', '60'], match({wait: 60000}));
   expectArgsAs(['--wait'], match({wait: Infinity}));
   expectArgsAs(['-E'], match.object);
-  expectArgsAs(['-I'], match({request: match({strictSSL: false})}));
+  expectArgsAs(['-I'], match({requestOpts: match({strictSSL: false})}));
   expectArgsAs(['-R', 'foo/bar'], match({storeRepo: 'foo/bar'}));
   expectArgsAs(['-b', 'branchname'], match({branch: 'branchname'}));
   expectArgsAs(['-b'], match({branch: true}));

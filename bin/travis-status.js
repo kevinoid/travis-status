@@ -236,7 +236,7 @@ function travisStatusCmd(args, options, callback) {
   command.err = options.err;
 
   if (command.insecure) {
-    command.request = {strictSSL: false};
+    command.requestOpts = {strictSSL: false};
   }
 
   travisStatus(command, function(err, build) {
