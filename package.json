@@ -48,6 +48,7 @@
     "chalk": "^1.1.1",
     "commander": "^2.9.0",
     "extend": "^3.0.0",
+    "promised-read": "^0.1.0",
     "request": "^2.37.0",
     "travis-ci": "2.1.0"
   },
@@ -60,7 +61,6 @@
     "jsdoc": "^3.4.0",
     "mocha": "^2.3.4",
     "pify": "^2.3.0",
-    "promised-read": "^0.1.0",
     "proxyquire": "^1.7.4",
     "server-destroy": "^1.0.1",
     "sinon": "^1.17.3"
