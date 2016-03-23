@@ -100,7 +100,7 @@ function travisStatus(options, callback) {
     throw new TypeError('callback must be a function');
   }
 
-  var gitChecker, travisChecker;
+  var agent, gitChecker, travisChecker;
   try {
     if (options && typeof options !== 'object') {
       throw new TypeError('options must be an object');
@@ -114,9 +114,9 @@ function travisStatus(options, callback) {
       GitStatusChecker.checkSlugFormat(options.storeRepo);
     }
 
-    // If the caller didn't request an agent behavior, control it ourselves
-    // Each function call will use a single connection (if one is not already
-    // open) the connection will be closed when no calls are in progress.
+    // If the caller didn't request an agent behavior, control it ourselves.
+    // Each function call will use HTTP keep-alive for the duration of the
+    // function, but not after completion, which callers may not expect.
     var requestOpts = options.requestOpts;
     if (!requestOpts ||
         (requestOpts.agent === undefined &&
@@ -133,8 +133,9 @@ function travisStatus(options, callback) {
            (nodeVer[0] === 0 && nodeVer[1] > 11) ||
            (nodeVer[0] === 0 && nodeVer[1] === 11 && nodeVer[2] >= 4))) {
         var Agent = apiUrl.protocol === 'https:' ? https.Agent : http.Agent;
+        agent = new Agent({keepAlive: true});
         requestOpts = extend({}, requestOpts);
-        requestOpts.agent = new Agent({keepAlive: true});
+        requestOpts.agent = agent;
         options = extend({}, options);
         options.requestOpts = requestOpts;
       }
@@ -223,7 +224,17 @@ function travisStatus(options, callback) {
       });
   }
 
-  return nodeify(checkedResultP, callback);
+  var cleanupP;
+  if (agent) {
+    cleanupP = checkedResultP.then(
+      function(result) { agent.destroy(); return result; },
+      function(err) { agent.destroy(); return Promise.reject(err); }
+    );
+  } else {
+    cleanupP = checkedResultP;
+  }
+
+  return nodeify(cleanupP, callback);
 }
 
 module.exports = travisStatus;
