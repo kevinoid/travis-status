@@ -193,7 +193,11 @@ describe('travisStatus integration', function() {
     return travisStatus(options).then(function(result) {
       assert.deepEqual(result, extend({}, testRepo, testBuild));
       apiMock.verify();
-      assert.strictEqual(connCount, 1);
+      // If Agent doesn't have .destroy(), travisStatus can't do keep-alive.
+      // TODO:  Check that travisStatusCmd does.
+      if (typeof new http.Agent().destroy === 'function') {
+        assert.strictEqual(connCount, 1);
+      }
     });
   });
 
