@@ -205,11 +205,30 @@ describe('GitStatusChecker', function() {
   });
 
   describe('#resolveHash()', function() {
+    var headHash;
     it('can resolve the hash of HEAD', function() {
       var checker = new GitStatusChecker();
       return checker.resolveHash('HEAD').then(function(hash) {
         assert.match(hash, /^[a-fA-F0-9]{40}$/);
+        headHash = hash;
       });
+    });
+
+    it('can resolve a hash to itself', function() {
+      var checker = new GitStatusChecker();
+      return checker.resolveHash(headHash).then(function(hash) {
+        assert.strictEqual(hash, headHash);
+      });
+    });
+
+    it('rejects with Error for unresolvable name', function() {
+      var checker = new GitStatusChecker();
+      return checker.resolveHash('notabranch').then(
+        sinon.mock().never(),
+        function(err) {
+          assert(err);
+        }
+      );
     });
   });
 
