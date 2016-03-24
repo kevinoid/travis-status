@@ -141,11 +141,15 @@ function travisStatusCmd(args, options, callback) {
     .option('-b, --branch [BRANCH]',
         'query latest build for a branch (default: current)')
     .option('-c, --commit [COMMIT]',
-        'require build to be for a specific commit (default: HEAD)',
-        'HEAD')
+        'require build to be for a specific commit (default: HEAD)')
+    .on('commit', function() {
+      if (this.commit === true) { this.commit = 'HEAD'; }
+    })
     .option('-w, --wait [TIMEOUT]',
-        'wait if build is pending (timeout in seconds)',
-        Infinity)
+        'wait if build is pending (timeout in seconds)')
+    .on('wait', function() {
+      if (this.wait === true) { this.wait = Infinity; }
+    })
     .version(packageJson.version);
 
   // Patch stdout, stderr, and exit for Commander

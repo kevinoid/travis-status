@@ -135,6 +135,21 @@ describe('travis-status command', function() {
   }
 
   // Check individual arguments are handled correctly
+  expectArgsAs([], match({
+    apiEndpoint: undefined,
+    branch: undefined,
+    commit: undefined,
+    repo: undefined,
+    // requestOpts may have defaults set.  Ensure --insecure isn't default
+    requestOpts: match(function(requestOpts) {
+      return !requestOpts ||
+        requestOpts.strictSSL === undefined ||
+        requestOpts.strictSSL === true;
+    }, 'not insecure'),
+    storeRepo: undefined,
+    token: undefined,
+    wait: undefined
+  }));
   expectArgsAs(['--api-endpoint', 'https://example.com'], match({apiEndpoint: 'https://example.com'}));
   expectArgsAs(['--branch', 'branchname'], match({branch: 'branchname'}));
   expectArgsAs(['--branch'], match({branch: true}));
