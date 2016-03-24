@@ -23,9 +23,9 @@ Client](https://github.com/travis-ci/travis.rb) in
   status`](https://github.com/travis-ci/travis.rb#status).  Any differences in
   behavior are considered issues and users are encouraged to report them.
 * It can be installed using [npm](https://www.npmjs.com/).  This is the major
-  feature which spurred development.  It makes development environment setup
-  easier and use in npm scripts (such as
-  [`version`](https://docs.npmjs.com/cli/version)) both easier and
+  feature which spurred development of this module (it is a clone after all).
+  It makes development environment setup easier and use in npm scripts (such
+  as [`version`](https://docs.npmjs.com/cli/version)) both easier and
   version-managed.
 * It adds the `--branch` option to query the status of a branch, rather than
   the most recent build for the repo.
