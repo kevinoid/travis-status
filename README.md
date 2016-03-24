@@ -46,10 +46,21 @@ npm install travis-status
 
 ## Recipes
 
+### Check branch status and commit
+
+To check the status of a named branch and confirm that it matches a named
+commit (named by tag, branch, or sha1):
+
+```sh
+travis-status --branch release --commit v2.0.1
+```
+
 ### Check repo is passing, not pending
 
 Although `travis-status` defaults to checking the status of the repository in
-which it is run, it can check other repositories using the `--repo` option:
+which it is run, it can check other repositories using the `--repo` option.
+The `--fail-pending` option can be used to cause non-0 exit for pending
+status:
 
 ```sh
 travis-status --repo kevinoid/travis-status --fail-pending || echo 'Not yet passing'
@@ -73,12 +84,13 @@ passing (and will wait if pending), that it matches the current commit, then
 exits quietly if passing or prints an error and exits with non-0 exit code if
 not.
 
-### Check branch status using Pro API
+### Check status using Pro API
 
-To use the Travis CI Pro API using an access token:
+To use the Travis CI Pro API with an access token stored in an environment
+variable:
 
 ```sh
-travis-status --pro --token "$TRAVIS_TOKEN" --branch feature
+travis-status --pro --token "$TRAVIS_TOKEN"
 ```
 
 ### Use from JavaScript
