@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: GitStatusChecker</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: GitStatusChecker</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>GitStatusChecker</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    <h4 class="name" id="GitStatusChecker"><span class="type-signature"></span>new GitStatusChecker<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Creates a status checker for the current git repository.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#GitStatusCheckerOptions">GitStatusCheckerOptions</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Options.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_git-status-checker.js.html">lib/git-status-checker.js</a>, <a href="lib_git-status-checker.js.html#line49">line 49</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".SLUG_CONFIG_NAME"><span class="type-signature">(static, constant) </span>SLUG_CONFIG_NAME<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Git configuration option name in which the Travis CI slug is stored.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_git-status-checker.js.html">lib/git-status-checker.js</a>, <a href="lib_git-status-checker.js.html#line98">line 98</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".SLUG_INVALID"><span class="type-signature">(static, constant) </span>SLUG_INVALID<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Message returned when the repository slug is invalid.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_git-status-checker.js.html">lib/git-status-checker.js</a>, <a href="lib_git-status-checker.js.html#line84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".SLUG_VALID_RE"><span class="type-signature">(static, constant) </span>SLUG_VALID_RE<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    RegExp used to test the validity of a repository slug.
+Note:  travis.rb only checks for a '/' character, but GitHub currently
+requires only ASCII letters, numbers, '.', and '-'.  Choose a middle ground
+which catches likely erroneous names.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_git-status-checker.js.html">lib/git-status-checker.js</a>, <a href="lib_git-status-checker.js.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Apr 02 2016 00:06:33 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

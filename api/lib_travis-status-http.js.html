@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/travis-status-http.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/travis-status-http.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @copyright Copyright 2016 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @license MIT
+ */
+'use strict';
+
+var TravisHttp = require('travis-ci/lib/travis-http');
+var caseless = require('caseless');
+var constants = require('./constants');
+var extend = require('extend');
+var inherits = require('util').inherits;
+var packageJson = require('../package.json');
+var request = require('request');
+var requestPackageJson = require('request/package.json');
+var trimSlash = require('./trim-slash');
+
+/** Default &lt;code>User-Agent&lt;/code> header to send with API requests.
+ * @const
+ * @private
+ */
+var DEFAULT_USER_AGENT = 'node-travis-status/' + packageJson.version +
+  ' Request/' + requestPackageJson.version +
+  ' Node.js/' + process.version;
+
+/** Creates an instance of the travis-ci HTTP agent with a given endpoint
+ * and request options.
+ *
+ * This class has the following features above &lt;code>TravisHttp&lt;/code>:
+ * - Uses a newer version of request (for gzip and proxy support)
+ * - Supports caller-specified API endpoints (e.g. for enterprise or local use)
+ * - Supports caller-specified request options (e.g. pooling, strictSSL, proxy,
+ *   tunnel, timeouts, etc.)
+ * - Improved error values which are real Error instances and include the
+ *   HTTP response information, regardless of content.
+ *
+ * @param {string=} endpoint Travis CI API endpoint (base URL).
+ * (default: {@link TravisStatusChecker.ORG_URI})
+ * @param {Object=} options Options to pass to the &lt;code>request&lt;/code>
+ * constructor.
+ */
+function TravisStatusHttp(endpoint, options) {
+  if (endpoint &amp;&amp; typeof endpoint !== 'string') {
+    throw new TypeError('endpoint must be a string');
+  }
+  endpoint = endpoint &amp;&amp; trimSlash(endpoint);
+
+  if (options &amp;&amp; typeof options !== 'object') {
+    throw new TypeError('options must be an object');
+  }
+
+  options = extend({gzip: true}, options);
+  options.headers = extend({}, options.headers);
+
+  // Careful about providing default values for case-insensitive headers
+  var caselessHeaders = caseless(options.headers);
+  // The Travis CI API docs say
+  // "Always set the Accept header to application/vnd.travis-ci.2+json"
+  // but the API actually sends Content-Type application/json.
+  // Declare that we accept either.
+  if (!caselessHeaders.has('Accept')) {
+    options.headers.Accept =
+      'application/vnd.travis-ci.2+json, application/json';
+  }
+  if (!caselessHeaders.has('User-Agent')) {
+    options.headers['User-Agent'] = DEFAULT_USER_AGENT;
+  }
+
+  TravisHttp.call(
+    this,
+    endpoint === constants.PRO_URI,
+    options.headers
+  );
+
+  this._endpoint = endpoint || constants.ORG_URI;
+  // Set this._headers as TravisHttp does
+  this._headers = options.headers;
+  delete options.headers;
+  this._options = options;
+}
+inherits(TravisStatusHttp, TravisHttp);
+
+TravisStatusHttp.prototype._getHeaders = function _getHeaders() {
+  var headers = this._headers;
+
+  var token = this._getAccessToken();
+  if (token) {
+    var quotedToken;
+    // From https://tools.ietf.org/html/rfc7235#section-2.1
+    if (/^[A-Za-z0-9._~+\/-]+$/.test(token)) {
+      // The token is a valid HTTP token68 and doesn't require quoting
+      quotedToken = token;
+    } else {
+      // Convert it to a quoted string
+      // Note:  No validation is done to ensure it doesn't have prohibited
+      // control characters, since there's no way to quote them and I'm more
+      // likely to screw up unicode handling than catch real errors.
+      quotedToken = '"' + token.replace(/["\\]/g, '\\$&amp;') + '"';
+    }
+
+    headers = extend({}, headers);
+    caseless(headers).del('Authorization');
+    headers.Authorization = 'token ' + quotedToken;
+  }
+
+  return headers;
+};
+
+TravisStatusHttp.prototype.request = function(method, path, data, callback) {
+  if (typeof data === 'function') {
+    callback = data;
+    data = undefined;
+  }
+
+  var options = extend({}, this._options, {
+    method: method,
+    url: this._endpoint + path,
+    headers: this._getHeaders()
+  });
+
+  if (data instanceof Buffer) {
+    options.body = data;
+  } else {
+    options.json = data || true;
+  }
+  return request(options, function(errRequest, res, body) {
+    if (errRequest) {
+      callback(errRequest);
+      return;
+    }
+
+    var err;
+
+    if (res.statusCode >= 400) {
+      err = new Error(res.statusMessage);
+    }
+
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (errJson) {
+        err = err || errJson;
+      }
+    }
+
+    // Note:  This error handling deviates from travis-ci (which returns body
+    // or statusCode as err).  I think this is much more sane.
+    if (err) {
+      err.statusCode = res.statusCode;
+      err.statusMessage = res.statusMessage;
+      err.headers = res.headers;
+      err.body = body;
+      callback(err);
+      return;
+    }
+
+    callback(null, body);
+  });
+};
+
+module.exports = TravisStatusHttp;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Apr 02 2016 00:06:33 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

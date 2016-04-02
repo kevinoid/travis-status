@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Specifications in Mocha</title>
+  <meta name="generator" content="Mocha &lt;https://mochajs.org/&gt;" />
+  <meta name="license" content="MIT" />
+  <meta name="copyright" content="&#169; 2016 Kevin Locke &lt;kevin@kevinlocke.name&gt;" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/highlight.js/9.1.0/styles/github.min.css" />
+  <style type="text/css">
+section section {
+  margin-left: 1em;
+}
+section section section section {
+  margin-left: 0;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="suite">
+      <h1>GitStatusChecker</h1>
+      <dl>
+        <dt>throws TypeError for non-object options</dt>
+        <dd><pre><code>assert.throws(
+  // eslint-disable-next-line no-new
+  function() { new GitStatusChecker(true); },
+  TypeError,
+  /\boptions\b/
+);</code></pre></dd>
+        <dt>throws TypeError for non-Readable in</dt>
+        <dd><pre><code>assert.throws(
+  // eslint-disable-next-line no-new
+  function() { new GitStatusChecker({in: new stream.Writable()}); },
+  TypeError,
+  /\boptions.in\b/
+);</code></pre></dd>
+        <dt>throws TypeError for non-Writable out</dt>
+        <dd><pre><code>assert.throws(
+  // eslint-disable-next-line no-new
+  function() { new GitStatusChecker({out: new stream.Readable()}); },
+  TypeError,
+  /\boptions.out\b/
+);</code></pre></dd>
+        <dt>returns Error for non-Writable err</dt>
+        <dd><pre><code>assert.throws(
+  // eslint-disable-next-line no-new
+  function() { new GitStatusChecker({err: new stream.Readable()}); },
+  TypeError,
+  /\boptions.err\b/
+);</code></pre></dd>
+        <section class="suite">
+          <h1>.checkSlugFormat()</h1>
+          <dl>
+            <dt>accepts &quot;owner/repo&quot;</dt>
+            <dd><pre><code>var result = GitStatusChecker.checkSlugFormat(slug);
+assert.strictEqual(result, slug);</code></pre></dd>
+            <dt>accepts &quot;owner-1/repo-1&quot;</dt>
+            <dd><pre><code>var result = GitStatusChecker.checkSlugFormat(slug);
+assert.strictEqual(result, slug);</code></pre></dd>
+            <dt>rejects &quot;repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;/owner/repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;/repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner/&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner//repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner/repo/&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner/repo/branch&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot; owner/repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner /repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner/ repo&quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+            <dt>rejects &quot;owner/repo &quot;</dt>
+            <dd><pre><code>assert.throws(
+  function() { GitStatusChecker.checkSlugFormat(slug); },
+  InvalidSlugError
+);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>#resolveHash()</h1>
+          <dl>
+            <dt>can resolve the hash of HEAD</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+return checker.resolveHash('HEAD').then(function(hash) {
+  assert.match(hash, /^[a-fA-F0-9]{40}$/);
+  headHash = hash;
+});</code></pre></dd>
+            <dt>can resolve a hash to itself</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+return checker.resolveHash(headHash).then(function(hash) {
+  assert.strictEqual(hash, headHash);
+});</code></pre></dd>
+            <dt>rejects with Error for unresolvable name</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+return checker.resolveHash('notabranch').then(
+  sinon.mock().never(),
+  function(err) {
+    assert(err);
+  }
+);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>#storeSlug()</h1>
+          <dl>
+            <dt>can store a valid slug</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+var testSlug = 'foo/bar';
+return checker.storeSlug(testSlug).then(function(slug) {
+  assert.strictEqual(slug, testSlug);
+  return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
+    .then(function(result) {
+      var configSlug = result[0].trimRight();
+      assert.strictEqual(configSlug, testSlug);
+    });
+});</code></pre></dd>
+            <dt>returns Error for an invalid slug</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+var testSlug = 'foobar';
+return checker.storeSlug(testSlug).then(
+  sinon.mock().never(),
+  function(errStore) {
+    assert.instanceOf(errStore, InvalidSlugError);
+    return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
+      .then(
+        function(configSlug) {
+          assert.fail(configSlug, null, 'slug should not be stored');
+        },
+        function(errGit) {
+          return errGit.code === 1 ? null : Promise.reject(errGit);
+        }
+      );
+  }
+);</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>#tryStoreSlug()</h1>
+          <dl>
+            <dt>can store a valid slug</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+var testSlug = 'foo/bar';
+return checker.tryStoreSlug(testSlug).then(function(slug) {
+  assert.strictEqual(slug, testSlug);
+  return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
+    .then(function(result) {
+      var configSlug = result[0].trimRight();
+      assert.strictEqual(configSlug, testSlug);
+    });
+});</code></pre></dd>
+            <dt>prints error message for an invalid slug</dt>
+            <dd><pre><code>var outStream = new stream.PassThrough();
+var errStream = new stream.PassThrough();
+var checker = new GitStatusChecker({
+  out: outStream,
+  err: errStream
+});
+var testSlug = 'foobar';
+return checker.tryStoreSlug(testSlug).then(function(slug) {
+  assert.strictEqual(slug, testSlug);
+  assert.strictEqual(outStream.read(), null);
+  assert.match(String(errStream.read()), /error/i);
+  return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
+    .then(
+      function(configSlug) {
+        assert.fail(configSlug, null, 'slug should not be stored');
+      },
+      function(errGit) {
+        return errGit.code === 1 ? null : Promise.reject(errGit);
+      }
+    );
+});</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>#confirmSlug()</h1>
+          <dl>
+            <dt>prompts user for confirmation</dt>
+            <dd><pre><code>var inStream = new stream.PassThrough();
+var outStream = new stream.PassThrough({encoding: 'utf8'});
+var errStream = new stream.PassThrough({encoding: 'utf8'});
+var checker = new GitStatusChecker({
+  in: inStream,
+  out: outStream,
+  err: errStream
+});
+var testSlug = 'foo/bar';
+var confirmP = checker.confirmSlug(testSlug);
+return read(errStream)
+  .then(function checkPrompt(promptMsg) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg, /correct/i);
+    assert.include(promptMsg, testSlug);
+    inStream.write('y\n');
+    return confirmP;
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, testSlug);
+    assert.strictEqual(outStream.read(), null);
+    assert.strictEqual(errStream.read(), null);
+  });</code></pre></dd>
+            <dt>prompts user for slug if not confirmed</dt>
+            <dd><pre><code>var inStream = new stream.PassThrough();
+var outStream = new stream.PassThrough({encoding: 'utf8'});
+var errStream = new stream.PassThrough({encoding: 'utf8'});
+var checker = new GitStatusChecker({
+  in: inStream,
+  out: outStream,
+  err: errStream
+});
+var testSlug1 = 'foo/bar';
+var testSlug2 = 'baz/quux';
+var confirmP = checker.confirmSlug(testSlug1);
+return read(errStream)
+  .then(function checkPrompt1(promptMsg1) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg1, /correct/i);
+    assert.include(promptMsg1, testSlug1);
+    inStream.write('n\n');
+    return read(errStream);
+  })
+  .then(function checkPrompt2(promptMsg2) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg2, /repository/i);
+    assert.include(promptMsg2, testSlug1);
+    inStream.write(testSlug2 + '\n');
+    return confirmP;
+  }).then(function checkSlug(slug) {
+    assert.strictEqual(slug, testSlug2);
+    assert.strictEqual(outStream.read(), null);
+    assert.strictEqual(errStream.read(), null);
+  });</code></pre></dd>
+            <dt>re-prompts user if slug is invalid</dt>
+            <dd><pre><code>var inStream = new stream.PassThrough();
+var outStream = new stream.PassThrough({encoding: 'utf8'});
+var errStream = new stream.PassThrough({encoding: 'utf8'});
+var checker = new GitStatusChecker({
+  in: inStream,
+  out: outStream,
+  err: errStream
+});
+var testSlug1 = 'foo/bar';
+var testSlug2 = 'fred';
+var testSlug3 = 'baz/quux';
+var confirmP = checker.confirmSlug(testSlug1);
+return read(errStream)
+  .then(function checkPrompt1(promptMsg1) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg1, /correct/i);
+    assert.include(promptMsg1, testSlug1);
+    inStream.write('n\n');
+    return read(errStream);
+  })
+  .then(function checkPrompt2(promptMsg2) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg2, /repository/i);
+    assert.include(promptMsg2, testSlug1);
+    inStream.write(testSlug2 + '\n');
+    return read(errStream);
+  })
+  .then(function checkError(errorMsg) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(errorMsg, /invalid/i);
+    // Prompt may be part of error message or not
+    if (errorMsg.indexOf(testSlug1) &gt;= 0) {
+      return errorMsg;
+    }
+    return read(errStream);
+  })
+  .then(function checkPrompt3(promptMsg3) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg3, /repository/i);
+    assert.include(promptMsg3, testSlug1);
+    inStream.write(testSlug3 + '\n');
+    return confirmP;
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, testSlug3);
+    assert.strictEqual(outStream.read(), null);
+    assert.strictEqual(errStream.read(), null);
+  });</code></pre></dd>
+            <dt>rejects with EOFError if input ends</dt>
+            <dd><pre><code>var inStream = new stream.PassThrough();
+var outStream = new stream.PassThrough({encoding: 'utf8'});
+var errStream = new stream.PassThrough({encoding: 'utf8'});
+var checker = new GitStatusChecker({
+  in: inStream,
+  out: outStream,
+  err: errStream
+});
+var testSlug = 'foo/bar';
+var confirmP = checker.confirmSlug(testSlug);
+return read(errStream)
+  .then(function checkPrompt(promptMsg) {
+    assert.strictEqual(outStream.read(), null);
+    assert.match(promptMsg, /correct/i);
+    assert.include(promptMsg, testSlug);
+    // End without newline (e.g. user hit ^D before return)
+    inStream.end('y');
+    return confirmP;
+  })
+  .then(
+    sinon.mock().never(),
+    function(err) {
+      assert.strictEqual(err.name, 'EOFError');
+      // Same message as travis.rb
+      assert.strictEqual(err.message, 'The input stream is exhausted.');
+      // Doesn't print error message itself, but calling code will
+      assert.strictEqual(outStream.read(), null);
+      assert.strictEqual(errStream.read(), null);
+    }
+  );</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>#detectBranch()</h1>
+          <dl>
+            <dt>resolves master on master</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+return git('checkout', 'master')
+  .then(function runDetect() {
+    return checker.detectBranch();
+  })
+  .then(function checkBranch(branch) {
+    assert.strictEqual(branch, 'master');
+  });</code></pre></dd>
+            <dt>resolves branch1 on branch1</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+return git('checkout', 'branch1')
+  .then(function runDetect() {
+    return checker.detectBranch();
+  })
+  .then(function checkBranch(branch) {
+    assert.strictEqual(branch, 'branch1');
+  });</code></pre></dd>
+            <dt>rejects with Error not on branch</dt>
+            <dd><pre><code>var checker = new GitStatusChecker();
+return git('checkout', 'HEAD^')
+  .then(function runDetect() {
+    return checker.detectBranch();
+  })
+  .then(
+      sinon.mock().never(),
+      function checkErr(err) {
+        assert.match(err.message, /branch/i);
+      }
+    );</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>#detectSlug()</h1>
+          <dl>
+            <dt>resolves owner1/repo1 for branch1</dt>
+            <dd><pre><code>var checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough()
+});
+return git('checkout', branchName)
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, remoteSlug);
+  });</code></pre></dd>
+            <dt>resolves owner2/repo2 for branch2</dt>
+            <dd><pre><code>var checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough()
+});
+return git('checkout', branchName)
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, remoteSlug);
+  });</code></pre></dd>
+            <dt>defaults to origin if branch has no remote</dt>
+            <dd><pre><code>var checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough()
+});
+return git('checkout', 'master')
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, REMOTE_SLUGS.origin);
+  });</code></pre></dd>
+            <dt>defaults to origin if not on branch</dt>
+            <dd><pre><code>var checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough()
+});
+return git('checkout', 'HEAD^')
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, REMOTE_SLUGS.origin);
+  });</code></pre></dd>
+            <dt>rejects with SlugDetectionError for remote with no URL</dt>
+            <dd><pre><code>var checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough()
+});
+return git('checkout', 'branchnourl')
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(
+    sinon.mock().never(),
+    function checkError(err) {
+      assert.strictEqual(err.name, 'SlugDetectionError');
+      assert.match(err.message, /remote/i);
+    }
+  );</code></pre></dd>
+            <dt>rejects with SlugDetectionError for remote without slug</dt>
+            <dd><pre><code>var checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough()
+});
+return git('checkout', 'branchnotslug')
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(
+    sinon.mock().never(),
+    function checkError(err) {
+      assert.strictEqual(err.name, 'SlugDetectionError');
+      assert.match(err.message, /URL/i);
+    }
+  );</code></pre></dd>
+            <dt>prompts for confirmation if interactive</dt>
+            <dd><pre><code>var outStream = new stream.PassThrough();
+var errStream = new stream.PassThrough();
+var checker = new GitStatusChecker({
+  interactive: true,
+  out: outStream,
+  err: errStream
+});
+var testSlug = 'prompt/slug';
+var mock = sinon.mock(checker);
+mock.expects('confirmSlug')
+  .once().withExactArgs(REMOTE_SLUGS.origin).returns(testSlug);
+return git('checkout', 'master')
+  .then(function runDetect() {
+    return checker.detectSlug();
+  })
+  .then(function checkSlug(slug) {
+    assert.strictEqual(slug, testSlug);
+    // Only output is from prompt (which is mocked)
+    assert.strictEqual(outStream.read(), null);
+    assert.strictEqual(errStream.read(), null);
+  });</code></pre></dd>
+            <dt class="error">prints result without confirmation if not interactive</dt>
+  </div><!-- .container -->
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/2.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/highlight.js/9.1.0/highlight.min.js"></script>
+  <script type="text/javascript">//<![CDATA[
+'use strict';
+// Adjust the nested heading level to match depth
+$('section section h1').each(function() {
+  var $this = $(this);
+  var depth = Math.min($this.parents('section').length, 6);
+  // http://stackoverflow.com/a/30059450/503410
+  $this.wrapInner(document.createElement('h' + depth)).children().unwrap();
+});
+
+// Make the tests collapsible
+var testNum = 0;
+$('dt + dd')
+  .addClass('collapse')
+  .attr('role', 'tabpanel')
+  .attr('aria-expanded', 'false')
+  .each(function() {
+    var $this = $(this);
+    var $dt = $this.prev();
+
+    ++testNum;
+    var id = 'test' + testNum;
+    var idDt = id + '-title';
+    var idDd = id + '-desc';
+
+    $dt.attr('id', idDt);
+    $this.attr('id', idDd);
+
+    $dt.wrapInner('<a role="button" data-toggle="collapse" href="#' + idDd +
+        '" aria-expanded="false" aria-controls="' + idDd + '"></a>')
+      .children()
+      .collapse();
+  });
+
+// Enable syntax highlighting for the code (which is all JavaScript)
+hljs.configure({languages: ['javascript']});
+hljs.initHighlighting();
+//]]></script>
+</body>
+</html>

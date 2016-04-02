@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/shortline.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/shortline.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @copyright Copyright 2016 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @license MIT
+ */
+'use strict';
+
+var Promise = require('any-promise');   // eslint-disable-line no-shadow
+var extend = require('extend');
+var promisedRead = require('promised-read');
+
+var EOFError = promisedRead.EOFError;
+var readTo = promisedRead.readTo;
+
+// Same error text as highline
+var EOF_MESSAGE = 'The input stream is exhausted.';
+
+/** Creates a new instance of Shortline which can be used to prompt users
+ * for input.
+ *
+ * This class is intended to be similar to {@link http://highline.rubyforge.org
+ * Highline}, although it is currently missing nearly all of its functionality.
+ *
+ * @constructor
+ * @param {{
+ *  input: stream.Readable|undefined,
+ *  output: stream.Writable|undefined
+ * }=} options Options to control the input source and output destination.
+ */
+function Shortline(options) {
+  var self = this;
+
+  self._input = (options &amp;&amp; options.input) || process.stdin;
+  self._output = (options &amp;&amp; options.output) || process.stderr;
+
+  /** Most recent error emitted by the input stream.
+   * @type {Error}
+   */
+  self.inputError = null;
+  self._input.on('end', function onInputEnd() {
+    self.inputError = new EOFError(EOF_MESSAGE);
+  });
+  // Note:  Can't listen for 'error' since it changes behavior if there are no
+  // other listeners.  Listen for it only when reading from input (since that
+  // is our error and will be returned to the caller).
+}
+
+/** Options for {@link Shortline#ask}.
+ *
+ * @ template ReturnType
+ * @typedef {{
+ *  convert: ((function(string): ReturnType)|undefined),
+ *  default: string|undefined,
+ *  responses: {
+ *    notValid: string|undefined
+ *  }|undefined,
+ *  trim: boolean|undefined,
+ *  validate: RegExp|undefined
+ * }} ShortlineAskOptions
+ * @property {(function(string): ReturnType)=} convert Type conversion used to
+ * create the return value from the trimmed and validated user input.
+ * @property {string=} default Default value used in place of empty user input.
+ * @property {{notValid: string|undefined}} responses Responses to various user
+ * input.  &lt;code>notValid&lt;/code> is printed if the input does not validate.
+ * @property {boolean=} trim Right-trim user input?
+ * @property {RegExp=} Prompt repeatedly until the trimmed user input matches a
+ * given RegExp.
+ */
+// var ShortlineAskOptions;
+
+/** Asks the user a "yes or no" question.
+ *
+ * @param {string} question Question to ask the user.
+ * @param {ShortlineAskOptions=} options Options.
+ * @return {!Promise&lt;ReturnType>} Promise with result of
+ * &lt;code>options.convert&lt;/code> applied to the user-entered text, or Error.
+ * @private
+ */
+Shortline.prototype.agree = function agree(question, options) {
+  options = extend(true, {
+    convert: function agreeToBoolean(answer) {
+      return answer.charAt(0).toLowerCase() === 'y';
+    },
+    responses: {
+      notValid: 'Please enter "yes" or "no".'
+    },
+    validate: /^y(?:es)?|no?$/i
+  }, options);
+  return this.ask(question, options);
+};
+
+/** Asks the user to provide input.
+ *
+ * @ template ReturnType
+ * @param {string} question Question to ask the user.
+ * @param {ShortlineAskOptions=} options Options.
+ * @return {!Promise&lt;ReturnType>} Promise with result of
+ * &lt;code>options.convert&lt;/code> applied to the user-entered text, or Error.
+ * @private
+ */
+Shortline.prototype.ask = function ask(question, options) {
+  var self = this;
+  options = options || {};
+
+  var fullQuestion = question;
+  if (options.default) {
+    fullQuestion = question.replace(/\s*$/, function(padding) {
+      return ' |' + options.default + '|' + (padding || ' ');
+    });
+  }
+
+  return self.prompt(fullQuestion).then(function answerToResult(answer) {
+    if (options.default) {
+      answer = answer || options.default;
+    }
+
+    if (options.trim) {
+      answer = answer.trimRight();
+    }
+
+    if (options.validate &amp;&amp; !options.validate.test(answer)) {
+      var response = options.responses &amp;&amp; options.responses.notValid;
+      if (!response) {
+        response = 'Your answer isn\'t valid (must match ' +
+            options.validate.source + ').';
+      }
+      self._output.write(response + '\n');
+      return self.ask(question, options);
+    }
+
+    if (options.convert) {
+      answer = options.convert(answer);
+    }
+
+    return answer;
+  });
+};
+
+/** Prompts the user for input without validation, retry, type conversion, or
+ * trimming.
+ *
+ * @param {string} text Text with which to prompt the user.
+ * @return {!Promise&lt;string>} Promise with user-entered text up to (but not
+ * including) the first newline or Error.
+ * @private
+ */
+Shortline.prototype.prompt = function prompt(text) {
+  var self = this;
+  var input = self._input;
+  var output = self._output;
+
+  output.write(text);
+
+  if (self.inputError) {
+    return Promise.reject(self.inputError);
+  }
+
+  function onError(err) {
+    self.inputError = err;
+  }
+  input.once('error', onError);
+  return readTo(input, '\n').then(
+    function(result) {
+      input.removeListener('error', onError);
+      // Trim \n, which is considered a non-input signaling character
+      // Convert to a string, since stream may not have an encoding set
+      return String(result.slice(0, -1));
+    },
+    function(err) {
+      input.removeListener('error', onError);
+      if (err.name === 'EOFError') {
+        err.message = EOF_MESSAGE;
+      }
+      return Promise.reject(err);
+    }
+  );
+};
+
+module.exports = Shortline;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Apr 02 2016 00:06:33 GMT-0700 (PDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
