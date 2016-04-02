@@ -8,4 +8,5 @@
 /doc/
 /scripts
 /test
+/test-lib
 jsdoc*.conf.json
