@@ -22,7 +22,7 @@ var Chalk = require('chalk').constructor;
 var Command = require('commander').Command;
 var Promise = require('any-promise');   // eslint-disable-line no-shadow
 var debug = require('debug')('travis-status');
-var extend = require('extend');
+var assign = require('object-assign');
 var packageJson = require('../package.json');
 var stateInfo = require('../lib/state-info');
 var travisStatus = require('..');
@@ -90,7 +90,7 @@ function travisStatusCmd(args, options, callback) {
       throw new TypeError('options must be an object');
     }
 
-    options = extend(
+    options = assign(
       {
         in: process.stdin,
         out: process.stdout,

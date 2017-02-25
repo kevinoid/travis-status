@@ -8,7 +8,7 @@
 var apiResponses = require('../../test-lib/api-responses');
 var assert = require('chai').assert;
 var enableDestroy = require('server-destroy');
-var extend = require('extend');
+var assign = require('object-assign');
 var http = require('http');
 var packageJson = require('../../package.json');
 var sinon = require('sinon');
@@ -46,7 +46,7 @@ describe('travisStatus integration', function() {
   var apiUrl;
   var connCount = 0;
   var server;
-  var testApiResponses = extend({}, apiResponses);
+  var testApiResponses = assign({}, apiResponses);
   before(function startServer(done) {
     server = http.createServer(function(req, res) {
       checkRequest(req);
@@ -192,7 +192,7 @@ describe('travisStatus integration', function() {
       repo: testSlug
     };
     return travisStatus(options).then(function(result) {
-      assert.deepEqual(result, extend({}, testRepo, testBuild));
+      assert.deepEqual(result, assign({}, testRepo, testBuild));
       apiMock.verify();
       // If Agent doesn't have .destroy(), travisStatus can't do keep-alive.
       // TODO:  Check that travisStatusCmd does.

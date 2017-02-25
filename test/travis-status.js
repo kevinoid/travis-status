@@ -10,7 +10,7 @@ var Promise = require('any-promise');   // eslint-disable-line no-shadow
 var TravisStatusChecker = require('../lib/travis-status-checker');
 var apiResponses = require('../test-lib/api-responses');
 var assert = require('chai').assert;
-var extend = require('extend');
+var assign = require('object-assign');
 var proxyquire = require('proxyquire');
 var sinon = require('sinon');
 
@@ -228,7 +228,7 @@ describe('travisStatus', function() {
         var testP;
         if (isSameHash) {
           testP = statusP.then(function(result) {
-            assert.deepEqual(result, extend({}, testRepo, testBuild));
+            assert.deepEqual(result, assign({}, testRepo, testBuild));
           });
         } else {
           testP = statusP.then(

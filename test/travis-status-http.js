@@ -6,7 +6,7 @@
 'use strict';
 
 var assert = require('chai').assert;
-var extend = require('extend');
+var assign = require('object-assign');
 var http = require('http');
 var packageJson = require('../package.json');
 var proxyquire = require('proxyquire');
@@ -191,11 +191,11 @@ describe('TravisStatusHttp', function() {
       var testBody = {test: 'stuff'};
       var testBodyStr = JSON.stringify(testBody);
       var response = new http.IncomingMessage();
-      extend(response, errProps);
+      assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBodyStr);
       status.request('GET', '/repos', function(err) {
         assert.strictEqual(err.message, errProps.statusMessage);
-        assert.deepEqual(extend({}, err), extend({body: testBody}, errProps));
+        assert.deepEqual(assign({}, err), assign({body: testBody}, errProps));
       });
       request.verify();
     });
@@ -214,11 +214,11 @@ describe('TravisStatusHttp', function() {
       var testErr;
       try { JSON.parse(testBody); } catch (errJson) { testErr = errJson; }
       var response = new http.IncomingMessage();
-      extend(response, errProps);
+      assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBody);
       status.request('GET', '/repos', function(err) {
         assert.strictEqual(err.message, testErr.message);
-        assert.deepEqual(extend({}, err), extend({body: testBody}, errProps));
+        assert.deepEqual(assign({}, err), assign({body: testBody}, errProps));
       });
       request.verify();
     });
@@ -235,11 +235,11 @@ describe('TravisStatusHttp', function() {
       };
       var testBody = 'Body?';
       var response = new http.IncomingMessage();
-      extend(response, errProps);
+      assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBody);
       status.request('GET', '/repos', function(err) {
         assert.strictEqual(err.message, errProps.statusMessage);
-        assert.deepEqual(extend({}, err), extend({body: testBody}, errProps));
+        assert.deepEqual(assign({}, err), assign({body: testBody}, errProps));
       });
       request.verify();
     });
@@ -257,7 +257,7 @@ describe('TravisStatusHttp', function() {
       var testBody = {prop: 'OK'};
       var testBodyStr = JSON.stringify(testBody);
       var response = new http.IncomingMessage();
-      extend(response, errProps);
+      assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBodyStr);
       status.request('GET', '/repos', function(err, body) {
         assert.deepEqual(body, testBody);
