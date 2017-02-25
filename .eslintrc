@@ -67,6 +67,9 @@ rules:
   ## disallow process.exit()
   # this is disabled locally only when require.main === module
   no-process-exit: 2
+  ## allow dangling underscores in identifiers
+  # this project is already using this style, for better or worse
+  no-underscore-dangle: 0
   ## disallow extra spaces in object literals
   object-curly-spacing: [2, "never"]
   ## allow multiple variable declarations per block/function and multiple
