@@ -19,13 +19,37 @@ if (require.main === module &&
 }
 
 var Chalk = require('chalk').constructor;
-var Command = require('commander').Command;
 var Promise = require('any-promise');   // eslint-disable-line no-shadow
+var Yargs = require('yargs/yargs');
 var debug = require('debug')('travis-status');
 var assign = require('object-assign');
 var packageJson = require('../package.json');
 var stateInfo = require('../lib/state-info');
 var travisStatus = require('..');
+
+/** Calls <code>yargs.parse</code> and passes any thrown errors to the callback.
+ * Workaround for https://github.com/yargs/yargs/issues/755
+ * @private
+ */
+function parseYargs(yargs, args, callback) {
+  // Since yargs doesn't nextTick its callback, this function must be careful
+  // that exceptions thrown from callback (which propagate through yargs.parse)
+  // are not caught and passed to a second invocation of callback.
+  var called = false;
+  try {
+    yargs.parse(args, function() {
+      called = true;
+      return callback.apply(this, arguments);
+    });
+  } catch (err) {
+    if (called) {
+      // err was thrown after or by callback.  Let it propagate.
+      throw err;
+    } else {
+      callback(err);
+    }
+  }
+}
 
 /** Options for command entry points.
  *
@@ -72,18 +96,14 @@ function travisStatusCmd(args, options, callback) {
 
   try {
     if (args === undefined || args === null || args.length === 0) {
-      // Fake args to keep Commander.js happy
-      args = [
-        process.execPath,
-        __filename
-      ];
+      args = [];
     } else if (typeof args !== 'object' ||
                Math.floor(args.length) !== args.length) {
       throw new TypeError('args must be Array-like');
     } else if (args.length < 2) {
       throw new RangeError('non-empty args must have at least 2 elements');
     } else {
-      args = Array.prototype.map.call(args, String);
+      args = Array.prototype.slice.call(args, 2).map(String);
     }
 
     if (options && typeof options !== 'object') {
@@ -115,190 +135,224 @@ function travisStatusCmd(args, options, callback) {
     return undefined;
   }
 
-  var command = new Command()
-    .description('Checks status of the latest build.')
+  // Workaround for https://github.com/yargs/yargs/issues/783
+  require.main = module;
+  var yargs = new Yargs(null, null, require)
+    .usage('Usage: $0 [options] [args...]')
+    .help()
+    .alias('help', 'h')
+    .alias('help', '?')
     // Note:  Option order matches travis.rb with new ones at bottom
-    .option('-i, --interactive', 'be interactive and colorful')
-    .option('-E, --explode', 'ignored for compatibility with travis.rb')
-    .option('--skip-version-check', 'ignored for compatibility with travis.rb')
-    .option('--skip-completion-check',
-        'ignored for compatibility with travis.rb')
-    .option('-I, --insecure', 'do not verify SSL certificate of API endpoint')
-    .option('-e, --api-endpoint <URL>', 'Travis API server to talk to')
-    .option('--pro',
-        'short-cut for --api-endpoint \'' + travisStatus.PRO_URI + '\'')
-    .on('pro', function() {
-      this.apiEndpoint = travisStatus.PRO_URI;
+    .option('interactive', {
+      alias: 'i',
+      default: undefined,
+      describe: 'be interactive and colorful',
+      type: 'boolean'
     })
-    .option('--org',
-        'short-cut for --api-endpoint \'' + travisStatus.ORG_URI + '\'')
-    .on('org', function() {
-      this.apiEndpoint = travisStatus.ORG_URI;
+    .option('explode', {
+      alias: 'E',
+      describe: 'ignored for compatibility with travis.rb',
+      type: 'boolean'
     })
-    .option('--staging', 'talks to staging system')
-    .on('staging', function() {
-      this.apiEndpoint = (this.apiEndpoint || travisStatus.ORG_URI)
+    .option('skip-version-check', {
+      describe: 'ignored for compatibility with travis.rb',
+      type: 'boolean'
+    })
+    .option('skip-completion-check', {
+      describe: 'ignored for compatibility with travis.rb',
+      type: 'boolean'
+    })
+    .option('insecure', {
+      alias: 'I',
+      describe: 'do not verify SSL certificate of API endpoint',
+      type: 'boolean'
+    })
+    .option('api-endpoint', {
+      alias: 'e',
+      describe: 'Travis API server to talk to',
+      nargs: 1
+    })
+    .option('pro', {
+      describe: 'short-cut for --api-endpoint \'' + travisStatus.PRO_URI + '\'',
+      type: 'boolean'
+    })
+    .option('org', {
+      describe: 'short-cut for --api-endpoint \'' + travisStatus.ORG_URI + '\'',
+      type: 'boolean'
+    })
+    .option('staging', {
+      describe: 'talks to staging system',
+      type: 'boolean'
+    })
+    .option('token', {
+      alias: 't',
+      describe: 'access token to use',
+      nargs: 1
+    })
+    .option('debug', {
+      describe: 'show API requests',
+      type: 'boolean'
+    })
+    .option('debug-http', {
+      describe: 'show HTTP(S) exchange',
+      type: 'boolean'
+    })
+    .option('repo', {
+      alias: 'r',
+      describe: 'repository to use (will try to detect from current git clone)',
+      nargs: 1
+    })
+    .option('store-repo', {
+      alias: 'R',
+      describe: 'like --repo, but remembers value for current directory',
+      nargs: 1
+    })
+    .option('exit-code', {
+      alias: 'x',
+      describe: 'sets the exit code to 1 if the build failed',
+      type: 'boolean'
+    })
+    .option('quiet', {
+      alias: 'q',
+      describe: 'does not print anything',
+      type: 'boolean'
+    })
+    .option('fail-pending', {
+      alias: 'p',
+      describe: 'sets the status code to 1 if the build is pending'
+    })
+    .option('branch', {
+      alias: 'b',
+      defaultDescription: 'current',
+      describe: 'query latest build for a branch'
+    })
+    .option('commit', {
+      alias: 'c',
+      defaultDescription: 'HEAD',
+      describe: 'require build to be for a specific commit'
+    })
+    .option('wait', {
+      alias: 'w',
+      defaultDescription: 'Infinity',
+      describe: 'wait if build is pending (timeout in seconds)'
+    })
+    .version(packageJson.name + ' ' + packageJson.version)
+    .alias('version', 'V')
+    .strict();
+  parseYargs(yargs, args, function(errYargs, command, output) {
+    if (errYargs) {
+      options.err.write(output ?
+                          output + '\n' :
+                          errYargs.name + ': ' + errYargs.message + '\n');
+      callback(null, 1);
+      return;
+    }
+
+    if (output) {
+      options.out.write(output + '\n');
+    }
+
+    if (command.help || command.version) {
+      callback(null, 0);
+      return;
+    }
+
+    if (typeof command.interactive === 'undefined') {
+      // Note:  Same default as travis.rb
+      // Need cast to Boolean so undefined becomes false to disable Chalk
+      command.interactive = Boolean(options.out.isTTY);
+    }
+
+    var chalk = new Chalk({enabled: command.interactive});
+
+    if (command._.length > 0) {
+      yargs.showHelp(function(helpStr) {
+        options.err.write(chalk.red('too many arguments') + '\n' + helpStr);
+        process.nextTick(function() { callback(null, 1); });
+      });
+      return;
+    }
+
+    if (command.commit === true) {
+      command.commit = 'HEAD';
+    }
+
+    if (command.org) {
+      command.apiEndpoint = travisStatus.ORG_URI;
+    }
+    if (command.pro) {
+      command.apiEndpoint = travisStatus.PRO_URI;
+    }
+    if (command.staging) {
+      command.apiEndpoint = (command.apiEndpoint || travisStatus.ORG_URI)
         .replace(/api/g, 'api-staging');
-    })
-    .option('-t, --token <ACCESS_TOKEN>', 'access token to use')
-    .option('--debug', 'show API requests')
-    .option('--debug-http', 'show HTTP(S) exchange')
-    .option('-r, --repo <SLUG>',
-        'repository to use (will try to detect from current git clone)')
-    .option('-R, --store-repo <SLUG>',
-        'like --repo, but remembers value for current directory')
-    .on('store-repo', function() {
-      this.repo = this.storeRepo;
-    })
-    .option('-x, --exit-code', 'sets the exit code to 1 if the build failed')
-    .option('-q, --quiet', 'does not print anything')
-    .option('-p, --fail-pending',
-        'sets the status code to 1 if the build is pending')
-    .option('-b, --branch [BRANCH]',
-        'query latest build for a branch (default: current)')
-    .option('-c, --commit [COMMIT]',
-        'require build to be for a specific commit (default: HEAD)')
-    .on('commit', function() {
-      if (this.commit === true) { this.commit = 'HEAD'; }
-    })
-    .option('-w, --wait [TIMEOUT]',
-        'wait if build is pending (timeout in seconds)')
-    .on('wait', function() {
-      if (this.wait === true) { this.wait = Infinity; }
-    })
-    .version(packageJson.version);
+    }
 
-  // Patch stdout, stderr, and exit for Commander
-  // See: https://github.com/tj/commander.js/pull/444
-  var exitDesc = Object.getOwnPropertyDescriptor(process, 'exit');
-  var stdoutDesc = Object.getOwnPropertyDescriptor(process, 'stdout');
-  var stderrDesc = Object.getOwnPropertyDescriptor(process, 'stderr');
-  var consoleDesc = Object.getOwnPropertyDescriptor(global, 'console');
-  var errExit = new Error('process.exit() called');
-  process.exit = function throwOnExit(code) {
-    errExit.code = code;
-    throw errExit;
-  };
-  if (options.out) {
-    Object.defineProperty(
-        process,
-        'stdout',
-        {configurable: true, enumerable: true, value: options.out}
-    );
-  }
-  if (options.err) {
-    Object.defineProperty(
-        process,
-        'stderr',
-        {configurable: true, enumerable: true, value: options.err}
-    );
-  }
-  if (options.out || options.err) {
-    Object.defineProperty(
-      global,
-      'console',
-      {
-        configurable: true,
-        enumerable: true,
-        // eslint-disable-next-line no-console
-        value: new console.Console(process.stdout, process.stderr)
+    if (command.storeRepo) {
+      command.repo = command.storeRepo;
+    }
+
+    if (command.wait !== undefined) {
+      var wait = command.wait === true ? Infinity : Number(command.wait);
+      if (isNaN(wait)) {
+        var waitErr = chalk.red('invalid wait time "' + command.wait + '"');
+        options.err.write(waitErr + '\n');
+        process.nextTick(function() { callback(null, 1); });
+        return;
       }
-    );
-  }
-  try {
-    command.parse(args);
-  } catch (errParse) {
-    var exitCode = errParse === errExit ? errExit.code || 0 : null;
-    process.nextTick(function() {
-      if (exitCode !== null) {
-        callback(null, exitCode);
-      } else {
-        callback(errParse);
+      command.wait = wait * 1000;
+    }
+
+    // Pass through options
+    command.in = options.in;
+    command.out = options.out;
+    command.err = options.err;
+
+    // Use HTTP keep-alive to avoid unnecessary reconnections
+    command.requestOpts = {
+      forever: true
+    };
+
+    if (command.insecure) {
+      command.requestOpts.strictSSL = false;
+    }
+
+    travisStatus(command, function(err, build) {
+      if (err && err.name === 'SlugDetectionError') {
+        debug('Error detecting repo slug', err);
+        options.err.write(chalk.red(
+          'Can\'t figure out GitHub repo name. ' +
+          'Ensure you\'re in the repo directory, or specify the repo name via ' +
+          'the -r option (e.g. travis-status -r <owner>/<repo>)\n'
+        ));
+        callback(null, 1);
+        return;
       }
+
+      if (err) {
+        options.err.write(chalk.red(err.message) + '\n');
+        callback(null, 1);
+        return;
+      }
+
+      var state = build.repo ? build.repo.last_build_state : build.branch.state;
+
+      if (!command.quiet) {
+        var color = stateInfo.colors[state] || 'yellow';
+        var number =
+          build.repo ? build.repo.last_build_number : build.branch.number;
+        options.out.write('build #' + number + ' ' + chalk[color](state) +
+            '\n');
+      }
+
+      var code = 0;
+      if ((command.exitCode && stateInfo.isUnsuccessful[state]) ||
+          (command.failPending && stateInfo.isPending[state])) {
+        code = 1;
+      }
+
+      callback(null, code);
     });
-    return undefined;
-  } finally {
-    Object.defineProperty(process, 'exit', exitDesc);
-    Object.defineProperty(process, 'stdout', stdoutDesc);
-    Object.defineProperty(process, 'stderr', stderrDesc);
-    Object.defineProperty(global, 'console', consoleDesc);
-  }
-
-  if (typeof command.interactive === 'undefined') {
-    // Note:  Same default as travis.rb
-    // Need cast to Boolean so undefined becomes false to disable Chalk
-    command.interactive = Boolean(options.out.isTTY);
-  }
-
-  var chalk = new Chalk({enabled: command.interactive});
-
-  if (command.args.length > 0) {
-    options.err.write(chalk.red('too many arguments') + '\n' +
-        command.helpInformation());
-    process.nextTick(function() { callback(null, 1); });
-    return undefined;
-  }
-
-  if (hasOwnProperty.call(command, 'wait')) {
-    var wait = Number(command.wait);
-    if (isNaN(wait)) {
-      var waitErr = chalk.red('invalid wait time "' + command.wait + '"');
-      options.err.write(waitErr + '\n');
-      process.nextTick(function() { callback(null, 1); });
-      return undefined;
-    }
-    command.wait = wait * 1000;
-  }
-
-  // Pass through options
-  command.in = options.in;
-  command.out = options.out;
-  command.err = options.err;
-
-  // Use HTTP keep-alive to avoid unnecessary reconnections
-  command.requestOpts = {
-    forever: true
-  };
-
-  if (command.insecure) {
-    command.requestOpts.strictSSL = false;
-  }
-
-  travisStatus(command, function(err, build) {
-    if (err && err.name === 'SlugDetectionError') {
-      debug('Error detecting repo slug', err);
-      options.err.write(chalk.red(
-        'Can\'t figure out GitHub repo name. ' +
-        'Ensure you\'re in the repo directory, or specify the repo name via ' +
-        'the -r option (e.g. travis-status -r <owner>/<repo>)\n'
-      ));
-      callback(null, 1);
-      return;
-    }
-
-    if (err) {
-      options.err.write(chalk.red(err.message) + '\n');
-      callback(null, 1);
-      return;
-    }
-
-    var state = build.repo ? build.repo.last_build_state : build.branch.state;
-
-    if (!command.quiet) {
-      var color = stateInfo.colors[state] || 'yellow';
-      var number =
-        build.repo ? build.repo.last_build_number : build.branch.number;
-      options.out.write('build #' + number + ' ' + chalk[color](state) +
-          '\n');
-    }
-
-    var code = 0;
-    if ((command.exitCode && stateInfo.isUnsuccessful[state]) ||
-        (command.failPending && stateInfo.isPending[state])) {
-      code = 1;
-    }
-
-    callback(null, code);
   });
 
   return undefined;
