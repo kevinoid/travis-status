@@ -1,7 +1,8 @@
 Travis Status (for Node.js)
 ===========================
 
-[![Build status](https://img.shields.io/travis/kevinoid/travis-status.svg?style=flat)](https://travis-ci.org/kevinoid/travis-status)
+[![Build Status: Linux](https://img.shields.io/travis/kevinoid/travis-status/master.svg?style=flat&label=build+on+linux)](https://travis-ci.org/kevinoid/travis-status)
+[![Build Status: Windows](https://img.shields.io/appveyor/ci/kevinoid/travis-status/master.svg?style=flat&label=build+on+windows)](https://ci.appveyor.com/project/kevinoid/travis-status)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/travis-status.svg?style=flat)](https://codecov.io/github/kevinoid/travis-status?branch=master)
 [![Dependency Status](https://img.shields.io/david/kevinoid/travis-status.svg?style=flat)](https://david-dm.org/kevinoid/travis-status)
 [![Supported Node Version](https://img.shields.io/node/v/travis-status.svg?style=flat)](https://www.npmjs.com/package/travis-status)
@@ -162,7 +163,7 @@ travisStatusCmd(['node', 'travis-status', '--quiet'], options, function(err, exi
 ```
 
 More examples can be found in the [test
-specifications](https://kevinoid.github.io/travis-status/specs).
+specifications](https://kevinoid.github.io/travis-status/spec).
 
 ## API Docs
 

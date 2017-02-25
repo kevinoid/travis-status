@@ -9,4 +9,6 @@
 /scripts
 /test
 /test-lib
+TODO.*
+appveyor.yml
 jsdoc*.conf.json
