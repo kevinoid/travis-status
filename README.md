@@ -1,8 +1,6 @@
 Travis Status (for Node.js)
 ===========================
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/kevinoid/travis-status.svg)](https://greenkeeper.io/)
-
 [![Build Status: Linux](https://img.shields.io/travis/kevinoid/travis-status/master.svg?style=flat&label=build+on+linux)](https://travis-ci.org/kevinoid/travis-status)
 [![Build Status: Windows](https://img.shields.io/appveyor/ci/kevinoid/travis-status/master.svg?style=flat&label=build+on+windows)](https://ci.appveyor.com/project/kevinoid/travis-status)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/travis-status.svg?style=flat)](https://codecov.io/github/kevinoid/travis-status?branch=master)
