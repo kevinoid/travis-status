@@ -70,6 +70,21 @@ function travisStatusCmd(args, options, callback) {
   }
 
   try {
+    if (args === undefined || args === null || args.length === 0) {
+      // Fake args to keep Commander.js happy
+      args = [
+        process.execPath,
+        __filename
+      ];
+    } else if (typeof args !== 'object' ||
+               Math.floor(args.length) !== args.length) {
+      throw new TypeError('args must be Array-like');
+    } else if (args.length < 2) {
+      throw new RangeError('non-empty args must have at least 2 elements');
+    } else {
+      args = Array.prototype.map.call(args, String);
+    }
+
     if (options && typeof options !== 'object') {
       throw new TypeError('options must be an object');
     }
