@@ -444,17 +444,7 @@ describe('GitStatusChecker', function() {
       });
 
       var testSlug = 'foo/bar';
-      var confirmP = checker.confirmSlug(testSlug);
-
-      return read(errStream)
-        .then(function checkPrompt(promptMsg) {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg, /correct/i);
-          assert.include(promptMsg, testSlug);
-          // End without newline (e.g. user hit ^D before return)
-          inStream.end('y');
-          return confirmP;
-        })
+      var confirmP = checker.confirmSlug(testSlug)
         .then(
           sinon.mock().never(),
           function(err) {
@@ -466,6 +456,15 @@ describe('GitStatusChecker', function() {
             assert.strictEqual(errStream.read(), null);
           }
         );
+      var promptP = read(errStream)
+        .then(function checkPrompt(promptMsg) {
+          assert.strictEqual(outStream.read(), null);
+          assert.match(promptMsg, /correct/i);
+          assert.include(promptMsg, testSlug);
+          // End without newline (e.g. user hit ^D before return)
+          inStream.end('y');
+        });
+      return Promise.all([confirmP, promptP]);
     });
   });
 
