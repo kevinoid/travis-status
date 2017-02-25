@@ -2,6 +2,7 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
 var Travis = require('travis-ci');
@@ -86,7 +87,7 @@ describe('TravisStatusChecker', function() {
   });
 
   function apiMethod(methodName, args, travisUrlRe, pendingResponse,
-      passedResponse) {
+    passedResponse) {
     it('returns Travis CI API resource', function() {
       travisRequestMock = sinon.mock()
         .once()
@@ -138,7 +139,7 @@ describe('TravisStatusChecker', function() {
           .then(function(response) {
             assert.deepEqual(response, passedResponse);
           });
-        for (var i = 1; i < 11; ++i) {
+        for (var i = 1; i < 11; i += 1) {
           clock.tick(1000);
         }
         travisRequestMock.verify();
@@ -156,7 +157,7 @@ describe('TravisStatusChecker', function() {
           .then(function(response) {
             assert.deepEqual(response, pendingResponse);
           });
-        for (var i = 1; i < 11; ++i) {
+        for (var i = 1; i < 11; i += 1) {
           clock.tick(1000);
         }
         travisRequestMock.verify();
@@ -198,7 +199,7 @@ describe('TravisStatusChecker', function() {
               assert.strictEqual(err, errTest);
             }
           );
-        for (var i = 1; i < 31; ++i) {
+        for (var i = 1; i < 31; i += 1) {
           clock.tick(1000);
         }
         travisRequestMock.verify();

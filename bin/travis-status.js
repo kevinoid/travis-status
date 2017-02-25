@@ -3,6 +3,7 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
 // Set NODE_DEBUG for request before importing it
@@ -238,7 +239,7 @@ function travisStatusCmd(args, options, callback) {
     return undefined;
   }
 
-  if (command.hasOwnProperty('wait')) {
+  if (hasOwnProperty.call(command, 'wait')) {
     var wait = Number(command.wait);
     if (isNaN(wait)) {
       var waitErr = chalk.red('invalid wait time "' + command.wait + '"');

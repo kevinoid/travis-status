@@ -2,6 +2,7 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
 var apiResponses = require('../../test-lib/api-responses');
@@ -34,7 +35,7 @@ function checkRequest(req) {
   }
 
   var userAgent = req.headers['user-agent'];
-  var uaVersionRE = new RegExp('node-travis-status\/' +
+  var uaVersionRE = new RegExp('node-travis-status/' +
       packageJson.version.replace(/\./g, '\\.'));
   if (!uaVersionRE.test(userAgent)) {
     throw new Error('User-Agent does not include module and version');
@@ -77,7 +78,7 @@ describe('travisStatus integration', function() {
     });
     enableDestroy(server);
     server.on('connection', function() {
-      ++connCount;
+      connCount += 1;
     });
     server.once('error', done);
     server.listen(0, 'localhost', function() {
@@ -213,7 +214,7 @@ describe('travisStatus integration', function() {
     // We don't want to over-specify the timeout/backoff values.
     // So extra calls are added to ensure it is long enough to exceed the
     // keep-alive timeout.
-    for (var i = 0; i < 5; ++i) {
+    for (var i = 0; i < 5; i += 1) {
       expect.onCall(i).returns(pendingResult);
     }
     expect.onCall(5).returns(passedResult);

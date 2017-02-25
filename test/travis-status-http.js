@@ -2,6 +2,7 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
 var assert = require('chai').assert;
@@ -89,7 +90,7 @@ describe('TravisStatusHttp', function() {
     });
 
     it('sends User-Agent including module version by default', function() {
-      var uaVersionRE = new RegExp('node-travis-status\/' +
+      var uaVersionRE = new RegExp('node-travis-status/' +
         packageJson.version.replace(/\./g, '\\.'));
       var status = new TravisStatusHttp();
       request = sinon.mock()

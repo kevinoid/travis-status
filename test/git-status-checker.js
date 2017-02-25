@@ -2,13 +2,14 @@
  * @copyright Copyright 2016 Kevin Locke <kevin@kevinlocke.name>
  * @license MIT
  */
+
 'use strict';
 
+var Chalk = require('chalk').constructor;
 var GitStatusChecker = require('../lib/git-status-checker');
 var InvalidSlugError = require('../lib/invalid-slug-error');
 var Promise = require('any-promise');   // eslint-disable-line no-shadow
 var assert = require('chai').assert;
-var chalk = new (require('chalk').constructor)({enabled: true});
 var git = require('../lib/git');
 var path = require('path');
 var pify = require('pify');
@@ -17,6 +18,7 @@ var rimraf = require('rimraf');
 var sinon = require('sinon');
 var stream = require('stream');
 
+var chalk = new Chalk({enabled: true});
 var read = promisedRead.read;
 var rimrafP = pify(rimraf, Promise);
 
