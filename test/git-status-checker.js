@@ -105,10 +105,6 @@ before('setup test repository', function() {
     });
 });
 
-after('remove test repository', function() {
-  return rimrafP(TEST_REPO_PATH);
-});
-
 before('run from test repository', function() {
   origCWD = process.cwd();
   process.chdir(TEST_REPO_PATH);
@@ -116,6 +112,10 @@ before('run from test repository', function() {
 
 after('restore original working directory', function() {
   process.chdir(origCWD);
+});
+
+after('remove test repository', function() {
+  return rimrafP(TEST_REPO_PATH);
 });
 
 function unsetTravisSlug() {
