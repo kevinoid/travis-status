@@ -5,7 +5,6 @@
 
 'use strict';
 
-var Chalk = require('chalk').constructor;
 var GitStatusChecker = require('../lib/git-status-checker');
 var InvalidSlugError = require('../lib/invalid-slug-error');
 var Promise = require('any-promise');   // eslint-disable-line no-shadow
@@ -18,7 +17,6 @@ var rimraf = require('rimraf');
 var sinon = require('sinon');
 var stream = require('stream');
 
-var chalk = new Chalk({enabled: true});
 var read = promisedRead.read;
 var rimrafP = pify(rimraf, Promise);
 
@@ -644,7 +642,7 @@ describe('GitStatusChecker', function() {
           assert.strictEqual(slug, REMOTE_SLUGS.origin);
           assert.strictEqual(outStream.read(), null);
           // From travis.rb
-          var detectMsg = 'detected repository as ' + chalk.bold(slug) + '\n';
+          var detectMsg = 'detected repository as ' + slug + '\n';
           assert.strictEqual(errStream.read(), detectMsg);
         });
     });
