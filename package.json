@@ -71,7 +71,7 @@
     "proxyquire": "^1.7.4",
     "rimraf": "^2.2.0",
     "server-destroy": "^1.0.1",
-    "sinon": "^1.17.3"
+    "sinon": "^2.0.0"
   },
   "engines": {
     "node": ">=0.10",
