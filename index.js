@@ -5,15 +5,15 @@
 
 'use strict';
 
-var GitStatusChecker = require('./lib/git-status-checker');
-var Promise = require('any-promise');   // eslint-disable-line no-shadow
-var TravisStatusChecker = require('./lib/travis-status-checker');
-var assert = require('assert');
-var assign = require('object-assign');
-var http = require('http');
-var https = require('https');
-var nodeify = require('promise-nodeify');
-var url = require('url');
+const GitStatusChecker = require('./lib/git-status-checker');
+const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const TravisStatusChecker = require('./lib/travis-status-checker');
+const assert = require('assert');
+const assign = require('object-assign');
+const http = require('http');
+const https = require('https');
+const nodeify = require('promise-nodeify');
+const url = require('url');
 
 /** Checks that a build has an expected commit hash.
  * @param {!{commit:!{sha: string}}} build Build (or branch) object returned
@@ -25,11 +25,11 @@ var url = require('url');
  * <code>expected</code>.
  */
 function checkBuildCommit(build, localCommit) {
-  var buildCommit = build.commit;
-  var message = 'Build commit ' + buildCommit.sha +
-    ' does not match ' + localCommit.sha;
+  const buildCommit = build.commit;
+  let message = `Build commit ${buildCommit.sha
+    } does not match ${localCommit.sha}`;
   if (localCommit.name) {
-    message += ' (' + localCommit.name + ')';
+    message += ` (${localCommit.name})`;
   }
   // assert gives us useful exception properties for callers
   assert.strictEqual(
@@ -101,7 +101,7 @@ function travisStatus(options, callback) {
     throw new TypeError('callback must be a function');
   }
 
-  var agent, gitChecker, travisChecker;
+  let agent, gitChecker, travisChecker;
   try {
     if (options && typeof options !== 'object') {
       throw new TypeError('options must be an object');
@@ -118,16 +118,16 @@ function travisStatus(options, callback) {
     // If the caller didn't request an agent behavior, control it ourselves.
     // Each function call will use HTTP keep-alive for the duration of the
     // function, but not after completion, which callers may not expect.
-    var requestOpts = options.requestOpts;
+    let requestOpts = options.requestOpts;
     if (!requestOpts ||
         (requestOpts.agent === undefined &&
          requestOpts.agentClass === undefined &&
          requestOpts.agentOptions === undefined &&
          requestOpts.forever === undefined &&
          requestOpts.pool === undefined)) {
-      var apiUrl =
+      const apiUrl =
         url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
-      var Agent = apiUrl.protocol === 'https:' ? https.Agent :
+      const Agent = apiUrl.protocol === 'https:' ? https.Agent :
         apiUrl.protocol === 'http:' ? http.Agent :
         null;
       if (Agent) {
@@ -148,36 +148,34 @@ function travisStatus(options, callback) {
     gitChecker = new GitStatusChecker(options);
     travisChecker = new TravisStatusChecker(options);
   } catch (errOptions) {
-    var errResult = Promise.reject(errOptions);
+    const errResult = Promise.reject(errOptions);
     return nodeify(errResult, callback);
   }
 
-  var repoSlugP;
+  let repoSlugP;
   if (options.storeRepo) {
-    var storedSlugP = gitChecker.tryStoreSlug(options.storeRepo);
+    const storedSlugP = gitChecker.tryStoreSlug(options.storeRepo);
     // If both .repo and .storeRepo are present, store .storeRepo and use .repo
     repoSlugP =
-      options.repo ? storedSlugP.then(function() { return options.repo; }) :
+      options.repo ? storedSlugP.then(() => options.repo) :
       storedSlugP;
   } else if (options.repo) {
     repoSlugP = Promise.resolve(options.repo);
   } else {
-    var foundSlugP = gitChecker.findSlug()
+    const foundSlugP = gitChecker.findSlug()
       .then(GitStatusChecker.checkSlugFormat);
     if (options.interactive) {
-      repoSlugP = foundSlugP.then(function(slug) {
-        return gitChecker.tryStoreSlug(slug);
-      });
+      repoSlugP = foundSlugP.then((slug) => gitChecker.tryStoreSlug(slug));
     } else {
       repoSlugP = foundSlugP;
     }
   }
 
-  var localCommitP;
+  let localCommitP;
   if (options.commit) {
     localCommitP = gitChecker.resolveHash(options.commit)
-      .then(function hashToTravisCommit(resolved) {
-        var localCommit = {sha: resolved};
+      .then((resolved) => {
+        const localCommit = {sha: resolved};
         if (resolved !== options.commit) {
           localCommit.name = options.commit;
         }
@@ -186,53 +184,50 @@ function travisStatus(options, callback) {
   }
 
   // Before doing remote queries, ensure that there are no errors locally
-  var slugForQueryP = Promise.all([repoSlugP, localCommitP])
-    .then(function(slugAndHash) { return slugAndHash[0]; });
+  const slugForQueryP = Promise.all([repoSlugP, localCommitP])
+    .then((slugAndHash) => slugAndHash[0]);
 
-  var resultP;
+  let resultP;
   if (options.branch) {
-    var branchP = options.branch === true ? gitChecker.detectBranch() :
+    const branchP = options.branch === true ? gitChecker.detectBranch() :
       Promise.resolve(options.branch);
     resultP = Promise.all([slugForQueryP, branchP])
-      .then(function queryBranchFor(results) {
-        var slug = results[0];
-        var branch = results[1];
+      .then((results) => {
+        const slug = results[0];
+        const branch = results[1];
         return travisChecker.getBranch(slug, branch, options);
       });
   } else {
-    var repoP = slugForQueryP.then(function queryRepoFor(slug) {
-      return travisChecker.getRepo(slug, options);
-    });
+    const repoP =
+      slugForQueryP.then((slug) => travisChecker.getRepo(slug, options));
 
     if (localCommitP) {
       // Add build information to result
-      resultP = repoP.then(function queryBuildForRepo(repo) {
-        return travisChecker.getBuild(repo.repo.slug, repo.repo.last_build_id)
-          .then(function(build) {
-            return assign({}, repo, build);
-          });
-      });
+      resultP = repoP.then((repo) =>
+        travisChecker.getBuild(repo.repo.slug, repo.repo.last_build_id)
+          .then((build) => assign({}, repo, build))
+      );
     } else {
       resultP = repoP;
     }
   }
 
-  var checkedResultP = resultP;
+  let checkedResultP = resultP;
   if (localCommitP) {
     checkedResultP = Promise.all([resultP, localCommitP])
-      .then(function checkResultCommit(all) {
-        var result = all[0];
-        var localCommit = all[1];
+      .then((all) => {
+        const result = all[0];
+        const localCommit = all[1];
         checkBuildCommit(result, localCommit);
         return result;
       });
   }
 
-  var cleanupP;
+  let cleanupP;
   if (agent) {
     cleanupP = checkedResultP.then(
-      function(result) { agent.destroy(); return result; },
-      function(err) { agent.destroy(); return Promise.reject(err); }
+      (result) => { agent.destroy(); return result; },
+      (err) => { agent.destroy(); return Promise.reject(err); }
     );
   } else {
     cleanupP = checkedResultP;

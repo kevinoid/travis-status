@@ -5,7 +5,7 @@
 
 'use strict';
 
-var apiResponses = {};
+const apiResponses = {};
 
 function cloneDeep(obj) {
   return JSON.parse(JSON.stringify(obj));
@@ -16,7 +16,7 @@ function cloneDeep(obj) {
 
 apiResponses.branch = function branch(opts) {
   opts = Object(opts);
-  var sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
+  const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
   return cloneDeep({
     branch: {
       id: 109649462,
@@ -57,7 +57,7 @@ apiResponses.branch = function branch(opts) {
     },
     commit: {
       id: 31008785,
-      sha: sha,
+      sha,
       branch: opts.branch || 'master',
       message: 'Skip verify hooks for postversion doc commit\n\nThis branch is just for hosting generated files.  There\'s no need to run\ncommit checks or sign off on the commits.\n\nSigned-off-by: Kevin Locke <kevin@kevinlocke.name>',
       committed_at: '2016-02-16T07:10:03Z',
@@ -65,15 +65,15 @@ apiResponses.branch = function branch(opts) {
       author_email: 'kevin@kevinlocke.name',
       committer_name: 'Kevin Locke',
       committer_email: 'kevin@kevinlocke.name',
-      compare_url: 'https://github.com/' + (opts.slug || 'owner/repo') + '/compare/a73ca1cf3143...' + sha.slice(0, 12)
+      compare_url: `https://github.com/${opts.slug || 'owner/repo'}/compare/a73ca1cf3143...${sha.slice(0, 12)}`
     }
   });
 };
 
 apiResponses.build = function build(opts) {
   opts = Object(opts);
-  var buildId = opts.buildId || 109649462;
-  var sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
+  const buildId = opts.buildId || 109649462;
+  const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
   return cloneDeep({
     build: {
       id: buildId,
@@ -117,7 +117,7 @@ apiResponses.build = function build(opts) {
     },
     commit: {
       id: 31008785,
-      sha: sha,
+      sha,
       branch: opts.branch || 'master',
       branch_is_default: true,
       message: 'Skip verify hooks for postversion doc commit\n\nThis branch is just for hosting generated files.  There\'s no need to run\ncommit checks or sign off on the commits.\n\nSigned-off-by: Kevin Locke <kevin@kevinlocke.name>',
@@ -126,7 +126,7 @@ apiResponses.build = function build(opts) {
       author_email: 'kevin@kevinlocke.name',
       committer_name: 'Kevin Locke',
       committer_email: 'kevin@kevinlocke.name',
-      compare_url: 'https://github.com/' + (opts.slug || 'owner/repo') + '/compare/a73ca1cf3143...' + sha.slice(0, 12)
+      compare_url: `https://github.com/${opts.slug || 'owner/repo'}/compare/a73ca1cf3143...${sha.slice(0, 12)}`
     },
     jobs: [
       {

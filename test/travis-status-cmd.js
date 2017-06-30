@@ -5,27 +5,27 @@
 
 'use strict';
 
-var Promise = require('any-promise');   // eslint-disable-line no-shadow
-var SlugDetectionError = require('../lib/slug-detection-error');
-var apiResponses = require('../test-lib/api-responses');
-var assert = require('chai').assert;
-var chalk = require('chalk');
-var proxyquire = require('proxyquire');
-var sinon = require('sinon');
-var stateInfo = require('../lib/state-info');
-var stream = require('stream');
+const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const SlugDetectionError = require('../lib/slug-detection-error');
+const apiResponses = require('../test-lib/api-responses');
+const assert = require('chai').assert;
+const chalk = require('chalk');
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
+const stateInfo = require('../lib/state-info');
+const stream = require('stream');
 
-var match = sinon.match;
+const match = sinon.match;
 
 // Simulate arguments passed by the node runtime
-var RUNTIME_ARGS = ['node', 'travis-status'];
+const RUNTIME_ARGS = ['node', 'travis-status'];
 
-describe('travis-status command', function() {
+describe('travis-status command', () => {
   // In order to test the command parsing module in isolation, we need to mock
   // the travis-status module function.  To use different mocks for each test
   // without re-injecting the module repeatedly, we use this shared variable.
-  var travisStatus;
-  var travisStatusCmd = proxyquire(
+  let travisStatus;
+  const travisStatusCmd = proxyquire(
     '../bin/travis-status',
     {
       '..': function travisStatusInjected() {
@@ -35,11 +35,11 @@ describe('travis-status command', function() {
   );
 
   // Ensure that expectations are not carried over between tests
-  beforeEach(function() {
+  beforeEach(() => {
     travisStatus = sinon.expectation.create('travisStatus').never();
   });
 
-  it('accepts empty arguments', function() {
+  it('accepts empty arguments', () => {
     travisStatus = sinon.mock()
       .once()
       .withArgs(
@@ -50,29 +50,29 @@ describe('travis-status command', function() {
     travisStatus.verify();
   });
 
-  it('returns undefined when called with a function', function() {
+  it('returns undefined when called with a function', () => {
     travisStatus = sinon.mock()
       .once()
       .withArgs(
         match.any,
         match.func
       );
-    var result = travisStatusCmd(RUNTIME_ARGS, sinon.mock().never());
+    const result = travisStatusCmd(RUNTIME_ARGS, sinon.mock().never());
     travisStatus.verify();
     assert.strictEqual(result, undefined);
   });
 
   // Note:  Same default as travis.rb
-  it('default interactive true for TTY stdout', function() {
+  it('default interactive true for TTY stdout', () => {
     travisStatus = sinon.mock()
       .once()
       .withArgs(
         match({interactive: true}),
         match.func
       );
-    var outStream = new stream.PassThrough();
+    const outStream = new stream.PassThrough();
     outStream.isTTY = true;
-    var options = {
+    const options = {
       out: outStream,
       err: new stream.PassThrough()
     };
@@ -81,29 +81,29 @@ describe('travis-status command', function() {
   });
 
   function expectArgsAs(args, expectObj) {
-    it('interprets ' + args.join(' ') + ' as ' + expectObj, function() {
+    it(`interprets ${args.join(' ')} as ${expectObj}`, () => {
       travisStatus = sinon.mock()
         .once()
         .withArgs(
           expectObj,
           match.func
         );
-      var allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = RUNTIME_ARGS.concat(args);
       travisStatusCmd(allArgs, sinon.mock().never());
       travisStatus.verify();
     });
   }
 
   function expectArgsErr(args, expectErrMsg) {
-    it('prints error and exits for ' + args.join(' '), function(done) {
-      var outStream = new stream.PassThrough();
-      var errStream = new stream.PassThrough();
-      var options = {
+    it(`prints error and exits for ${args.join(' ')}`, (done) => {
+      const outStream = new stream.PassThrough();
+      const errStream = new stream.PassThrough();
+      const options = {
         out: outStream,
         err: errStream
       };
-      var allArgs = RUNTIME_ARGS.concat(args);
-      travisStatusCmd(allArgs, options, function(err, code) {
+      const allArgs = RUNTIME_ARGS.concat(args);
+      travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.isAtLeast(code, 1);
         assert.strictEqual(outStream.read(), null);
@@ -114,23 +114,23 @@ describe('travis-status command', function() {
   }
 
   function expectArgsStateCode(args, state, expectCode) {
-    var desc = (args.length ? 'with ' + args.join(' ') : 'normally') +
-      ' exits with code ' + expectCode + ' if build ' + state;
-    it(desc, function(done) {
+    const desc = `${args.length ? `with ${args.join(' ')}` : 'normally'
+      } exits with code ${expectCode} if build ${state}`;
+    it(desc, (done) => {
       travisStatus = sinon.stub();
-      var options = {
+      const options = {
         out: new stream.PassThrough(),
         err: new stream.PassThrough()
       };
-      var allArgs = RUNTIME_ARGS.concat(args);
-      travisStatusCmd(allArgs, options, function(err, code) {
+      const allArgs = RUNTIME_ARGS.concat(args);
+      travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, expectCode);
         done();
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state: state})
+        apiResponses.repo({state})
       );
     });
   }
@@ -142,11 +142,9 @@ describe('travis-status command', function() {
     commit: undefined,
     repo: undefined,
     // requestOpts may have defaults set.  Ensure --insecure isn't default
-    requestOpts: match(function(requestOpts) {
-      return !requestOpts ||
+    requestOpts: match((requestOpts) => !requestOpts ||
         requestOpts.strictSSL === undefined ||
-        requestOpts.strictSSL === true;
-    }, 'not insecure'),
+        requestOpts.strictSSL === true, 'not insecure'),
     storeRepo: undefined,
     token: undefined,
     wait: undefined
@@ -226,31 +224,31 @@ describe('travis-status command', function() {
 
   // Check argument behavior
   expectArgsStateCode([], 'failed', 0);
-  ['-x', '--exit-code'].forEach(function(arg) {
+  ['-x', '--exit-code'].forEach((arg) => {
     expectArgsStateCode([arg], 'canceled', 1);
     expectArgsStateCode([arg], 'errored', 1);
     expectArgsStateCode([arg], 'failed', 1);
   });
 
   expectArgsStateCode([], 'queued', 0);
-  ['-p', '--fail-pending'].forEach(function(arg) {
+  ['-p', '--fail-pending'].forEach((arg) => {
     expectArgsStateCode([arg], 'created', 1);
     expectArgsStateCode([arg], 'queued', 1);
     expectArgsStateCode([arg], 'received', 1);
     expectArgsStateCode([arg], 'started', 1);
   });
 
-  ['-q', '--quiet'].forEach(function(arg) {
-    it(arg + ' exits without printing state', function(done) {
+  ['-q', '--quiet'].forEach((arg) => {
+    it(`${arg} exits without printing state`, (done) => {
       travisStatus = sinon.stub();
-      var outStream = new stream.PassThrough();
-      var errStream = new stream.PassThrough();
-      var options = {
+      const outStream = new stream.PassThrough();
+      const errStream = new stream.PassThrough();
+      const options = {
         out: outStream,
         err: errStream
       };
-      var allArgs = RUNTIME_ARGS.concat(arg);
-      travisStatusCmd(allArgs, options, function(err, code) {
+      const allArgs = RUNTIME_ARGS.concat(arg);
+      travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, 0);
         assert.strictEqual(outStream.read(), null);
@@ -264,27 +262,27 @@ describe('travis-status command', function() {
     });
   });
 
-  [false, true].forEach(function(isBranch) {
-    var desc = 'prints build number and state for ' +
-      (isBranch ? 'branch' : 'repo') + ' to stdout';
-    it(desc, function(done) {
+  [false, true].forEach((isBranch) => {
+    const desc = `prints build number and state for ${
+      isBranch ? 'branch' : 'repo'} to stdout`;
+    it(desc, (done) => {
       travisStatus = sinon.stub();
-      var outStream = new stream.PassThrough();
-      var errStream = new stream.PassThrough();
-      var options = {
+      const outStream = new stream.PassThrough();
+      const errStream = new stream.PassThrough();
+      const options = {
         out: outStream,
         err: errStream
       };
-      var buildNum = 500;
-      var state = 'passed';
-      var allArgs = RUNTIME_ARGS.concat(isBranch ? ['--branch'] : []);
-      travisStatusCmd(allArgs, options, function(err, code) {
+      const buildNum = 500;
+      const state = 'passed';
+      const allArgs = RUNTIME_ARGS.concat(isBranch ? ['--branch'] : []);
+      travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, 0);
         assert.strictEqual(
           String(outStream.read()),
           // We are strict about this format since other programs may use it
-          'build #' + buildNum + ' ' + state + '\n'
+          `build #${buildNum} ${state}\n`
         );
         assert.strictEqual(errStream.read(), null);
         done();
@@ -292,27 +290,27 @@ describe('travis-status command', function() {
       travisStatus.yield(
         null,
         isBranch ?
-          apiResponses.branch({number: buildNum, state: state}) :
-          apiResponses.repo({number: buildNum, state: state})
+          apiResponses.branch({number: buildNum, state}) :
+          apiResponses.repo({number: buildNum, state})
       );
     });
   });
 
-  Object.keys(stateInfo.colors).forEach(function(state) {
-    var color = stateInfo.colors[state];
-    it('prints ' + state + ' in ' + color + ' if interactive', function(done) {
+  Object.keys(stateInfo.colors).forEach((state) => {
+    const color = stateInfo.colors[state];
+    it(`prints ${state} in ${color} if interactive`, (done) => {
       travisStatus = sinon.stub();
-      var outStream = new stream.PassThrough();
-      var errStream = new stream.PassThrough();
-      var options = {
+      const outStream = new stream.PassThrough();
+      const errStream = new stream.PassThrough();
+      const options = {
         out: outStream,
         err: errStream
       };
-      var allArgs = RUNTIME_ARGS.concat(['--interactive']);
-      travisStatusCmd(allArgs, options, function(err, code) {
+      const allArgs = RUNTIME_ARGS.concat(['--interactive']);
+      travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, 0);
-        var outString = String(outStream.read());
+        const outString = String(outStream.read());
         assert.include(
           outString,
           chalk.styles[color].open + state + chalk.styles[color].close
@@ -322,26 +320,26 @@ describe('travis-status command', function() {
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state: state})
+        apiResponses.repo({state})
       );
     });
   });
 
-  it('prints error messages in red if interactive', function(done) {
+  it('prints error messages in red if interactive', (done) => {
     travisStatus = sinon.stub();
-    var outStream = new stream.PassThrough();
-    var errStream = new stream.PassThrough();
-    var options = {
+    const outStream = new stream.PassThrough();
+    const errStream = new stream.PassThrough();
+    const options = {
       out: outStream,
       err: errStream
     };
-    var errMsg = 'super duper test error';
-    var allArgs = RUNTIME_ARGS.concat(['--interactive']);
-    travisStatusCmd(allArgs, options, function(err, code) {
+    const errMsg = 'super duper test error';
+    const allArgs = RUNTIME_ARGS.concat(['--interactive']);
+    travisStatusCmd(allArgs, options, (err, code) => {
       assert.ifError(err);
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
-      var errString = String(errStream.read());
+      const errString = String(errStream.read());
       assert.include(errString, chalk.styles.red.open);
       assert.include(errString, errMsg);
       done();
@@ -349,61 +347,61 @@ describe('travis-status command', function() {
     travisStatus.yield(new Error(errMsg));
   });
 
-  it('throws for non-function callback', function() {
+  it('throws for non-function callback', () => {
     assert.throws(
-      function() { travisStatusCmd(RUNTIME_ARGS, {}, true); },
+      () => { travisStatusCmd(RUNTIME_ARGS, {}, true); },
       TypeError,
       /\bcallback\b/
     );
   });
 
-  it('returns Error for non-object options', function(done) {
-    travisStatusCmd([], true, function(err) {
+  it('returns Error for non-object options', (done) => {
+    travisStatusCmd([], true, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions\b/);
       done();
     });
   });
 
-  it('returns Error for non-Readable in', function(done) {
-    travisStatusCmd([], {in: new stream.Writable()}, function(err) {
+  it('returns Error for non-Readable in', (done) => {
+    travisStatusCmd([], {in: new stream.Writable()}, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.in\b/);
       done();
     });
   });
 
-  it('returns Error for non-Writable out', function(done) {
-    travisStatusCmd([], {out: new stream.Readable()}, function(err) {
+  it('returns Error for non-Writable out', (done) => {
+    travisStatusCmd([], {out: new stream.Readable()}, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.out\b/);
       done();
     });
   });
 
-  it('returns Error for non-Writable err', function(done) {
-    travisStatusCmd([], {err: new stream.Readable()}, function(err) {
+  it('returns Error for non-Writable err', (done) => {
+    travisStatusCmd([], {err: new stream.Readable()}, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.err\b/);
       done();
     });
   });
 
-  it('prints error messages in red if interactive', function(done) {
+  it('prints error messages in red if interactive', (done) => {
     travisStatus = sinon.stub();
-    var outStream = new stream.PassThrough();
-    var errStream = new stream.PassThrough();
-    var options = {
+    const outStream = new stream.PassThrough();
+    const errStream = new stream.PassThrough();
+    const options = {
       out: outStream,
       err: errStream
     };
-    var errMsg = 'super duper test error';
-    var allArgs = RUNTIME_ARGS.concat(['--interactive']);
-    travisStatusCmd(allArgs, options, function(err, code) {
+    const errMsg = 'super duper test error';
+    const allArgs = RUNTIME_ARGS.concat(['--interactive']);
+    travisStatusCmd(allArgs, options, (err, code) => {
       assert.ifError(err);
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
-      var errString = String(errStream.read());
+      const errString = String(errStream.read());
       assert.include(errString, chalk.styles.red.open);
       assert.include(errString, errMsg);
       done();
@@ -411,20 +409,20 @@ describe('travis-status command', function() {
     travisStatus.yield(new Error(errMsg));
   });
 
-  it('prints error messages without color if not interactive', function(done) {
+  it('prints error messages without color if not interactive', (done) => {
     travisStatus = sinon.stub();
-    var outStream = new stream.PassThrough();
-    var errStream = new stream.PassThrough();
-    var options = {
+    const outStream = new stream.PassThrough();
+    const errStream = new stream.PassThrough();
+    const options = {
       out: outStream,
       err: errStream
     };
-    var errMsg = 'super duper test error';
-    travisStatusCmd(RUNTIME_ARGS, options, function(err, code) {
+    const errMsg = 'super duper test error';
+    travisStatusCmd(RUNTIME_ARGS, options, (err, code) => {
       assert.ifError(err);
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
-      var errString = String(errStream.read());
+      const errString = String(errStream.read());
       assert(!chalk.hasColor(errString), 'string has color');
       assert.include(errString, errMsg);
       done();
@@ -432,15 +430,15 @@ describe('travis-status command', function() {
     travisStatus.yield(new Error(errMsg));
   });
 
-  it('prints a help message for SlugDetectionError', function(done) {
+  it('prints a help message for SlugDetectionError', (done) => {
     travisStatus = sinon.stub();
-    var outStream = new stream.PassThrough();
-    var errStream = new stream.PassThrough();
-    var options = {
+    const outStream = new stream.PassThrough();
+    const errStream = new stream.PassThrough();
+    const options = {
       out: outStream,
       err: errStream
     };
-    travisStatusCmd(RUNTIME_ARGS, options, function(err, code) {
+    travisStatusCmd(RUNTIME_ARGS, options, (err, code) => {
       assert.ifError(err);
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
@@ -450,34 +448,34 @@ describe('travis-status command', function() {
     travisStatus.yield(new SlugDetectionError('oops'));
   });
 
-  it('returns a Promise when called without a function', function() {
+  it('returns a Promise when called without a function', () => {
     travisStatus = sinon.stub();
-    var result = travisStatusCmd(RUNTIME_ARGS);
+    const result = travisStatusCmd(RUNTIME_ARGS);
     assert(result instanceof Promise);
   });
 
-  it('returned Promise is resolved with exit code', function() {
+  it('returned Promise is resolved with exit code', () => {
     travisStatus = sinon.stub();
-    var options = {
+    const options = {
       out: new stream.PassThrough(),
       err: new stream.PassThrough()
     };
-    var result = travisStatusCmd(RUNTIME_ARGS, options);
+    const result = travisStatusCmd(RUNTIME_ARGS, options);
     travisStatus.yield(
       null,
       apiResponses.repo()
     );
-    return result.then(function(code) {
+    return result.then((code) => {
       assert.strictEqual(code, 0);
     });
   });
 
-  it('returned Promise is rejected with Error', function() {
+  it('returned Promise is rejected with Error', () => {
     travisStatus = sinon.stub();
-    var result = travisStatusCmd(RUNTIME_ARGS, true);
+    const result = travisStatusCmd(RUNTIME_ARGS, true);
     return result.then(
       sinon.mock().never(),
-      function(err) { assert.instanceOf(err, TypeError); }
+      (err) => { assert.instanceOf(err, TypeError); }
     );
   });
 });

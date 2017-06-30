@@ -5,21 +5,21 @@
 
 'use strict';
 
-var assert = require('chai').assert;
-var assign = require('object-assign');
-var http = require('http');
-var packageJson = require('../package.json');
-var proxyquire = require('proxyquire');
-var sinon = require('sinon');
+const assert = require('chai').assert;
+const assign = require('object-assign');
+const http = require('http');
+const packageJson = require('../package.json');
+const proxyquire = require('proxyquire');
+const sinon = require('sinon');
 
-var match = sinon.match;
+const match = sinon.match;
 
-describe('TravisStatusHttp', function() {
+describe('TravisStatusHttp', () => {
   // In order to test the TravisStatusHttp module in isolation, we need to mock
   // the request module.  To use different mocks for each test without
   // re-injecting the module repeatedly, we use this shared variable.
-  var request;
-  var TravisStatusHttp = proxyquire(
+  let request;
+  const TravisStatusHttp = proxyquire(
     '../lib/travis-status-http',
     {
       request: function requestInjected() {
@@ -28,46 +28,47 @@ describe('TravisStatusHttp', function() {
     }
   );
 
-  it('throws TypeError for non-string endpoint', function() {
+  it('throws TypeError for non-string endpoint', () => {
     assert.throws(
       // eslint-disable-next-line no-new
-      function() { new TravisStatusHttp(true); },
+      () => { new TravisStatusHttp(true); },
       TypeError,
       /\bendpoint\b/
     );
   });
 
-  it('throws TypeError for non-object options', function() {
+  it('throws TypeError for non-object options', () => {
     assert.throws(
       // eslint-disable-next-line no-new
-      function() { new TravisStatusHttp(null, true); },
+      () => { new TravisStatusHttp(null, true); },
       TypeError,
       /\boptions\b/
     );
   });
 
-  describe('#request()', function() {
-    it('accepts Travis and JSON media types by default', function() {
-      var status = new TravisStatusHttp();
+  describe('#request()', () => {
+    it('accepts Travis and JSON media types by default', () => {
+      const status = new TravisStatusHttp();
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
-            Accept: match(function(accept) {
-              var travisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
+            Accept: match((accept) => {
+              const travisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
               return travisRE.test(accept) &&
                 / application\/json(?:,|$)/.test(accept);
             }, 'match Travis and JSON media types')
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('can send custom accept header', function() {
-      var testAccept = 'text/plain';
+    it('can send custom accept header', () => {
+      const testAccept = 'text/plain';
       // Note:  Testing lower case properly replaces upper
-      var status = new TravisStatusHttp(null, {headers: {accept: testAccept}});
+      const status =
+        new TravisStatusHttp(null, {headers: {accept: testAccept}});
       request = sinon.mock()
         .once()
         .withArgs(match({
@@ -76,23 +77,23 @@ describe('TravisStatusHttp', function() {
             accept: testAccept
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('supports gzip by default', function() {
-      var status = new TravisStatusHttp();
+    it('supports gzip by default', () => {
+      const status = new TravisStatusHttp();
       request = sinon.mock()
         .once()
         .withArgs(match({gzip: true}));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('sends User-Agent including module version by default', function() {
-      var uaVersionRE = new RegExp('node-travis-status/' +
-        packageJson.version.replace(/\./g, '\\.'));
-      var status = new TravisStatusHttp();
+    it('sends User-Agent including module version by default', () => {
+      const uaVersionRE = new RegExp(`node-travis-status/${
+        packageJson.version.replace(/\./g, '\\.')}`);
+      const status = new TravisStatusHttp();
       request = sinon.mock()
         .once()
         .withArgs(match({
@@ -100,14 +101,14 @@ describe('TravisStatusHttp', function() {
             'User-Agent': match(uaVersionRE)
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('can send custom user-agent header', function() {
-      var testUA = 'Test Agent';
+    it('can send custom user-agent header', () => {
+      const testUA = 'Test Agent';
       // Note:  Testing lower case properly replaces upper
-      var status =
+      const status =
         new TravisStatusHttp(null, {headers: {'user-agent': testUA}});
       request = sinon.mock()
         .once()
@@ -117,70 +118,70 @@ describe('TravisStatusHttp', function() {
             'user-agent': testUA
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('builds Authorization header from setAccessToken', function() {
-      var testToken = '12345';
-      var status = new TravisStatusHttp();
+    it('builds Authorization header from setAccessToken', () => {
+      const testToken = '12345';
+      const status = new TravisStatusHttp();
       status.setAccessToken(testToken);
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
-            Authorization: 'token ' + testToken
+            Authorization: `token ${testToken}`
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('builds quoted Authorization header from setAccessToken', function() {
-      var testToken = '12345"67\\89';
-      var quotedToken = '"12345\\"67\\\\89"';
-      var status = new TravisStatusHttp();
+    it('builds quoted Authorization header from setAccessToken', () => {
+      const testToken = '12345"67\\89';
+      const quotedToken = '"12345\\"67\\\\89"';
+      const status = new TravisStatusHttp();
       status.setAccessToken(testToken);
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
-            Authorization: 'token ' + quotedToken
+            Authorization: `token ${quotedToken}`
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('setAccessToken overrides options.headers.Authorization', function() {
-      var testToken = '12345';
-      var status =
+    it('setAccessToken overrides options.headers.Authorization', () => {
+      const testToken = '12345';
+      const status =
         new TravisStatusHttp(null, {headers: {Authorization: 'foo'}});
       status.setAccessToken(testToken);
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
-            Authorization: 'token ' + testToken
+            Authorization: `token ${testToken}`
           })
         }));
-      status.request('GET', '/repos', function() {});
+      status.request('GET', '/repos', () => {});
       request.verify();
     });
 
-    it('returns errors from request', function() {
-      var errTest = new Error('Test request error');
-      var status = new TravisStatusHttp();
+    it('returns errors from request', () => {
+      const errTest = new Error('Test request error');
+      const status = new TravisStatusHttp();
       request = sinon.mock().once().yields(errTest);
-      status.request('GET', '/repos', function(err) {
+      status.request('GET', '/repos', (err) => {
         assert.strictEqual(err, errTest);
       });
       request.verify();
     });
 
-    it('returns errors for HTTP status >= 400', function() {
-      var status = new TravisStatusHttp();
-      var errProps = {
+    it('returns errors for HTTP status >= 400', () => {
+      const status = new TravisStatusHttp();
+      const errProps = {
         statusCode: 400,
         statusMessage: 'Test Message',
         headers: {
@@ -188,21 +189,21 @@ describe('TravisStatusHttp', function() {
           test: 'ok'
         }
       };
-      var testBody = {test: 'stuff'};
-      var testBodyStr = JSON.stringify(testBody);
-      var response = new http.IncomingMessage();
+      const testBody = {test: 'stuff'};
+      const testBodyStr = JSON.stringify(testBody);
+      const response = new http.IncomingMessage();
       assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBodyStr);
-      status.request('GET', '/repos', function(err) {
+      status.request('GET', '/repos', (err) => {
         assert.strictEqual(err.message, errProps.statusMessage);
         assert.deepEqual(assign({}, err), assign({body: testBody}, errProps));
       });
       request.verify();
     });
 
-    it('returns errors for non-JSON', function() {
-      var status = new TravisStatusHttp();
-      var errProps = {
+    it('returns errors for non-JSON', () => {
+      const status = new TravisStatusHttp();
+      const errProps = {
         statusCode: 200,
         statusMessage: 'Test Message',
         headers: {
@@ -210,22 +211,22 @@ describe('TravisStatusHttp', function() {
           test: 'ok'
         }
       };
-      var testBody = 'Body?';
-      var testErr;
+      const testBody = 'Body?';
+      let testErr;
       try { JSON.parse(testBody); } catch (errJson) { testErr = errJson; }
-      var response = new http.IncomingMessage();
+      const response = new http.IncomingMessage();
       assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBody);
-      status.request('GET', '/repos', function(err) {
+      status.request('GET', '/repos', (err) => {
         assert.strictEqual(err.message, testErr.message);
         assert.deepEqual(assign({}, err), assign({body: testBody}, errProps));
       });
       request.verify();
     });
 
-    it('returns HTTP errors in preference to JSON', function() {
-      var status = new TravisStatusHttp();
-      var errProps = {
+    it('returns HTTP errors in preference to JSON', () => {
+      const status = new TravisStatusHttp();
+      const errProps = {
         statusCode: 400,
         statusMessage: 'Test Message',
         headers: {
@@ -233,20 +234,20 @@ describe('TravisStatusHttp', function() {
           test: 'ok'
         }
       };
-      var testBody = 'Body?';
-      var response = new http.IncomingMessage();
+      const testBody = 'Body?';
+      const response = new http.IncomingMessage();
       assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBody);
-      status.request('GET', '/repos', function(err) {
+      status.request('GET', '/repos', (err) => {
         assert.strictEqual(err.message, errProps.statusMessage);
         assert.deepEqual(assign({}, err), assign({body: testBody}, errProps));
       });
       request.verify();
     });
 
-    it('returns body JSON without Error', function() {
-      var status = new TravisStatusHttp();
-      var errProps = {
+    it('returns body JSON without Error', () => {
+      const status = new TravisStatusHttp();
+      const errProps = {
         statusCode: 200,
         statusMessage: 'Test Message',
         headers: {
@@ -254,12 +255,12 @@ describe('TravisStatusHttp', function() {
           test: 'ok'
         }
       };
-      var testBody = {prop: 'OK'};
-      var testBodyStr = JSON.stringify(testBody);
-      var response = new http.IncomingMessage();
+      const testBody = {prop: 'OK'};
+      const testBodyStr = JSON.stringify(testBody);
+      const response = new http.IncomingMessage();
       assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBodyStr);
-      status.request('GET', '/repos', function(err, body) {
+      status.request('GET', '/repos', (err, body) => {
         assert.deepEqual(body, testBody);
       });
       request.verify();

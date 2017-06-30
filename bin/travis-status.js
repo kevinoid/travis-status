@@ -10,22 +10,22 @@
 if (require.main === module &&
     (process.argv.indexOf('--debug') >= 0 ||
      process.argv.indexOf('--debug-http') >= 0)) {
-  var nodeDebug = process.env.NODE_DEBUG;
+  const nodeDebug = process.env.NODE_DEBUG;
   if (!nodeDebug) {
     process.env.NODE_DEBUG = 'request';
   } else if (!/\brequest\b/.test(nodeDebug)) {
-    process.env.NODE_DEBUG = nodeDebug + ',request';
+    process.env.NODE_DEBUG = `${nodeDebug},request`;
   }
 }
 
-var Chalk = require('chalk').constructor;
-var Command = require('commander').Command;
-var Promise = require('any-promise');   // eslint-disable-line no-shadow
-var debug = require('debug')('travis-status');
-var assign = require('object-assign');
-var packageJson = require('../package.json');
-var stateInfo = require('../lib/state-info');
-var travisStatus = require('..');
+const Chalk = require('chalk').constructor;
+const Command = require('commander').Command;
+const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const debug = require('debug')('travis-status');
+const assign = require('object-assign');
+const packageJson = require('../package.json');
+const stateInfo = require('../lib/state-info');
+const travisStatus = require('..');
 
 /** Options for command entry points.
  *
@@ -59,8 +59,8 @@ function travisStatusCmd(args, options, callback) {
   }
 
   if (!callback) {
-    return new Promise(function(resolve, reject) {
-      travisStatusCmd(args, options, function(err, result) {
+    return new Promise((resolve, reject) => {
+      travisStatusCmd(args, options, (err, result) => {
         if (err) { reject(err); } else { resolve(result); }
       });
     });
@@ -109,13 +109,13 @@ function travisStatusCmd(args, options, callback) {
       throw new TypeError('options.err must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(function() {
+    process.nextTick(() => {
       callback(err);
     });
     return undefined;
   }
 
-  var command = new Command()
+  const command = new Command()
     .description('Checks status of the latest build.')
     // Note:  Option order matches travis.rb with new ones at bottom
     .option('-i, --interactive', 'be interactive and colorful')
@@ -126,12 +126,12 @@ function travisStatusCmd(args, options, callback) {
     .option('-I, --insecure', 'do not verify SSL certificate of API endpoint')
     .option('-e, --api-endpoint <URL>', 'Travis API server to talk to')
     .option('--pro',
-        'short-cut for --api-endpoint \'' + travisStatus.PRO_URI + '\'')
+        `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
     .on('pro', function() {
       this.apiEndpoint = travisStatus.PRO_URI;
     })
     .option('--org',
-        'short-cut for --api-endpoint \'' + travisStatus.ORG_URI + '\'')
+        `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
     .on('org', function() {
       this.apiEndpoint = travisStatus.ORG_URI;
     })
@@ -170,11 +170,11 @@ function travisStatusCmd(args, options, callback) {
 
   // Patch stdout, stderr, and exit for Commander
   // See: https://github.com/tj/commander.js/pull/444
-  var exitDesc = Object.getOwnPropertyDescriptor(process, 'exit');
-  var stdoutDesc = Object.getOwnPropertyDescriptor(process, 'stdout');
-  var stderrDesc = Object.getOwnPropertyDescriptor(process, 'stderr');
-  var consoleDesc = Object.getOwnPropertyDescriptor(global, 'console');
-  var errExit = new Error('process.exit() called');
+  const exitDesc = Object.getOwnPropertyDescriptor(process, 'exit');
+  const stdoutDesc = Object.getOwnPropertyDescriptor(process, 'stdout');
+  const stderrDesc = Object.getOwnPropertyDescriptor(process, 'stderr');
+  const consoleDesc = Object.getOwnPropertyDescriptor(global, 'console');
+  const errExit = new Error('process.exit() called');
   process.exit = function throwOnExit(code) {
     errExit.code = code;
     throw errExit;
@@ -208,8 +208,8 @@ function travisStatusCmd(args, options, callback) {
   try {
     command.parse(args);
   } catch (errParse) {
-    var exitCode = errParse === errExit ? errExit.code || 0 : null;
-    process.nextTick(function() {
+    const exitCode = errParse === errExit ? errExit.code || 0 : null;
+    process.nextTick(() => {
       if (exitCode !== null) {
         callback(null, exitCode);
       } else {
@@ -230,21 +230,21 @@ function travisStatusCmd(args, options, callback) {
     command.interactive = Boolean(options.out.isTTY);
   }
 
-  var chalk = new Chalk({enabled: command.interactive});
+  const chalk = new Chalk({enabled: command.interactive});
 
   if (command.args.length > 0) {
-    options.err.write(chalk.red('too many arguments') + '\n' +
-        command.helpInformation());
-    process.nextTick(function() { callback(null, 1); });
+    options.err.write(`${chalk.red('too many arguments')}\n${
+        command.helpInformation()}`);
+    process.nextTick(() => { callback(null, 1); });
     return undefined;
   }
 
   if (hasOwnProperty.call(command, 'wait')) {
-    var wait = Number(command.wait);
+    const wait = Number(command.wait);
     if (isNaN(wait)) {
-      var waitErr = chalk.red('invalid wait time "' + command.wait + '"');
-      options.err.write(waitErr + '\n');
-      process.nextTick(function() { callback(null, 1); });
+      const waitErr = chalk.red(`invalid wait time "${command.wait}"`);
+      options.err.write(`${waitErr}\n`);
+      process.nextTick(() => { callback(null, 1); });
       return undefined;
     }
     command.wait = wait * 1000;
@@ -264,7 +264,7 @@ function travisStatusCmd(args, options, callback) {
     command.requestOpts.strictSSL = false;
   }
 
-  travisStatus(command, function(err, build) {
+  travisStatus(command, (err, build) => {
     if (err && err.name === 'SlugDetectionError') {
       debug('Error detecting repo slug', err);
       options.err.write(chalk.red(
@@ -277,22 +277,22 @@ function travisStatusCmd(args, options, callback) {
     }
 
     if (err) {
-      options.err.write(chalk.red(err.message) + '\n');
+      options.err.write(`${chalk.red(err.message)}\n`);
       callback(null, 1);
       return;
     }
 
-    var state = build.repo ? build.repo.last_build_state : build.branch.state;
+    const state = build.repo ? build.repo.last_build_state : build.branch.state;
 
     if (!command.quiet) {
-      var color = stateInfo.colors[state] || 'yellow';
-      var number =
+      const color = stateInfo.colors[state] || 'yellow';
+      const number =
         build.repo ? build.repo.last_build_number : build.branch.number;
-      options.out.write('build #' + number + ' ' + chalk[color](state) +
-          '\n');
+      options.out.write(`build #${number} ${chalk[color](state)
+          }\n`);
     }
 
-    var code = 0;
+    let code = 0;
     if ((command.exitCode && stateInfo.isUnsuccessful[state]) ||
         (command.failPending && stateInfo.isPending[state])) {
       code = 1;
@@ -309,16 +309,16 @@ module.exports = travisStatusCmd;
 if (require.main === module) {
   // This file was invoked directly.
   /* eslint-disable no-process-exit */
-  var mainOptions = {
+  const mainOptions = {
     in: process.stdin,
     out: process.stdout,
     err: process.stderr
   };
-  travisStatusCmd(process.argv, mainOptions, function(err, code) {
+  travisStatusCmd(process.argv, mainOptions, (err, code) => {
     if (err) {
       if (err.stdout) { process.stdout.write(err.stdout); }
       if (err.stderr) { process.stderr.write(err.stderr); }
-      process.stderr.write(err.name + ': ' + err.message + '\n');
+      process.stderr.write(`${err.name}: ${err.message}\n`);
 
       code = typeof err.code === 'number' ? err.code : 1;
     }
