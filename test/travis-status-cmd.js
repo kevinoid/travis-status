@@ -7,9 +7,10 @@
 
 const Promise = require('any-promise');   // eslint-disable-line no-shadow
 const SlugDetectionError = require('../lib/slug-detection-error');
+const ansiStyles = require('ansi-styles');
 const apiResponses = require('../test-lib/api-responses');
 const assert = require('chai').assert;
-const chalk = require('chalk');
+const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const stateInfo = require('../lib/state-info');
@@ -313,7 +314,7 @@ describe('travis-status command', () => {
         const outString = String(outStream.read());
         assert.include(
           outString,
-          chalk.styles[color].open + state + chalk.styles[color].close
+          ansiStyles[color].open + state + ansiStyles[color].close
         );
         assert.strictEqual(errStream.read(), null);
         done();
@@ -340,7 +341,7 @@ describe('travis-status command', () => {
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
       const errString = String(errStream.read());
-      assert.include(errString, chalk.styles.red.open);
+      assert.include(errString, ansiStyles.red.open);
       assert.include(errString, errMsg);
       done();
     });
@@ -402,7 +403,7 @@ describe('travis-status command', () => {
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
       const errString = String(errStream.read());
-      assert.include(errString, chalk.styles.red.open);
+      assert.include(errString, ansiStyles.red.open);
       assert.include(errString, errMsg);
       done();
     });
@@ -423,7 +424,7 @@ describe('travis-status command', () => {
       assert.isAtLeast(code, 1);
       assert.strictEqual(outStream.read(), null);
       const errString = String(errStream.read());
-      assert(!chalk.hasColor(errString), 'string has color');
+      assert(!hasAnsi(errString), 'string has color');
       assert.include(errString, errMsg);
       done();
     });
