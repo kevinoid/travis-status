@@ -158,14 +158,8 @@ function travisStatusCmd(args, options, callback) {
         'query latest build for a branch (default: current)')
     .option('-c, --commit [COMMIT]',
         'require build to be for a specific commit (default: HEAD)')
-    .on('commit', function() {
-      if (this.commit === true) { this.commit = 'HEAD'; }
-    })
     .option('-w, --wait [TIMEOUT]',
         'wait if build is pending (timeout in seconds)')
-    .on('wait', function() {
-      if (this.wait === true) { this.wait = Infinity; }
-    })
     .version(packageJson.version);
 
   // Patch stdout, stderr, and exit for Commander
@@ -224,10 +218,16 @@ function travisStatusCmd(args, options, callback) {
     Object.defineProperty(global, 'console', consoleDesc);
   }
 
+  if (command.commit === true) {
+    command.commit = 'HEAD';
+  }
   if (typeof command.interactive === 'undefined') {
     // Note:  Same default as travis.rb
     // Need cast to Boolean so undefined becomes false to disable Chalk
     command.interactive = Boolean(options.out.isTTY);
+  }
+  if (command.wait === true) {
+    command.wait = Infinity;
   }
 
   const chalk = new Chalk({enabled: command.interactive});
