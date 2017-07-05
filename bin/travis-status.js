@@ -127,16 +127,16 @@ function travisStatusCmd(args, options, callback) {
     .option('-e, --api-endpoint <URL>', 'Travis API server to talk to')
     .option('--pro',
         `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
-    .on('pro', function() {
+    .on('option:pro', function() {
       this.apiEndpoint = travisStatus.PRO_URI;
     })
     .option('--org',
         `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
-    .on('org', function() {
+    .on('option:org', function() {
       this.apiEndpoint = travisStatus.ORG_URI;
     })
     .option('--staging', 'talks to staging system')
-    .on('staging', function() {
+    .on('option:staging', function() {
       this.apiEndpoint = (this.apiEndpoint || travisStatus.ORG_URI)
         .replace(/api/g, 'api-staging');
     })
@@ -147,7 +147,7 @@ function travisStatusCmd(args, options, callback) {
         'repository to use (will try to detect from current git clone)')
     .option('-R, --store-repo <SLUG>',
         'like --repo, but remembers value for current directory')
-    .on('store-repo', function() {
+    .on('option:store-repo', function() {
       this.repo = this.storeRepo;
     })
     .option('-x, --exit-code', 'sets the exit code to 1 if the build failed')
