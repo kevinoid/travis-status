@@ -51,7 +51,7 @@ describe('travisStatus integration', () => {
     server = http.createServer((req, res) => {
       checkRequest(req);
 
-      /* eslint no-cond-assign: [2, "except-parens"]*/
+      /* eslint no-cond-assign: [2, "except-parens"] */
 
       let json;
       let parts;
