@@ -1,3 +1,2 @@
 --check-leaks
 --no-exit
---require ./test/helper-any-promise

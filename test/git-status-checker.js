@@ -7,7 +7,6 @@
 
 const GitStatusChecker = require('../lib/git-status-checker');
 const InvalidSlugError = require('../lib/invalid-slug-error');
-const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const assert = require('chai').assert;
 const git = require('../lib/git');
 const path = require('path');

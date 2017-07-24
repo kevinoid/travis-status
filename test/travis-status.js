@@ -6,11 +6,9 @@
 'use strict';
 
 const GitStatusChecker = require('../lib/git-status-checker');
-const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const TravisStatusChecker = require('../lib/travis-status-checker');
 const apiResponses = require('../test-lib/api-responses');
 const assert = require('chai').assert;
-const assign = require('object-assign');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
@@ -228,7 +226,7 @@ describe('travisStatus', () => {
         let testP;
         if (isSameHash) {
           testP = statusP.then((result) => {
-            assert.deepEqual(result, assign({}, testRepo, testBuild));
+            assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
           });
         } else {
           testP = statusP.then(

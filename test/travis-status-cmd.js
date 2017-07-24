@@ -5,7 +5,6 @@
 
 'use strict';
 
-const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const SlugDetectionError = require('../lib/slug-detection-error');
 const ansiStyles = require('ansi-styles');
 const apiResponses = require('../test-lib/api-responses');

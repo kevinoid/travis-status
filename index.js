@@ -6,10 +6,8 @@
 'use strict';
 
 const GitStatusChecker = require('./lib/git-status-checker');
-const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const TravisStatusChecker = require('./lib/travis-status-checker');
 const assert = require('assert');
-const assign = require('object-assign');
 const http = require('http');
 const https = require('https');
 const nodeify = require('promise-nodeify');
@@ -135,9 +133,9 @@ function travisStatus(options, callback) {
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
         // If Agent doesn't support keepAlive/destroy, we don't need/want it.
         if (typeof agent.destroy === 'function') {
-          requestOpts = assign({}, requestOpts);
+          requestOpts = Object.assign({}, requestOpts);
           requestOpts.agent = agent;
-          options = assign({}, options);
+          options = Object.assign({}, options);
           options.requestOpts = requestOpts;
         } else {
           agent = undefined;
@@ -205,7 +203,7 @@ function travisStatus(options, callback) {
       // Add build information to result
       resultP = repoP.then((repo) =>
         travisChecker.getBuild(repo.repo.slug, repo.repo.last_build_id)
-          .then((build) => assign({}, repo, build))
+          .then((build) => Object.assign({}, repo, build))
       );
     } else {
       resultP = repoP;

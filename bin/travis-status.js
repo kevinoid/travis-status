@@ -20,9 +20,7 @@ if (require.main === module &&
 
 const Chalk = require('chalk').constructor;
 const Command = require('commander').Command;
-const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const debug = require('debug')('travis-status');
-const assign = require('object-assign');
 const packageJson = require('../package.json');
 const stateInfo = require('../lib/state-info');
 const travisStatus = require('..');
@@ -90,7 +88,7 @@ function travisStatusCmd(args, options, callback) {
       throw new TypeError('options must be an object');
     }
 
-    options = assign(
+    options = Object.assign(
       {
         in: process.stdin,
         out: process.stdout,
