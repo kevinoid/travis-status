@@ -6,7 +6,7 @@
 'use strict';
 
 const GitStatusChecker = require('../lib/git-status-checker');
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const TravisStatusChecker = require('../lib/travis-status-checker');
 const apiResponses = require('../test-lib/api-responses');
 const assert = require('chai').assert;
@@ -160,7 +160,7 @@ describe('travisStatus', () => {
     travisCheckerMock.expects('getRepo').never();
     travisCheckerMock.expects('getBranch')
       .once().withArgs(testSlug, testBranch)
-        .returns(Promise.resolve(testResult));
+      .returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBuild').never();
     const options = {branch: testBranch, repo: testSlug};
     return travisStatus(options).then((result) => {
@@ -185,7 +185,7 @@ describe('travisStatus', () => {
     travisCheckerMock.expects('getRepo').never();
     travisCheckerMock.expects('getBranch')
       .once().withArgs(testSlug, testBranch)
-        .returns(Promise.resolve(testResult));
+      .returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBuild').never();
     const options = {branch: true, repo: testSlug};
     return travisStatus(options).then((result) => {
@@ -200,7 +200,7 @@ describe('travisStatus', () => {
       const desc =
         `${isSameHash ? 'resolves combined result' : 'rejects with Error'
         } for ${
-        commitIsHash ? 'same commit hash' : 'matching commit name'}`;
+          commitIsHash ? 'same commit hash' : 'matching commit name'}`;
       it(desc, () => {
         const testSlug = 'foo/bar';
         const testHash = '692064aac95441e2dae7f1780fccc536143a0863';
@@ -223,7 +223,7 @@ describe('travisStatus', () => {
         travisCheckerMock.expects('getBranch').never();
         travisCheckerMock.expects('getBuild')
           .once().withArgs(testSlug, testRepo.repo.last_build_id)
-            .returns(Promise.resolve(testBuild));
+          .returns(Promise.resolve(testBuild));
         const statusP = travisStatus({commit: testCommit, repo: testSlug});
         let testP;
         if (isSameHash) {
@@ -250,12 +250,12 @@ describe('travisStatus', () => {
   });
 
   it('rejects with TypeError for non-object options', () => travisStatus(true).then(
-      sinon.mock().never(),
-      (err) => {
-        assert.strictEqual(err.name, 'TypeError');
-        assert.match(err.message, /\boptions\b/);
-      }
-    ));
+    sinon.mock().never(),
+    (err) => {
+      assert.strictEqual(err.name, 'TypeError');
+      assert.match(err.message, /\boptions\b/);
+    }
+  ));
 
   it('throws TypeError for non-function callback', () => {
     assert.throws(

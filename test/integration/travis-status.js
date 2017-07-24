@@ -21,7 +21,7 @@ function checkRequest(req) {
   const acceptTravisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
   if (!acceptTravisRE.test(accept)) {
     throw new Error(`Accept does not start with Travis Media Type: ${
-        accept}`);
+      accept}`);
   }
 
   if (!/application\/json/.test(accept)) {
@@ -31,12 +31,12 @@ function checkRequest(req) {
   const acceptEncoding = req.headers['accept-encoding'];
   if (!/gzip/.test(acceptEncoding)) {
     throw new Error(`Accept-Encoding does not include gzip: ${
-        acceptEncoding}`);
+      acceptEncoding}`);
   }
 
   const userAgent = req.headers['user-agent'];
   const uaVersionRE = new RegExp(`node-travis-status/${
-      packageJson.version.replace(/\./g, '\\.')}`);
+    packageJson.version.replace(/\./g, '\\.')}`);
   if (!uaVersionRE.test(userAgent)) {
     throw new Error('User-Agent does not include module and version');
   }

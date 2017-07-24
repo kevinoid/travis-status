@@ -5,7 +5,7 @@
 
 'use strict';
 
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const SlugDetectionError = require('../lib/slug-detection-error');
 const ansiStyles = require('ansi-styles');
 const apiResponses = require('../test-lib/api-responses');
@@ -116,7 +116,7 @@ describe('travis-status command', () => {
 
   function expectArgsStateCode(args, state, expectCode) {
     const desc = `${args.length ? `with ${args.join(' ')}` : 'normally'
-      } exits with code ${expectCode} if build ${state}`;
+    } exits with code ${expectCode} if build ${state}`;
     it(desc, (done) => {
       travisStatus = sinon.stub();
       const options = {

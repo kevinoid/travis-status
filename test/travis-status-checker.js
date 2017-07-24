@@ -120,9 +120,9 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: 10000}))
-          .then((response) => {
-            assert.deepEqual(response, passedResponse);
-          });
+            .then((response) => {
+              assert.deepEqual(response, passedResponse);
+            });
         travisRequestMock.verify();
         return promise;
       });
@@ -136,9 +136,9 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: 10000}))
-          .then((response) => {
-            assert.deepEqual(response, passedResponse);
-          });
+            .then((response) => {
+              assert.deepEqual(response, passedResponse);
+            });
         for (let i = 1; i < 11; i += 1) {
           clock.tick(1000);
         }
@@ -154,9 +154,9 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: 10000}))
-          .then((response) => {
-            assert.deepEqual(response, pendingResponse);
-          });
+            .then((response) => {
+              assert.deepEqual(response, pendingResponse);
+            });
         for (let i = 1; i < 11; i += 1) {
           clock.tick(1000);
         }
@@ -173,12 +173,12 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: 30000}))
-          .then(
-            sinon.mock().never(),
-            (err) => {
-              assert.strictEqual(err, errTest);
-            }
-          );
+            .then(
+              sinon.mock().never(),
+              (err) => {
+                assert.strictEqual(err, errTest);
+              }
+            );
         travisRequestMock.verify();
         return promise;
       });
@@ -193,12 +193,12 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: 30000}))
-          .then(
-            sinon.mock().never(),
-            (err) => {
-              assert.strictEqual(err, errTest);
-            }
-          );
+            .then(
+              sinon.mock().never(),
+              (err) => {
+                assert.strictEqual(err, errTest);
+              }
+            );
         for (let i = 1; i < 31; i += 1) {
           clock.tick(1000);
         }
@@ -211,13 +211,13 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: 'hello'}))
-          .then(
-            sinon.mock().never(),
-            (err) => {
-              assert.strictEqual(err.name, 'TypeError');
-              assert.match(err.message, /\bwait\b/);
-            }
-          );
+            .then(
+              sinon.mock().never(),
+              (err) => {
+                assert.strictEqual(err.name, 'TypeError');
+                assert.match(err.message, /\bwait\b/);
+              }
+            );
         travisRequestMock.verify();
         return promise;
       });
@@ -227,13 +227,13 @@ describe('TravisStatusChecker', () => {
         const checker = new TravisStatusChecker();
         const promise =
           checker[methodName].apply(checker, args.concat({wait: -5}))
-          .then(
-            sinon.mock().never(),
-            (err) => {
-              assert.strictEqual(err.name, 'RangeError');
-              assert.match(err.message, /\bwait\b/);
-            }
-          );
+            .then(
+              sinon.mock().never(),
+              (err) => {
+                assert.strictEqual(err.name, 'RangeError');
+                assert.match(err.message, /\bwait\b/);
+              }
+            );
         travisRequestMock.verify();
         return promise;
       });

@@ -20,7 +20,7 @@ if (require.main === module &&
 
 const Chalk = require('chalk').constructor;
 const Command = require('commander').Command;
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const debug = require('debug')('travis-status');
 const assign = require('object-assign');
 const packageJson = require('../package.json');
@@ -122,16 +122,16 @@ function travisStatusCmd(args, options, callback) {
     .option('-E, --explode', 'ignored for compatibility with travis.rb')
     .option('--skip-version-check', 'ignored for compatibility with travis.rb')
     .option('--skip-completion-check',
-        'ignored for compatibility with travis.rb')
+      'ignored for compatibility with travis.rb')
     .option('-I, --insecure', 'do not verify SSL certificate of API endpoint')
     .option('-e, --api-endpoint <URL>', 'Travis API server to talk to')
     .option('--pro',
-        `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
+      `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
     .on('option:pro', function() {
       this.apiEndpoint = travisStatus.PRO_URI;
     })
     .option('--org',
-        `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
+      `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
     .on('option:org', function() {
       this.apiEndpoint = travisStatus.ORG_URI;
     })
@@ -144,22 +144,22 @@ function travisStatusCmd(args, options, callback) {
     .option('--debug', 'show API requests')
     .option('--debug-http', 'show HTTP(S) exchange')
     .option('-r, --repo <SLUG>',
-        'repository to use (will try to detect from current git clone)')
+      'repository to use (will try to detect from current git clone)')
     .option('-R, --store-repo <SLUG>',
-        'like --repo, but remembers value for current directory')
+      'like --repo, but remembers value for current directory')
     .on('option:store-repo', function() {
       this.repo = this.storeRepo;
     })
     .option('-x, --exit-code', 'sets the exit code to 1 if the build failed')
     .option('-q, --quiet', 'does not print anything')
     .option('-p, --fail-pending',
-        'sets the status code to 1 if the build is pending')
+      'sets the status code to 1 if the build is pending')
     .option('-b, --branch [BRANCH]',
-        'query latest build for a branch (default: current)')
+      'query latest build for a branch (default: current)')
     .option('-c, --commit [COMMIT]',
-        'require build to be for a specific commit (default: HEAD)')
+      'require build to be for a specific commit (default: HEAD)')
     .option('-w, --wait [TIMEOUT]',
-        'wait if build is pending (timeout in seconds)')
+      'wait if build is pending (timeout in seconds)')
     .version(packageJson.version);
 
   // Patch stdout, stderr, and exit for Commander
@@ -175,16 +175,16 @@ function travisStatusCmd(args, options, callback) {
   };
   if (options.out) {
     Object.defineProperty(
-        process,
-        'stdout',
-        {configurable: true, enumerable: true, value: options.out}
+      process,
+      'stdout',
+      {configurable: true, enumerable: true, value: options.out}
     );
   }
   if (options.err) {
     Object.defineProperty(
-        process,
-        'stderr',
-        {configurable: true, enumerable: true, value: options.err}
+      process,
+      'stderr',
+      {configurable: true, enumerable: true, value: options.err}
     );
   }
   if (options.out || options.err) {
@@ -234,7 +234,7 @@ function travisStatusCmd(args, options, callback) {
 
   if (command.args.length > 0) {
     options.err.write(`${chalk.red('too many arguments')}\n${
-        command.helpInformation()}`);
+      command.helpInformation()}`);
     process.nextTick(() => { callback(null, 1); });
     return undefined;
   }
@@ -289,7 +289,7 @@ function travisStatusCmd(args, options, callback) {
       const number =
         build.repo ? build.repo.last_build_number : build.branch.number;
       options.out.write(`build #${number} ${chalk[color](state)
-          }\n`);
+      }\n`);
     }
 
     let code = 0;

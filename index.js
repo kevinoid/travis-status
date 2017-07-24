@@ -6,7 +6,7 @@
 'use strict';
 
 const GitStatusChecker = require('./lib/git-status-checker');
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const TravisStatusChecker = require('./lib/travis-status-checker');
 const assert = require('assert');
 const assign = require('object-assign');
@@ -27,15 +27,15 @@ const url = require('url');
 function checkBuildCommit(build, localCommit) {
   const buildCommit = build.commit;
   let message = `Build commit ${buildCommit.sha
-    } does not match ${localCommit.sha}`;
+  } does not match ${localCommit.sha}`;
   if (localCommit.name) {
     message += ` (${localCommit.name})`;
   }
   // assert gives us useful exception properties for callers
   assert.strictEqual(
-      buildCommit.sha,
-      localCommit.sha,
-      message
+    buildCommit.sha,
+    localCommit.sha,
+    message
   );
   return build;
 }
@@ -129,7 +129,7 @@ function travisStatus(options, callback) {
         url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent :
         apiUrl.protocol === 'http:' ? http.Agent :
-        null;
+          null;
       if (Agent) {
         agent = new Agent({keepAlive: true});
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
@@ -158,7 +158,7 @@ function travisStatus(options, callback) {
     // If both .repo and .storeRepo are present, store .storeRepo and use .repo
     repoSlugP =
       options.repo ? storedSlugP.then(() => options.repo) :
-      storedSlugP;
+        storedSlugP;
   } else if (options.repo) {
     repoSlugP = Promise.resolve(options.repo);
   } else {

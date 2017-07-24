@@ -7,7 +7,7 @@
 
 const GitStatusChecker = require('../lib/git-status-checker');
 const InvalidSlugError = require('../lib/invalid-slug-error');
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
+const Promise = require('any-promise'); // eslint-disable-line no-shadow
 const assert = require('chai').assert;
 const git = require('../lib/git');
 const path = require('path');
@@ -44,45 +44,45 @@ const REMOTE_SLUGS = {
 const TEST_REPO_PATH = path.join(__dirname, '..', 'test-repo');
 
 before('setup test repository', () => rimrafP(TEST_REPO_PATH)
-    .then(() => git('init', '-q', TEST_REPO_PATH))
-    // The user name and email must be configured for the later git commands
-    // to work.  On Travis CI (and probably others) there is no global config
-    .then(() => git('-C', TEST_REPO_PATH,
-          'config', 'user.name', 'Test User'))
-    .then(() => git('-C', TEST_REPO_PATH,
-          'config', 'user.email', 'test@example.com'))
-    .then(() => git('-C', TEST_REPO_PATH,
-          'commit', '-q', '-m', 'Initial Commit', '--allow-empty'))
-    .then(() => git('-C', TEST_REPO_PATH,
-          'commit', '-q', '-m', 'Second Commit', '--allow-empty'))
-    .then(() => Object.keys(REMOTES).reduce((p, remoteName) => p.then(() => {
-      const remoteUrl = REMOTES[remoteName];
-      return git('-C', TEST_REPO_PATH,
-              'remote', 'add', remoteName, remoteUrl);
-    }), Promise.resolve()))
-    .then(() => Object.keys(BRANCH_REMOTES)
-      .reduce((p, branchName) => p.then(() => {
-        const upstream = BRANCH_REMOTES[branchName];
-        let gitBranchP = git('-C', TEST_REPO_PATH, 'branch', branchName);
-        if (upstream) {
-          gitBranchP = gitBranchP.then(() => {
-                // Note:  Can't use 'git branch -u' without fetching remote
-            const upstreamParts = upstream.split('/');
-            assert.strictEqual(upstreamParts.length, 2);
-            const remoteName = upstreamParts[0];
-            const remoteBranch = upstreamParts[1];
-            const remoteRef = `refs/heads/${remoteBranch}`;
-            const configBranch = `branch.${branchName}`;
-            const configMerge = `${configBranch}.merge`;
-            const configRemote = `${configBranch}.remote`;
-            return git('-C', TEST_REPO_PATH,
-                    'config', '--add', configRemote, remoteName)
-                  .then(() => git('-C', TEST_REPO_PATH,
-                        'config', '--add', configMerge, remoteRef));
-          });
-        }
-        return gitBranchP;
-      }), Promise.resolve())));
+  .then(() => git('init', '-q', TEST_REPO_PATH))
+  // The user name and email must be configured for the later git commands
+  // to work.  On Travis CI (and probably others) there is no global config
+  .then(() => git('-C', TEST_REPO_PATH,
+    'config', 'user.name', 'Test User'))
+  .then(() => git('-C', TEST_REPO_PATH,
+    'config', 'user.email', 'test@example.com'))
+  .then(() => git('-C', TEST_REPO_PATH,
+    'commit', '-q', '-m', 'Initial Commit', '--allow-empty'))
+  .then(() => git('-C', TEST_REPO_PATH,
+    'commit', '-q', '-m', 'Second Commit', '--allow-empty'))
+  .then(() => Object.keys(REMOTES).reduce((p, remoteName) => p.then(() => {
+    const remoteUrl = REMOTES[remoteName];
+    return git('-C', TEST_REPO_PATH,
+      'remote', 'add', remoteName, remoteUrl);
+  }), Promise.resolve()))
+  .then(() => Object.keys(BRANCH_REMOTES)
+    .reduce((p, branchName) => p.then(() => {
+      const upstream = BRANCH_REMOTES[branchName];
+      let gitBranchP = git('-C', TEST_REPO_PATH, 'branch', branchName);
+      if (upstream) {
+        gitBranchP = gitBranchP.then(() => {
+          // Note:  Can't use 'git branch -u' without fetching remote
+          const upstreamParts = upstream.split('/');
+          assert.strictEqual(upstreamParts.length, 2);
+          const remoteName = upstreamParts[0];
+          const remoteBranch = upstreamParts[1];
+          const remoteRef = `refs/heads/${remoteBranch}`;
+          const configBranch = `branch.${branchName}`;
+          const configMerge = `${configBranch}.merge`;
+          const configRemote = `${configBranch}.remote`;
+          return git('-C', TEST_REPO_PATH,
+            'config', '--add', configRemote, remoteName)
+            .then(() => git('-C', TEST_REPO_PATH,
+              'config', '--add', configMerge, remoteRef));
+        });
+      }
+      return gitBranchP;
+    }), Promise.resolve())));
 
 before('run from test repository', () => {
   origCWD = process.cwd();
@@ -99,7 +99,7 @@ function unsetTravisSlug() {
   return git('config', '--unset-all', GitStatusChecker.SLUG_CONFIG_NAME)
     .catch((err) =>
       // Exit code 5 is 'try to unset an option which does not exist'
-     (err.code === 5 ? null : Promise.reject(err))
+      (err.code === 5 ? null : Promise.reject(err))
     );
 }
 
@@ -465,11 +465,11 @@ describe('GitStatusChecker', () => {
       return git('checkout', 'HEAD^')
         .then(() => checker.detectBranch())
         .then(
-            sinon.mock().never(),
-            (err) => {
-              assert.match(err.message, /branch/i);
-            }
-          );
+          sinon.mock().never(),
+          (err) => {
+            assert.match(err.message, /branch/i);
+          }
+        );
     });
   });
 
