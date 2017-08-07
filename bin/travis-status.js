@@ -228,7 +228,12 @@ function travisStatusCmd(args, options, callback) {
     command.wait = Infinity;
   }
 
-  const chalk = new Chalk({enabled: command.interactive});
+  const chalk = new Chalk({
+    enabled: command.interactive,
+    // Note:  level: 0 overrides enabled: true, so must be specified here in
+    // case supports-color returns false causing 0 default level.
+    level: 1
+  });
 
   if (command.args.length > 0) {
     options.err.write(`${chalk.red('too many arguments')}\n${
