@@ -247,13 +247,14 @@ describe('travisStatus', () => {
     });
   });
 
-  it('rejects with TypeError for non-object options', () => travisStatus(true).then(
-    sinon.mock().never(),
-    (err) => {
-      assert.strictEqual(err.name, 'TypeError');
-      assert.match(err.message, /\boptions\b/);
-    }
-  ));
+  it('rejects with TypeError for non-object options', () =>
+    travisStatus(true).then(
+      sinon.mock().never(),
+      (err) => {
+        assert.strictEqual(err.name, 'TypeError');
+        assert.match(err.message, /\boptions\b/);
+      }
+    ));
 
   it('throws TypeError for non-function callback', () => {
     assert.throws(

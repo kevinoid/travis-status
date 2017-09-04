@@ -203,8 +203,7 @@ function travisStatus(options, callback) {
       // Add build information to result
       resultP = repoP.then((repo) =>
         travisChecker.getBuild(repo.repo.slug, repo.repo.last_build_id)
-          .then((build) => Object.assign({}, repo, build))
-      );
+          .then((build) => Object.assign({}, repo, build)));
     } else {
       resultP = repoP;
     }

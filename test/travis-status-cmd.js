@@ -149,7 +149,10 @@ describe('travis-status command', () => {
     token: undefined,
     wait: undefined
   }));
-  expectArgsAs(['--api-endpoint', 'https://example.com'], match({apiEndpoint: 'https://example.com'}));
+  expectArgsAs(
+    ['--api-endpoint', 'https://example.com'],
+    match({apiEndpoint: 'https://example.com'})
+  );
   expectArgsAs(['--branch', 'branchname'], match({branch: 'branchname'}));
   expectArgsAs(['--branch'], match({branch: true}));
   expectArgsAs(['--commit', 'v1.0.0'], match({commit: 'v1.0.0'}));
@@ -164,9 +167,18 @@ describe('travis-status command', () => {
   expectArgsAs(['--repo', 'foo/bar'], match({repo: 'foo/bar'}));
   expectArgsAs(['--skip-completion-check'], match.object);
   expectArgsAs(['--skip-version-check'], match.object);
-  expectArgsAs(['--staging'], match({apiEndpoint: 'https://api-staging.travis-ci.org/'}));
-  expectArgsAs(['--org', '--staging'], match({apiEndpoint: 'https://api-staging.travis-ci.org/'}));
-  expectArgsAs(['--pro', '--staging'], match({apiEndpoint: 'https://api-staging.travis-ci.com/'}));
+  expectArgsAs(
+    ['--staging'],
+    match({apiEndpoint: 'https://api-staging.travis-ci.org/'})
+  );
+  expectArgsAs(
+    ['--org', '--staging'],
+    match({apiEndpoint: 'https://api-staging.travis-ci.org/'})
+  );
+  expectArgsAs(
+    ['--pro', '--staging'],
+    match({apiEndpoint: 'https://api-staging.travis-ci.com/'})
+  );
   expectArgsAs(['--store-repo', 'foo/bar'], match({storeRepo: 'foo/bar'}));
   expectArgsAs(['--token', '12345'], match({token: '12345'}));
   expectArgsAs(['--wait', '60'], match({wait: 60000}));
@@ -178,7 +190,10 @@ describe('travis-status command', () => {
   expectArgsAs(['-b'], match({branch: true}));
   expectArgsAs(['-c', 'v1.0.0'], match({commit: 'v1.0.0'}));
   expectArgsAs(['-c'], match({commit: 'HEAD'}));
-  expectArgsAs(['-e', 'https://example.com'], match({apiEndpoint: 'https://example.com'}));
+  expectArgsAs(
+    ['-e', 'https://example.com'],
+    match({apiEndpoint: 'https://example.com'})
+  );
   expectArgsAs(['-i'], match({interactive: true}));
   expectArgsAs(['-r', 'foo/bar'], match({repo: 'foo/bar'}));
   expectArgsAs(['-t', '12345'], match({token: '12345'}));

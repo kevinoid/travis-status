@@ -98,8 +98,7 @@ function unsetTravisSlug() {
   return git('config', '--unset-all', GitStatusChecker.SLUG_CONFIG_NAME)
     .catch((err) =>
       // Exit code 5 is 'try to unset an option which does not exist'
-      (err.code === 5 ? null : Promise.reject(err))
-    );
+      (err.code === 5 ? null : Promise.reject(err)));
 }
 
 describe('GitStatusChecker', () => {
@@ -606,8 +605,7 @@ describe('GitStatusChecker', () => {
         .then(() =>
           checker.loadSlug().then((slug) => {
             assert.strictEqual(slug, testSlug);
-          })
-        );
+          }));
     });
 
     it('resolves null if slug is not set', () => {

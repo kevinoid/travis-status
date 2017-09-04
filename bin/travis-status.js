@@ -244,7 +244,7 @@ function travisStatusCmd(args, options, callback) {
 
   if (hasOwnProperty.call(command, 'wait')) {
     const wait = Number(command.wait);
-    if (isNaN(wait)) {
+    if (Number.isNaN(wait)) {
       const waitErr = chalk.red(`invalid wait time "${command.wait}"`);
       options.err.write(`${waitErr}\n`);
       process.nextTick(() => { callback(null, 1); });
