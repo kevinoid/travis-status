@@ -16,6 +16,7 @@ const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
 
+const isWindows = /^win/i.test(process.platform);
 const read = promisedRead.read;
 const rimrafP = pify(rimraf, Promise);
 
@@ -42,46 +43,51 @@ const REMOTE_SLUGS = {
 /** Path to repository in which tests are run. */
 const TEST_REPO_PATH = path.join(__dirname, '..', 'test-repo');
 
-before('setup test repository', () => rimrafP(TEST_REPO_PATH)
-  .then(() => git('init', '-q', TEST_REPO_PATH))
-  // The user name and email must be configured for the later git commands
-  // to work.  On Travis CI (and probably others) there is no global config
-  .then(() => git('-C', TEST_REPO_PATH,
-    'config', 'user.name', 'Test User'))
-  .then(() => git('-C', TEST_REPO_PATH,
-    'config', 'user.email', 'test@example.com'))
-  .then(() => git('-C', TEST_REPO_PATH,
-    'commit', '-q', '-m', 'Initial Commit', '--allow-empty'))
-  .then(() => git('-C', TEST_REPO_PATH,
-    'commit', '-q', '-m', 'Second Commit', '--allow-empty'))
-  .then(() => Object.keys(REMOTES).reduce((p, remoteName) => p.then(() => {
-    const remoteUrl = REMOTES[remoteName];
-    return git('-C', TEST_REPO_PATH,
-      'remote', 'add', remoteName, remoteUrl);
-  }), Promise.resolve()))
-  .then(() => Object.keys(BRANCH_REMOTES)
-    .reduce((p, branchName) => p.then(() => {
-      const upstream = BRANCH_REMOTES[branchName];
-      let gitBranchP = git('-C', TEST_REPO_PATH, 'branch', branchName);
-      if (upstream) {
-        gitBranchP = gitBranchP.then(() => {
-          // Note:  Can't use 'git branch -u' without fetching remote
-          const upstreamParts = upstream.split('/');
-          assert.strictEqual(upstreamParts.length, 2);
-          const remoteName = upstreamParts[0];
-          const remoteBranch = upstreamParts[1];
-          const remoteRef = `refs/heads/${remoteBranch}`;
-          const configBranch = `branch.${branchName}`;
-          const configMerge = `${configBranch}.merge`;
-          const configRemote = `${configBranch}.remote`;
-          return git('-C', TEST_REPO_PATH,
-            'config', '--add', configRemote, remoteName)
-            .then(() => git('-C', TEST_REPO_PATH,
-              'config', '--add', configMerge, remoteRef));
-        });
-      }
-      return gitBranchP;
-    }), Promise.resolve())));
+before('setup test repository', function() {
+  // Some git versions can run quite slowly on Windows
+  this.timeout(isWindows ? 8000 : 4000);
+
+  return rimrafP(TEST_REPO_PATH)
+    .then(() => git('init', '-q', TEST_REPO_PATH))
+    // The user name and email must be configured for the later git commands
+    // to work.  On Travis CI (and probably others) there is no global config
+    .then(() => git('-C', TEST_REPO_PATH,
+      'config', 'user.name', 'Test User'))
+    .then(() => git('-C', TEST_REPO_PATH,
+      'config', 'user.email', 'test@example.com'))
+    .then(() => git('-C', TEST_REPO_PATH,
+      'commit', '-q', '-m', 'Initial Commit', '--allow-empty'))
+    .then(() => git('-C', TEST_REPO_PATH,
+      'commit', '-q', '-m', 'Second Commit', '--allow-empty'))
+    .then(() => Object.keys(REMOTES).reduce((p, remoteName) => p.then(() => {
+      const remoteUrl = REMOTES[remoteName];
+      return git('-C', TEST_REPO_PATH,
+        'remote', 'add', remoteName, remoteUrl);
+    }), Promise.resolve()))
+    .then(() => Object.keys(BRANCH_REMOTES)
+      .reduce((p, branchName) => p.then(() => {
+        const upstream = BRANCH_REMOTES[branchName];
+        let gitBranchP = git('-C', TEST_REPO_PATH, 'branch', branchName);
+        if (upstream) {
+          gitBranchP = gitBranchP.then(() => {
+            // Note:  Can't use 'git branch -u' without fetching remote
+            const upstreamParts = upstream.split('/');
+            assert.strictEqual(upstreamParts.length, 2);
+            const remoteName = upstreamParts[0];
+            const remoteBranch = upstreamParts[1];
+            const remoteRef = `refs/heads/${remoteBranch}`;
+            const configBranch = `branch.${branchName}`;
+            const configMerge = `${configBranch}.merge`;
+            const configRemote = `${configBranch}.remote`;
+            return git('-C', TEST_REPO_PATH,
+              'config', '--add', configRemote, remoteName)
+              .then(() => git('-C', TEST_REPO_PATH,
+                'config', '--add', configMerge, remoteRef));
+          });
+        }
+        return gitBranchP;
+      }), Promise.resolve()));
+});
 
 before('run from test repository', () => {
   origCWD = process.cwd();
