@@ -5,13 +5,14 @@
 
 'use strict';
 
-const GitStatusChecker = require('./lib/git-status-checker');
-const TravisStatusChecker = require('./lib/travis-status-checker');
 const assert = require('assert');
 const http = require('http');
 const https = require('https');
 const nodeify = require('promise-nodeify');
 const url = require('url');
+
+const GitStatusChecker = require('./lib/git-status-checker');
+const TravisStatusChecker = require('./lib/travis-status-checker');
 
 /** Checks that a build has an expected commit hash.
  * @param {!{commit:!{sha: string}}} build Build (or branch) object returned
@@ -117,17 +118,17 @@ function travisStatus(options, callback) {
     // Each function call will use HTTP keep-alive for the duration of the
     // function, but not after completion, which callers may not expect.
     let requestOpts = options.requestOpts;
-    if (!requestOpts ||
-        (requestOpts.agent === undefined &&
-         requestOpts.agentClass === undefined &&
-         requestOpts.agentOptions === undefined &&
-         requestOpts.forever === undefined &&
-         requestOpts.pool === undefined)) {
-      const apiUrl =
-        url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
-      const Agent = apiUrl.protocol === 'https:' ? https.Agent :
-        apiUrl.protocol === 'http:' ? http.Agent :
-          null;
+    if (!requestOpts
+        || (requestOpts.agent === undefined
+         && requestOpts.agentClass === undefined
+         && requestOpts.agentOptions === undefined
+         && requestOpts.forever === undefined
+         && requestOpts.pool === undefined)) {
+      const apiUrl
+        = url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
+      const Agent = apiUrl.protocol === 'https:' ? https.Agent
+        : apiUrl.protocol === 'http:' ? http.Agent
+          : null;
       if (Agent) {
         agent = new Agent({keepAlive: true});
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
@@ -154,9 +155,9 @@ function travisStatus(options, callback) {
   if (options.storeRepo) {
     const storedSlugP = gitChecker.tryStoreSlug(options.storeRepo);
     // If both .repo and .storeRepo are present, store .storeRepo and use .repo
-    repoSlugP =
-      options.repo ? storedSlugP.then(() => options.repo) :
-        storedSlugP;
+    repoSlugP
+      = options.repo ? storedSlugP.then(() => options.repo)
+        : storedSlugP;
   } else if (options.repo) {
     repoSlugP = Promise.resolve(options.repo);
   } else {
@@ -187,8 +188,8 @@ function travisStatus(options, callback) {
 
   let resultP;
   if (options.branch) {
-    const branchP = options.branch === true ? gitChecker.detectBranch() :
-      Promise.resolve(options.branch);
+    const branchP = options.branch === true ? gitChecker.detectBranch()
+      : Promise.resolve(options.branch);
     resultP = Promise.all([slugForQueryP, branchP])
       .then((results) => {
         const slug = results[0];
@@ -196,14 +197,16 @@ function travisStatus(options, callback) {
         return travisChecker.getBranch(slug, branch, options);
       });
   } else {
-    const repoP =
-      slugForQueryP.then((slug) => travisChecker.getRepo(slug, options));
+    const repoP
+      = slugForQueryP.then((slug) => travisChecker.getRepo(slug, options));
 
     if (localCommitP) {
       // Add build information to result
-      resultP = repoP.then((repo) =>
-        travisChecker.getBuild(repo.repo.slug, repo.repo.last_build_id)
-          .then((build) => Object.assign({}, repo, build)));
+      resultP = repoP.then((repo) => travisChecker.getBuild(
+        repo.repo.slug,
+        repo.repo.last_build_id
+      )
+        .then((build) => Object.assign({}, repo, build)));
     } else {
       resultP = repoP;
     }

@@ -5,12 +5,13 @@
 
 'use strict';
 
-const GitStatusChecker = require('../lib/git-status-checker');
-const TravisStatusChecker = require('../lib/travis-status-checker');
-const apiResponses = require('../test-lib/api-responses');
 const assert = require('chai').assert;
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
+
+const GitStatusChecker = require('../lib/git-status-checker');
+const TravisStatusChecker = require('../lib/travis-status-checker');
+const apiResponses = require('../test-lib/api-responses');
 
 describe('travisStatus', () => {
   // In order to test travisStatus in isolation, we need to mock
@@ -195,8 +196,8 @@ describe('travisStatus', () => {
 
   [true, false].forEach((isSameHash) => {
     [true, false].forEach((commitIsHash) => {
-      const desc =
-        `${isSameHash ? 'resolves combined result' : 'rejects with Error'
+      const desc
+        = `${isSameHash ? 'resolves combined result' : 'rejects with Error'
         } for ${
           commitIsHash ? 'same commit hash' : 'matching commit name'}`;
       it(desc, () => {
@@ -247,8 +248,8 @@ describe('travisStatus', () => {
     });
   });
 
-  it('rejects with TypeError for non-object options', () =>
-    travisStatus(true).then(
+  it('rejects with TypeError for non-object options', () => travisStatus(true)
+    .then(
       sinon.mock().never(),
       (err) => {
         assert.strictEqual(err.name, 'TypeError');

@@ -7,9 +7,10 @@
 
 const assert = require('chai').assert;
 const http = require('http');
-const packageJson = require('../package.json');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
+
+const packageJson = require('../package.json');
 
 const match = sinon.match;
 
@@ -54,8 +55,8 @@ describe('TravisStatusHttp', () => {
           headers: match({
             Accept: match((accept) => {
               const travisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
-              return travisRE.test(accept) &&
-                / application\/json(?:,|$)/.test(accept);
+              return travisRE.test(accept)
+                && / application\/json(?:,|$)/.test(accept);
             }, 'match Travis and JSON media types')
           })
         }));
@@ -66,8 +67,8 @@ describe('TravisStatusHttp', () => {
     it('can send custom accept header', () => {
       const testAccept = 'text/plain';
       // Note:  Testing lower case properly replaces upper
-      const status =
-        new TravisStatusHttp(null, {headers: {accept: testAccept}});
+      const status
+        = new TravisStatusHttp(null, {headers: {accept: testAccept}});
       request = sinon.mock()
         .once()
         .withArgs(match({
@@ -107,8 +108,8 @@ describe('TravisStatusHttp', () => {
     it('can send custom user-agent header', () => {
       const testUA = 'Test Agent';
       // Note:  Testing lower case properly replaces upper
-      const status =
-        new TravisStatusHttp(null, {headers: {'user-agent': testUA}});
+      const status
+        = new TravisStatusHttp(null, {headers: {'user-agent': testUA}});
       request = sinon.mock()
         .once()
         .withArgs(match({
@@ -154,8 +155,8 @@ describe('TravisStatusHttp', () => {
 
     it('setAccessToken overrides options.headers.Authorization', () => {
       const testToken = '12345';
-      const status =
-        new TravisStatusHttp(null, {headers: {Authorization: 'foo'}});
+      const status
+        = new TravisStatusHttp(null, {headers: {Authorization: 'foo'}});
       status.setAccessToken(testToken);
       request = sinon.mock()
         .once()

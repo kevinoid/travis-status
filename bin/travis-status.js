@@ -7,9 +7,9 @@
 'use strict';
 
 // Set NODE_DEBUG for request before importing it
-if (require.main === module &&
-    (process.argv.indexOf('--debug') >= 0 ||
-     process.argv.indexOf('--debug-http') >= 0)) {
+if (require.main === module
+    && (process.argv.indexOf('--debug') >= 0
+     || process.argv.indexOf('--debug-http') >= 0)) {
   const nodeDebug = process.env.NODE_DEBUG;
   if (!nodeDebug) {
     process.env.NODE_DEBUG = 'request';
@@ -21,6 +21,7 @@ if (require.main === module &&
 const Chalk = require('chalk').constructor;
 const Command = require('commander').Command;
 const debug = require('debug')('travis-status');
+
 const packageJson = require('../package.json');
 const stateInfo = require('../lib/state-info');
 const travisStatus = require('..');
@@ -75,8 +76,8 @@ function travisStatusCmd(args, options, callback) {
         process.execPath,
         __filename
       ];
-    } else if (typeof args !== 'object' ||
-               Math.floor(args.length) !== args.length) {
+    } else if (typeof args !== 'object'
+               || Math.floor(args.length) !== args.length) {
       throw new TypeError('args must be Array-like');
     } else if (args.length < 2) {
       throw new RangeError('non-empty args must have at least 2 elements');
@@ -271,9 +272,9 @@ function travisStatusCmd(args, options, callback) {
     if (err && err.name === 'SlugDetectionError') {
       debug('Error detecting repo slug', err);
       options.err.write(chalk.red(
-        'Can\'t figure out GitHub repo name. ' +
-        'Ensure you\'re in the repo directory, or specify the repo name via ' +
-        'the -r option (e.g. travis-status -r <owner>/<repo>)\n'
+        'Can\'t figure out GitHub repo name. '
+        + 'Ensure you\'re in the repo directory, or specify the repo name via '
+        + 'the -r option (e.g. travis-status -r <owner>/<repo>)\n'
       ));
       callback(null, 1);
       return;
@@ -289,15 +290,15 @@ function travisStatusCmd(args, options, callback) {
 
     if (!command.quiet) {
       const color = stateInfo.colors[state] || 'yellow';
-      const number =
-        build.repo ? build.repo.last_build_number : build.branch.number;
+      const number
+        = build.repo ? build.repo.last_build_number : build.branch.number;
       options.out.write(`build #${number} ${chalk[color](state)
       }\n`);
     }
 
     let code = 0;
-    if ((command.exitCode && stateInfo.isUnsuccessful[state]) ||
-        (command.failPending && stateInfo.isPending[state])) {
+    if ((command.exitCode && stateInfo.isUnsuccessful[state])
+        || (command.failPending && stateInfo.isPending[state])) {
       code = 1;
     }
 

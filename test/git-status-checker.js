@@ -5,16 +5,17 @@
 
 'use strict';
 
-const GitStatusChecker = require('../lib/git-status-checker');
-const InvalidSlugError = require('../lib/invalid-slug-error');
 const assert = require('chai').assert;
-const git = require('../lib/git');
 const path = require('path');
 const pify = require('pify');
 const promisedRead = require('promised-read');
 const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
+
+const GitStatusChecker = require('../lib/git-status-checker');
+const InvalidSlugError = require('../lib/invalid-slug-error');
+const git = require('../lib/git');
 
 const isWindows = /^win/i.test(process.platform);
 const read = promisedRead.read;
@@ -102,9 +103,7 @@ after('remove test repository', () => rimrafP(TEST_REPO_PATH));
 
 function unsetTravisSlug() {
   return git('config', '--unset-all', GitStatusChecker.SLUG_CONFIG_NAME)
-    .catch((err) =>
-      // Exit code 5 is 'try to unset an option which does not exist'
-      (err.code === 5 ? null : Promise.reject(err)));
+    .catch((err) => (err.code === 5 ? null : Promise.reject(err)));
 }
 
 describe('GitStatusChecker', () => {
@@ -608,10 +607,9 @@ describe('GitStatusChecker', () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foo/bar';
       return checker.storeSlug(testSlug)
-        .then(() =>
-          checker.loadSlug().then((slug) => {
-            assert.strictEqual(slug, testSlug);
-          }));
+        .then(() => checker.loadSlug().then((slug) => {
+          assert.strictEqual(slug, testSlug);
+        }));
     });
 
     it('resolves null if slug is not set', () => {

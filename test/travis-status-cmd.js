@@ -5,15 +5,16 @@
 
 'use strict';
 
-const SlugDetectionError = require('../lib/slug-detection-error');
 const ansiStyles = require('ansi-styles');
-const apiResponses = require('../test-lib/api-responses');
 const assert = require('chai').assert;
 const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
-const stateInfo = require('../lib/state-info');
 const stream = require('stream');
+
+const SlugDetectionError = require('../lib/slug-detection-error');
+const apiResponses = require('../test-lib/api-responses');
+const stateInfo = require('../lib/state-info');
 
 const match = sinon.match;
 
@@ -142,9 +143,9 @@ describe('travis-status command', () => {
     commit: undefined,
     repo: undefined,
     // requestOpts may have defaults set.  Ensure --insecure isn't default
-    requestOpts: match((requestOpts) => !requestOpts ||
-        requestOpts.strictSSL === undefined ||
-        requestOpts.strictSSL === true, 'not insecure'),
+    requestOpts: match((requestOpts) => !requestOpts
+        || requestOpts.strictSSL === undefined
+        || requestOpts.strictSSL === true, 'not insecure'),
     storeRepo: undefined,
     token: undefined,
     wait: undefined
@@ -304,9 +305,9 @@ describe('travis-status command', () => {
       });
       travisStatus.yield(
         null,
-        isBranch ?
-          apiResponses.branch({number: buildNum, state}) :
-          apiResponses.repo({number: buildNum, state})
+        isBranch
+          ? apiResponses.branch({number: buildNum, state})
+          : apiResponses.repo({number: buildNum, state})
       );
     });
   });
