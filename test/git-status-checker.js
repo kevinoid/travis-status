@@ -5,10 +5,10 @@
 
 'use strict';
 
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const path = require('path');
 const pify = require('pify');
-const promisedRead = require('promised-read');
+const {read} = require('promised-read');
 const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
@@ -18,8 +18,7 @@ const InvalidSlugError = require('../lib/invalid-slug-error');
 const git = require('../lib/git');
 
 const isWindows = /^win/i.test(process.platform);
-const read = promisedRead.read;
-const rimrafP = pify(rimraf, Promise);
+const rimrafP = pify(rimraf);
 
 // Global variables
 let origCWD;

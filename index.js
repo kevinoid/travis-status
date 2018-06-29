@@ -117,7 +117,7 @@ function travisStatus(options, callback) {
     // If the caller didn't request an agent behavior, control it ourselves.
     // Each function call will use HTTP keep-alive for the duration of the
     // function, but not after completion, which callers may not expect.
-    let requestOpts = options.requestOpts;
+    let {requestOpts} = options;
     if (!requestOpts
         || (requestOpts.agent === undefined
          && requestOpts.agentClass === undefined

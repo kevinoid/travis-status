@@ -19,7 +19,7 @@ if (require.main === module
 }
 
 const Chalk = require('chalk').constructor;
-const Command = require('commander').Command;
+const {Command} = require('commander');
 const debug = require('debug')('travis-status');
 
 const packageJson = require('../package.json');

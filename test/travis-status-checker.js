@@ -6,14 +6,14 @@
 'use strict';
 
 const Travis = require('travis-ci');
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
 const apiResponses = require('../test-lib/api-responses');
 const TravisStatusHttp = require('../lib/travis-status-http');
 
-const match = sinon.match;
+const {match} = sinon;
 
 describe('TravisStatusChecker', () => {
   // In order to test TravisStatusChecker in isolation, we need to mock
@@ -25,18 +25,18 @@ describe('TravisStatusChecker', () => {
   const TravisStatusChecker = proxyquire(
     '../lib/travis-status-checker',
     {
-      'travis-ci': function TravisInjected() {
+      'travis-ci': function TravisInjected(...args) {
         const travis = Object.create(TravisMock);
-        return TravisMock.apply(travis, arguments) || travis;
+        return TravisMock.apply(travis, args) || travis;
       },
-      './travis-status-http': function TravisStatusHttpInjected() {
+      './travis-status-http': function TravisStatusHttpInjected(...args) {
         let travisHttp;
         if (travisHttpMock) {
           travisHttp = travisHttpMock;
         } else {
           travisHttp = Object.create(TravisStatusHttp);
           travisHttp
-            = TravisStatusHttp.apply(travisHttp, arguments) || travisHttp;
+            = TravisStatusHttp.apply(travisHttp, args) || travisHttp;
         }
         if (travisRequestMock) {
           travisHttp.request = travisRequestMock;
@@ -95,7 +95,7 @@ describe('TravisStatusChecker', () => {
         .withArgs(match(/GET/i), match(travisUrlRe))
         .yields(null, passedResponse);
       const checker = new TravisStatusChecker();
-      const promise = checker[methodName].apply(checker, args)
+      const promise = checker[methodName](...args)
         .then((response) => {
           assert.deepEqual(response, passedResponse);
         });
@@ -120,7 +120,7 @@ describe('TravisStatusChecker', () => {
           .yields(null, passedResponse);
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: 10000}))
+          = checker[methodName](...args.concat({wait: 10000}))
             .then((response) => {
               assert.deepEqual(response, passedResponse);
             });
@@ -136,7 +136,7 @@ describe('TravisStatusChecker', () => {
         travisRequestMock.onSecondCall().yields(null, passedResponse);
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: 10000}))
+          = checker[methodName](...args.concat({wait: 10000}))
             .then((response) => {
               assert.deepEqual(response, passedResponse);
             });
@@ -154,7 +154,7 @@ describe('TravisStatusChecker', () => {
           .yields(null, pendingResponse);
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: 10000}))
+          = checker[methodName](...args.concat({wait: 10000}))
             .then((response) => {
               assert.deepEqual(response, pendingResponse);
             });
@@ -173,7 +173,7 @@ describe('TravisStatusChecker', () => {
           .yields(errTest);
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: 30000}))
+          = checker[methodName](...args.concat({wait: 30000}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -193,7 +193,7 @@ describe('TravisStatusChecker', () => {
         travisRequestMock.onSecondCall().yields(errTest);
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: 30000}))
+          = checker[methodName](...args.concat({wait: 30000}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -211,7 +211,7 @@ describe('TravisStatusChecker', () => {
         travisRequestMock = sinon.mock().never();
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: 'hello'}))
+          = checker[methodName](...args.concat({wait: 'hello'}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -227,7 +227,7 @@ describe('TravisStatusChecker', () => {
         travisRequestMock = sinon.mock().never();
         const checker = new TravisStatusChecker();
         const promise
-          = checker[methodName].apply(checker, args.concat({wait: -5}))
+          = checker[methodName](...args.concat({wait: -5}))
             .then(
               sinon.mock().never(),
               (err) => {

@@ -6,7 +6,7 @@
 'use strict';
 
 const ansiStyles = require('ansi-styles');
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
@@ -16,7 +16,7 @@ const SlugDetectionError = require('../lib/slug-detection-error');
 const apiResponses = require('../test-lib/api-responses');
 const stateInfo = require('../lib/state-info');
 
-const match = sinon.match;
+const {match} = sinon;
 
 // Simulate arguments passed by the node runtime
 const RUNTIME_ARGS = ['node', 'travis-status'];
@@ -29,8 +29,8 @@ describe('travis-status command', () => {
   const travisStatusCmd = proxyquire(
     '../bin/travis-status',
     {
-      '..': function travisStatusInjected() {
-        return travisStatus.apply(this, arguments);
+      '..': function travisStatusInjected(...args) {
+        return travisStatus.apply(this, args);
       }
     }
   );

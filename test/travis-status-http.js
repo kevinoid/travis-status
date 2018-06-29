@@ -5,14 +5,14 @@
 
 'use strict';
 
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const http = require('http');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
 const packageJson = require('../package.json');
 
-const match = sinon.match;
+const {match} = sinon;
 
 describe('TravisStatusHttp', () => {
   // In order to test the TravisStatusHttp module in isolation, we need to mock
@@ -22,8 +22,8 @@ describe('TravisStatusHttp', () => {
   const TravisStatusHttp = proxyquire(
     '../lib/travis-status-http',
     {
-      request: function requestInjected() {
-        return request.apply(this, arguments);
+      request: function requestInjected(...args) {
+        return request.apply(this, args);
       }
     }
   );

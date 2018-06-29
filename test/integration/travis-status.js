@@ -5,7 +5,7 @@
 
 'use strict';
 
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const enableDestroy = require('server-destroy');
 const http = require('http');
 const sinon = require('sinon');
@@ -14,10 +14,10 @@ const packageJson = require('../../package.json');
 const apiResponses = require('../../test-lib/api-responses');
 const travisStatus = require('../..');
 
-const match = sinon.match;
+const {match} = sinon;
 
 function checkRequest(req) {
-  const accept = req.headers.accept;
+  const {accept} = req.headers;
   const acceptTravisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
   if (!acceptTravisRE.test(accept)) {
     throw new Error(`Accept does not start with Travis Media Type: ${
@@ -112,13 +112,8 @@ describe('travisStatus integration', () => {
     realClearTimeout = clearTimeout;
     realSetTimeout = setTimeout;
     global.clearTimeout = clearInterval;
-    global.setTimeout = function mockSetTimeout(fn, delay) {
-      if (arguments.length <= 2) {
-        return setImmediate(fn);
-      }
-      const args = Array.prototype.slice.call(arguments, 1);
-      args[0] = fn;
-      return setImmediate.apply(null, args);
+    global.setTimeout = function mockSetTimeout(fn, delay, ...args) {
+      return setImmediate(fn, ...args);
     };
   });
   afterEach(() => {
