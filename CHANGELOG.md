@@ -1,15 +1,23 @@
 # Change Log
 
-## [2.0.0](https://github.com/kevinoid/travis-status/tree/2.0.0) (2017-07-17)
-[Full Changelog](https://github.com/kevinoid/travis-status/compare/v1.0.0...2.0.0)
+## [v3.0.0](https://github.com/kevinoid/travis-status/tree/v3.0.0) (2018-06-29)
+[Full Changelog](https://github.com/kevinoid/travis-status/compare/v2.0.0...v3.0.0)
+
+- **BREAKING** Drop support for Node < 6.
+- Update dependency versions.
+- Replace `debug` dependency with `util.debuglog`.
+- Improve code style.
+
+## [v2.0.0](https://github.com/kevinoid/travis-status/tree/v2.0.0) (2017-07-17)
+[Full Changelog](https://github.com/kevinoid/travis-status/compare/v1.0.0...v2.0.0)
 
 - **BREAKING** **No API Changes**  Require Node v4 or later (as dependencies
   do).
 - Code style updates.
 - Dependency updates.
 
-## [1.0.0](https://github.com/kevinoid/travis-status/tree/1.0.0) (2017-02-25)
-[Full Changelog](https://github.com/kevinoid/travis-status/compare/v0.1.0...1.0.0)
+## [v1.0.0](https://github.com/kevinoid/travis-status/tree/v1.0.0) (2017-02-25)
+[Full Changelog](https://github.com/kevinoid/travis-status/compare/v0.1.0...v1.0.0)
 
 - **No API Changes**  Bump to 1.0 is declaration of stability rather than an
   indication of changes.
