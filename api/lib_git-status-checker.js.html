@@ -34,14 +34,15 @@
 'use strict';
 
 const Chalk = require('chalk').constructor;
+const util = require('util');
+const url = require('url');
+
 const InvalidSlugError = require('./invalid-slug-error');
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
 const Shortline = require('./shortline');
 const SlugDetectionError = require('./slug-detection-error');
-const assign = require('object-assign');
-const debug = require('debug')('travis-status:git-status-checker');
 const git = require('./git');
-const url = require('url');
+
+const debug = util.debuglog('travis-status:git-status-checker');
 
 /** Gets the right-trimmed stdout result of &lt;code>execFileP&lt;/code>.
  * @param {!Array&lt;string>} result Result Array from &lt;code>execFileP&lt;/code>
@@ -80,7 +81,7 @@ function GitStatusChecker(options) {
     throw new TypeError('options must be an object');
   }
 
-  options = assign(
+  options = Object.assign(
     {
       in: process.stdin,
       out: process.stdout,
@@ -102,9 +103,9 @@ function GitStatusChecker(options) {
   this._options = options;
   this._chalk = new Chalk({
     enabled: Boolean(
-      options.interactive !== undefined ?
-        options.interactive :
-        options.out.isTTY
+      options.interactive !== undefined
+        ? options.interactive
+        : options.out.isTTY
     )
   });
 }
@@ -112,8 +113,8 @@ function GitStatusChecker(options) {
 /** Message returned when the repository slug is invalid.
  * @const
  */
-GitStatusChecker.SLUG_INVALID =
-  'GitHub repo name is invalid, it should be on the form \'owner/repo\'';
+GitStatusChecker.SLUG_INVALID
+  = 'GitHub repo name is invalid, it should be on the form \'owner/repo\'';
 
 /** RegExp used to test the validity of a repository slug.
  * Note:  travis.rb only checks for a '/' character, but GitHub currently
@@ -181,7 +182,7 @@ GitStatusChecker.prototype.storeSlug = function storeSlug(slug) {
  * @private
  */
 GitStatusChecker.prototype.tryStoreSlug = function tryStoreSlug(slug) {
-  const err = this._options.err;
+  const {err} = this._options;
   return this.storeSlug(slug)
     .catch((errStore) => {
       err.write(`Error storing slug in git config: ${errStore}`);
@@ -200,7 +201,7 @@ GitStatusChecker.prototype.confirmSlug = function confirmSlug(slug) {
     output: this._options.err
   });
   const question = `Detected repository as ${this._chalk.yellow(slug)
-    } is this correct? `;
+  } is this correct? `;
   return shortline.agree(question)
     .then((correct) => {
       if (correct) {
@@ -284,28 +285,23 @@ GitStatusChecker.prototype.detectSlug = function detectSlug() {
       debug('Unable to get remote for current branch', err);
       return 'origin';
     })
-    .then((remoteName) =>
-      // Note:  ls-remote defaulted to origin since 2010 (git/git@cefb2a5e)
-      // then the remote for the current branch since 2015 (git/git@da66b274)
-      // The man page was fixed to note defaulting in 2016 (git/git@80b17e58)
-      // Can remote remote name determination when using git v2.5.0 or later
-       git('ls-remote', '--get-url', remoteName)
-        .then(getTrimmedStdout)
-        .then((remoteUrl) => {
-          // ls-remote prints its argument when it doesn't have a URL
-          if (remoteUrl === remoteName) {
-            return Promise.reject(new SlugDetectionError(
-              `No URL for '${remoteName}' remote`
-            ));
-          }
-          return remoteUrl;
-        }))
+    .then((remoteName) => git('ls-remote', '--get-url', remoteName)
+      .then(getTrimmedStdout)
+      .then((remoteUrl) => {
+        // ls-remote prints its argument when it doesn't have a URL
+        if (remoteUrl === remoteName) {
+          return Promise.reject(new SlugDetectionError(
+            `No URL for '${remoteName}' remote`
+          ));
+        }
+        return remoteUrl;
+      }))
     .then((remoteUrl) => {
       const path = gitUrlPath(remoteUrl);
       const match = /([^/]+\/[^/]+?)(?:\/?\.git)?$/.exec(path);
-      return match ?
-        match[1] :
-        Promise.reject(new SlugDetectionError(
+      return match
+        ? match[1]
+        : Promise.reject(new SlugDetectionError(
           `Unable to extract slug from URL &lt;${remoteUrl}>`
         ));
     });
@@ -316,7 +312,7 @@ GitStatusChecker.prototype.detectSlug = function detectSlug() {
     }
 
     self._options.err.write(`detected repository as ${
-        self._chalk.bold(slug)}\n`);
+      self._chalk.bold(slug)}\n`);
     return slug;
   });
 };
@@ -329,9 +325,9 @@ GitStatusChecker.prototype.detectSlug = function detectSlug() {
 GitStatusChecker.prototype.loadSlug = function loadSlug() {
   return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
     .then(
-        getTrimmedStdout,
-        // git config exits with code 1 if the configuration value is not set
-        (err) => (err.code === 1 ? null : Promise.reject(err))
+      getTrimmedStdout,
+      // git config exits with code 1 if the configuration value is not set
+      (err) => (err.code === 1 ? null : Promise.reject(err))
     );
 };
 
@@ -370,7 +366,7 @@ module.exports = GitStatusChecker;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Mon Jul 17 2017 15:27:38 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jun 29 2018 18:05:13 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>

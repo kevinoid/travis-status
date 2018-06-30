@@ -35,9 +35,9 @@
 'use strict';
 
 // Set NODE_DEBUG for request before importing it
-if (require.main === module &amp;&amp;
-    (process.argv.indexOf('--debug') >= 0 ||
-     process.argv.indexOf('--debug-http') >= 0)) {
+if (require.main === module
+    &amp;&amp; (process.argv.indexOf('--debug') >= 0
+     || process.argv.indexOf('--debug-http') >= 0)) {
   const nodeDebug = process.env.NODE_DEBUG;
   if (!nodeDebug) {
     process.env.NODE_DEBUG = 'request';
@@ -47,13 +47,14 @@ if (require.main === module &amp;&amp;
 }
 
 const Chalk = require('chalk').constructor;
-const Command = require('commander').Command;
-const Promise = require('any-promise');   // eslint-disable-line no-shadow
-const debug = require('debug')('travis-status');
-const assign = require('object-assign');
+const {Command} = require('commander');
+const util = require('util');
+
 const packageJson = require('../package.json');
 const stateInfo = require('../lib/state-info');
 const travisStatus = require('..');
+
+const debug = util.debuglog('travis-status');
 
 /** Options for command entry points.
  *
@@ -105,8 +106,8 @@ function travisStatusCmd(args, options, callback) {
         process.execPath,
         __filename
       ];
-    } else if (typeof args !== 'object' ||
-               Math.floor(args.length) !== args.length) {
+    } else if (typeof args !== 'object'
+               || Math.floor(args.length) !== args.length) {
       throw new TypeError('args must be Array-like');
     } else if (args.length &lt; 2) {
       throw new RangeError('non-empty args must have at least 2 elements');
@@ -118,7 +119,7 @@ function travisStatusCmd(args, options, callback) {
       throw new TypeError('options must be an object');
     }
 
-    options = assign(
+    options = Object.assign(
       {
         in: process.stdin,
         out: process.stdout,
@@ -150,16 +151,16 @@ function travisStatusCmd(args, options, callback) {
     .option('-E, --explode', 'ignored for compatibility with travis.rb')
     .option('--skip-version-check', 'ignored for compatibility with travis.rb')
     .option('--skip-completion-check',
-        'ignored for compatibility with travis.rb')
+      'ignored for compatibility with travis.rb')
     .option('-I, --insecure', 'do not verify SSL certificate of API endpoint')
     .option('-e, --api-endpoint &lt;URL>', 'Travis API server to talk to')
     .option('--pro',
-        `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
+      `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
     .on('option:pro', function() {
       this.apiEndpoint = travisStatus.PRO_URI;
     })
     .option('--org',
-        `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
+      `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
     .on('option:org', function() {
       this.apiEndpoint = travisStatus.ORG_URI;
     })
@@ -172,22 +173,22 @@ function travisStatusCmd(args, options, callback) {
     .option('--debug', 'show API requests')
     .option('--debug-http', 'show HTTP(S) exchange')
     .option('-r, --repo &lt;SLUG>',
-        'repository to use (will try to detect from current git clone)')
+      'repository to use (will try to detect from current git clone)')
     .option('-R, --store-repo &lt;SLUG>',
-        'like --repo, but remembers value for current directory')
+      'like --repo, but remembers value for current directory')
     .on('option:store-repo', function() {
       this.repo = this.storeRepo;
     })
     .option('-x, --exit-code', 'sets the exit code to 1 if the build failed')
     .option('-q, --quiet', 'does not print anything')
     .option('-p, --fail-pending',
-        'sets the status code to 1 if the build is pending')
+      'sets the status code to 1 if the build is pending')
     .option('-b, --branch [BRANCH]',
-        'query latest build for a branch (default: current)')
+      'query latest build for a branch (default: current)')
     .option('-c, --commit [COMMIT]',
-        'require build to be for a specific commit (default: HEAD)')
+      'require build to be for a specific commit (default: HEAD)')
     .option('-w, --wait [TIMEOUT]',
-        'wait if build is pending (timeout in seconds)')
+      'wait if build is pending (timeout in seconds)')
     .version(packageJson.version);
 
   // Patch stdout, stderr, and exit for Commander
@@ -203,16 +204,16 @@ function travisStatusCmd(args, options, callback) {
   };
   if (options.out) {
     Object.defineProperty(
-        process,
-        'stdout',
-        {configurable: true, enumerable: true, value: options.out}
+      process,
+      'stdout',
+      {configurable: true, enumerable: true, value: options.out}
     );
   }
   if (options.err) {
     Object.defineProperty(
-        process,
-        'stderr',
-        {configurable: true, enumerable: true, value: options.err}
+      process,
+      'stderr',
+      {configurable: true, enumerable: true, value: options.err}
     );
   }
   if (options.out || options.err) {
@@ -258,18 +259,23 @@ function travisStatusCmd(args, options, callback) {
     command.wait = Infinity;
   }
 
-  const chalk = new Chalk({enabled: command.interactive});
+  const chalk = new Chalk({
+    enabled: command.interactive,
+    // Note:  level: 0 overrides enabled: true, so must be specified here in
+    // case supports-color returns false causing 0 default level.
+    level: 1
+  });
 
   if (command.args.length > 0) {
     options.err.write(`${chalk.red('too many arguments')}\n${
-        command.helpInformation()}`);
+      command.helpInformation()}`);
     process.nextTick(() => { callback(null, 1); });
     return undefined;
   }
 
   if (hasOwnProperty.call(command, 'wait')) {
     const wait = Number(command.wait);
-    if (isNaN(wait)) {
+    if (Number.isNaN(wait)) {
       const waitErr = chalk.red(`invalid wait time "${command.wait}"`);
       options.err.write(`${waitErr}\n`);
       process.nextTick(() => { callback(null, 1); });
@@ -296,9 +302,9 @@ function travisStatusCmd(args, options, callback) {
     if (err &amp;&amp; err.name === 'SlugDetectionError') {
       debug('Error detecting repo slug', err);
       options.err.write(chalk.red(
-        'Can\'t figure out GitHub repo name. ' +
-        'Ensure you\'re in the repo directory, or specify the repo name via ' +
-        'the -r option (e.g. travis-status -r &lt;owner>/&lt;repo>)\n'
+        'Can\'t figure out GitHub repo name. '
+        + 'Ensure you\'re in the repo directory, or specify the repo name via '
+        + 'the -r option (e.g. travis-status -r &lt;owner>/&lt;repo>)\n'
       ));
       callback(null, 1);
       return;
@@ -314,15 +320,15 @@ function travisStatusCmd(args, options, callback) {
 
     if (!command.quiet) {
       const color = stateInfo.colors[state] || 'yellow';
-      const number =
-        build.repo ? build.repo.last_build_number : build.branch.number;
+      const number
+        = build.repo ? build.repo.last_build_number : build.branch.number;
       options.out.write(`build #${number} ${chalk[color](state)
-          }\n`);
+      }\n`);
     }
 
     let code = 0;
-    if ((command.exitCode &amp;&amp; stateInfo.isUnsuccessful[state]) ||
-        (command.failPending &amp;&amp; stateInfo.isPending[state])) {
+    if ((command.exitCode &amp;&amp; stateInfo.isUnsuccessful[state])
+        || (command.failPending &amp;&amp; stateInfo.isPending[state])) {
       code = 1;
     }
 
@@ -370,7 +376,7 @@ if (require.main === module) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Mon Jul 17 2017 15:27:38 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jun 29 2018 18:05:13 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>
