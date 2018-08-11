@@ -49,7 +49,7 @@
     "promise-nodeify": "^3.0.0",
     "promised-read": "^2.0.0",
     "request": "^2.68.0",
-    "travis-ci": "2.1.1"
+    "travis-ci": "2.2.0"
   },
   "devDependencies": {
     "ansi-styles": "^3.1.0",
