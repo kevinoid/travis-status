@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.0.1](https://github.com/kevinoid/travis-status/tree/v3.0.1) (2018-08-12)
+[Full Changelog](https://github.com/kevinoid/travis-status/compare/v3.0.0...v3.0.1)
+
+- Update travis-ci to the latest version [\#50](https://github.com/kevinoid/travis-status/pull/50)
+- Update pify to the latest version [\#49](https://github.com/kevinoid/travis-status/pull/49)
+- Update promised-read to the latest version [\#47](https://github.com/kevinoid/travis-status/pull/47)
+
 ## [v3.0.0](https://github.com/kevinoid/travis-status/tree/v3.0.0) (2018-06-29)
 [Full Changelog](https://github.com/kevinoid/travis-status/compare/v2.0.0...v3.0.0)
 
