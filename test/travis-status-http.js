@@ -67,8 +67,8 @@ describe('TravisStatusHttp', () => {
     it('can send custom accept header', () => {
       const testAccept = 'text/plain';
       // Note:  Testing lower case properly replaces upper
-      const status
-        = new TravisStatusHttp(null, {headers: {accept: testAccept}});
+      const status =
+        new TravisStatusHttp(null, {headers: {accept: testAccept}});
       request = sinon.mock()
         .once()
         .withArgs(match({
@@ -108,8 +108,8 @@ describe('TravisStatusHttp', () => {
     it('can send custom user-agent header', () => {
       const testUA = 'Test Agent';
       // Note:  Testing lower case properly replaces upper
-      const status
-        = new TravisStatusHttp(null, {headers: {'user-agent': testUA}});
+      const status =
+        new TravisStatusHttp(null, {headers: {'user-agent': testUA}});
       request = sinon.mock()
         .once()
         .withArgs(match({
@@ -155,8 +155,8 @@ describe('TravisStatusHttp', () => {
 
     it('setAccessToken overrides options.headers.Authorization', () => {
       const testToken = '12345';
-      const status
-        = new TravisStatusHttp(null, {headers: {Authorization: 'foo'}});
+      const status =
+        new TravisStatusHttp(null, {headers: {Authorization: 'foo'}});
       status.setAccessToken(testToken);
       request = sinon.mock()
         .once()

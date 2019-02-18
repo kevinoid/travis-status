@@ -35,8 +35,8 @@ describe('TravisStatusChecker', () => {
           travisHttp = travisHttpMock;
         } else {
           travisHttp = Object.create(TravisStatusHttp);
-          travisHttp
-            = TravisStatusHttp.apply(travisHttp, args) || travisHttp;
+          travisHttp =
+            TravisStatusHttp.apply(travisHttp, args) || travisHttp;
         }
         if (travisRequestMock) {
           travisHttp.request = travisRequestMock;
@@ -119,8 +119,8 @@ describe('TravisStatusChecker', () => {
           .withArgs(match(/GET/i), match(travisUrlRe))
           .yields(null, passedResponse);
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: 10000}))
+        const promise =
+          checker[methodName](...args.concat({wait: 10000}))
             .then((response) => {
               assert.deepEqual(response, passedResponse);
             });
@@ -135,8 +135,8 @@ describe('TravisStatusChecker', () => {
         travisRequestMock.onFirstCall().yields(null, pendingResponse);
         travisRequestMock.onSecondCall().yields(null, passedResponse);
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: 10000}))
+        const promise =
+          checker[methodName](...args.concat({wait: 10000}))
             .then((response) => {
               assert.deepEqual(response, passedResponse);
             });
@@ -153,8 +153,8 @@ describe('TravisStatusChecker', () => {
           .withArgs(match(/GET/i), match(travisUrlRe))
           .yields(null, pendingResponse);
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: 10000}))
+        const promise =
+          checker[methodName](...args.concat({wait: 10000}))
             .then((response) => {
               assert.deepEqual(response, pendingResponse);
             });
@@ -172,8 +172,8 @@ describe('TravisStatusChecker', () => {
           .withArgs(match(/GET/i), match(travisUrlRe))
           .yields(errTest);
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: 30000}))
+        const promise =
+          checker[methodName](...args.concat({wait: 30000}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -192,8 +192,8 @@ describe('TravisStatusChecker', () => {
         travisRequestMock.onFirstCall().yields(null, pendingResponse);
         travisRequestMock.onSecondCall().yields(errTest);
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: 30000}))
+        const promise =
+          checker[methodName](...args.concat({wait: 30000}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -210,8 +210,8 @@ describe('TravisStatusChecker', () => {
       it('rejects with TypeError for non-number wait', () => {
         travisRequestMock = sinon.mock().never();
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: 'hello'}))
+        const promise =
+          checker[methodName](...args.concat({wait: 'hello'}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -226,8 +226,8 @@ describe('TravisStatusChecker', () => {
       it('rejects with RangeError for negative wait', () => {
         travisRequestMock = sinon.mock().never();
         const checker = new TravisStatusChecker();
-        const promise
-          = checker[methodName](...args.concat({wait: -5}))
+        const promise =
+          checker[methodName](...args.concat({wait: -5}))
             .then(
               sinon.mock().never(),
               (err) => {
@@ -254,8 +254,8 @@ describe('TravisStatusChecker', () => {
       slug: testSlug,
       state: 'passed'
     });
-    const travisUrlRe
-      = new RegExp(`^/repos/${testSlug}/branches/${testBranch}$`);
+    const travisUrlRe =
+      new RegExp(`^/repos/${testSlug}/branches/${testBranch}$`);
     const args = [testSlug, testBranch];
     apiMethod('getBranch', args, travisUrlRe, pendingResponse, passedResponse);
   });
@@ -273,8 +273,8 @@ describe('TravisStatusChecker', () => {
       slug: testSlug,
       state: 'passed'
     });
-    const travisUrlRe
-      = new RegExp(`^(?:/repos/${testSlug})?/builds/${testBuildId}$`);
+    const travisUrlRe =
+      new RegExp(`^(?:/repos/${testSlug})?/builds/${testBuildId}$`);
     const args = [testSlug, testBuildId];
     apiMethod('getBuild', args, travisUrlRe, pendingResponse, passedResponse);
   });
@@ -289,8 +289,8 @@ describe('TravisStatusChecker', () => {
       slug: testSlug,
       state: 'passed'
     });
-    const travisUrlRe
-      = new RegExp(`^/repos/${testSlug}$`);
+    const travisUrlRe =
+      new RegExp(`^/repos/${testSlug}$`);
     const args = [testSlug];
     apiMethod('getRepo', args, travisUrlRe, pendingResponse, passedResponse);
   });

@@ -196,8 +196,8 @@ describe('travisStatus', () => {
 
   [true, false].forEach((isSameHash) => {
     [true, false].forEach((commitIsHash) => {
-      const desc
-        = `${isSameHash ? 'resolves combined result' : 'rejects with Error'
+      const desc =
+        `${isSameHash ? 'resolves combined result' : 'rejects with Error'
         } for ${
           commitIsHash ? 'same commit hash' : 'matching commit name'}`;
       it(desc, () => {

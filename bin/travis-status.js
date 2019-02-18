@@ -292,8 +292,8 @@ function travisStatusCmd(args, options, callback) {
 
     if (!command.quiet) {
       const color = stateInfo.colors[state] || 'yellow';
-      const number
-        = build.repo ? build.repo.last_build_number : build.branch.number;
+      const number =
+        build.repo ? build.repo.last_build_number : build.branch.number;
       options.out.write(`build #${number} ${chalk[color](state)
       }\n`);
     }

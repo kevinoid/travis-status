@@ -124,8 +124,8 @@ function travisStatus(options, callback) {
          && requestOpts.agentOptions === undefined
          && requestOpts.forever === undefined
          && requestOpts.pool === undefined)) {
-      const apiUrl
-        = url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
+      const apiUrl =
+        url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent
         : apiUrl.protocol === 'http:' ? http.Agent
           : null;
@@ -155,8 +155,8 @@ function travisStatus(options, callback) {
   if (options.storeRepo) {
     const storedSlugP = gitChecker.tryStoreSlug(options.storeRepo);
     // If both .repo and .storeRepo are present, store .storeRepo and use .repo
-    repoSlugP
-      = options.repo ? storedSlugP.then(() => options.repo)
+    repoSlugP =
+      options.repo ? storedSlugP.then(() => options.repo)
         : storedSlugP;
   } else if (options.repo) {
     repoSlugP = Promise.resolve(options.repo);
@@ -197,8 +197,8 @@ function travisStatus(options, callback) {
         return travisChecker.getBranch(slug, branch, options);
       });
   } else {
-    const repoP
-      = slugForQueryP.then((slug) => travisChecker.getRepo(slug, options));
+    const repoP =
+      slugForQueryP.then((slug) => travisChecker.getRepo(slug, options));
 
     if (localCommitP) {
       // Add build information to result
