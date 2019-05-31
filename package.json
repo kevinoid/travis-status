@@ -52,7 +52,7 @@
     "travis-ci": "2.2.0"
   },
   "devDependencies": {
-    "ansi-styles": "^3.1.0",
+    "ansi-styles": "^4.0.0",
     "chai": "^4.0.0",
     "codecov": "^3.0.0",
     "coveralls": "^3.0.0",
