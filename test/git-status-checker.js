@@ -7,18 +7,18 @@
 
 const {assert} = require('chai');
 const path = require('path');
-const pify = require('pify');
 const {read} = require('promised-read');
 const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
+const util = require('util');
 
 const GitStatusChecker = require('../lib/git-status-checker');
 const InvalidSlugError = require('../lib/invalid-slug-error');
 const git = require('../lib/git');
 
 const isWindows = /^win/i.test(process.platform);
-const rimrafP = pify(rimraf);
+const rimrafP = util.promisify(rimraf);
 
 // Global variables
 let origCWD;
