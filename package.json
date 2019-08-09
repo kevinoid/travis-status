@@ -61,7 +61,6 @@
     "eslint-plugin-import": "^2.14.0",
     "greenkeeper-lockfile": "^1.15.1",
     "has-ansi": "^3.0.0",
-    "istanbul": "^0.4.1",
     "jsdoc": "^3.6.0",
     "mocha": "^6.0.0",
     "nodecat": "^2.0.0",
