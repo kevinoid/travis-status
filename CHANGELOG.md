@@ -1,5 +1,15 @@
 # Change Log
 
+## [4.0.0](https://github.com/kevinoid/travis-status/tree/4.0.0) (2019-08-09)
+[Full Changelog](https://github.com/kevinoid/travis-status/compare/v3.0.1...4.0.0)
+
+- **BREAKING** Require Node 8 or later.
+- **BREAKING** Update `commander` to `v3.0.0`, which changed short option
+  parsing.  Short options with optional arguments followed by an adjacent
+  character are now interpreted as an adjacent argument instead of an adjacent
+  option (e.g. `-wx` is interpreted as `-w x` instead of `-w -x`).  See
+  tj/commander.js#599 for details.
+
 ## [v3.0.1](https://github.com/kevinoid/travis-status/tree/v3.0.1) (2018-08-12)
 [Full Changelog](https://github.com/kevinoid/travis-status/compare/v3.0.0...v3.0.1)
 
