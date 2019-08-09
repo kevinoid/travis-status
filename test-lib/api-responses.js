@@ -12,7 +12,7 @@ function cloneDeep(obj) {
 }
 
 // The JSON is copied almost verbatim from the API responses.
-/* eslint-disable max-len */
+/* eslint camelcase: ["error", {"properties": "never"}], max-len: "off" */
 
 apiResponses.branch = function branch(opts) {
   opts = Object(opts);
