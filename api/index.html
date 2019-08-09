@@ -43,7 +43,8 @@
 
 
     <section>
-        <article><h1>Travis Status (for Node.js)</h1><p><a href="https://travis-ci.org/kevinoid/travis-status"><img src="https://img.shields.io/travis/kevinoid/travis-status/master.svg?style=flat&amp;label=build+on+linux" alt="Build Status: Linux"></a>
+        <article><h1>Travis Status (for Node.js)</h1>
+<p><a href="https://travis-ci.org/kevinoid/travis-status"><img src="https://img.shields.io/travis/kevinoid/travis-status/master.svg?style=flat&amp;label=build+on+linux" alt="Build Status: Linux"></a>
 <a href="https://ci.appveyor.com/project/kevinoid/travis-status"><img src="https://img.shields.io/appveyor/ci/kevinoid/travis-status/master.svg?style=flat&amp;label=build+on+windows" alt="Build Status: Windows"></a>
 <a href="https://codecov.io/github/kevinoid/travis-status?branch=master"><img src="https://img.shields.io/codecov/c/github/kevinoid/travis-status.svg?style=flat" alt="Coverage"></a>
 <a href="https://david-dm.org/kevinoid/travis-status"><img src="https://img.shields.io/david/kevinoid/travis-status.svg?style=flat" alt="Dependency Status"></a>
@@ -52,11 +53,14 @@
 <p>This project is an implementation of the <code>status</code> subcommand of <a href="https://github.com/travis-ci/travis.rb">The Travis
 Client</a> in
 <a href="https://nodejs.org/">Node.js</a>, with a few extra features.</p>
-<h2>Introductory Example</h2><pre class="prettyprint source"><code>$ npm install -g travis-status
+<h2>Introductory Example</h2>
+<pre><code>$ npm install -g travis-status
 $ travis-status
-build #42 passed</code></pre><h2>Features</h2><ul>
-<li>It is a drop-in replacement for <a href="https://github.com/travis-ci/travis.rb#status"><code>travis
-status</code></a>.  Any differences in
+build #42 passed
+</code></pre>
+<h2>Features</h2>
+<ul>
+<li>It is a drop-in replacement for <a href="https://github.com/travis-ci/travis.rb#status"><code>travis status</code></a>.  Any differences in
 behavior are considered issues and users are encouraged to report them.</li>
 <li>It can be installed using <a href="https://www.npmjs.com/">npm</a>.  This is the major
 feature which spurred development of this module (it is a clone after all).
@@ -70,28 +74,45 @@ resulted from a build of a particular commit.</li>
 <li>It adds the <code>--wait</code> option to wait for a pending build to complete within a
 given time interval.</li>
 </ul>
-<h2>Installation</h2><p><a href="https://www.npmjs.com/package/travis-status">This package</a> can be
+<h2>Installation</h2>
+<p><a href="https://www.npmjs.com/package/travis-status">This package</a> can be
 installed using <a href="https://www.npmjs.com/">npm</a>, either globally or locally, by
 running:</p>
-<pre class="prettyprint source lang-sh"><code>npm install travis-status</code></pre><h2>Recipes</h2><h3>Check branch status and commit</h3><p>To check the status of a named branch and confirm that it matches a named
+<pre class="prettyprint source lang-sh"><code>npm install travis-status
+</code></pre>
+<h2>Recipes</h2>
+<h3>Check branch status and commit</h3>
+<p>To check the status of a named branch and confirm that it matches a named
 commit (named by tag, branch, or sha1):</p>
-<pre class="prettyprint source lang-sh"><code>travis-status --branch release --commit v2.0.1</code></pre><h3>Check repo is passing, not pending</h3><p>Although <code>travis-status</code> defaults to checking the status of the repository in
+<pre class="prettyprint source lang-sh"><code>travis-status --branch release --commit v2.0.1
+</code></pre>
+<h3>Check repo is passing, not pending</h3>
+<p>Although <code>travis-status</code> defaults to checking the status of the repository in
 which it is run, it can check other repositories using the <code>--repo</code> option.
 The <code>--fail-pending</code> option can be used to cause non-0 exit for pending
 status:</p>
-<pre class="prettyprint source lang-sh"><code>travis-status --repo kevinoid/travis-status --fail-pending || echo 'Not yet passing'</code></pre><h3>Check status before release</h3><p>To check that the build for the current commit is passing before releasing it
+<pre class="prettyprint source lang-sh"><code>travis-status --repo kevinoid/travis-status --fail-pending || echo 'Not yet passing'
+</code></pre>
+<h3>Check status before release</h3>
+<p>To check that the build for the current commit is passing before releasing it
 as a new version, add the following to <code>package.json</code>:</p>
 <pre class="prettyprint source lang-json"><code>{
   &quot;scripts&quot;: {
     &quot;preversion&quot;: &quot;travis-status -c -qxw&quot;
   }
-}</code></pre><p>This will check that the Travis CI status for the current repository is
+}
+</code></pre>
+<p>This will check that the Travis CI status for the current repository is
 passing (and will wait if pending), that it matches the current commit, then
 exits quietly if passing or prints an error and exits with non-0 exit code if
 not.</p>
-<h3>Check status using Pro API</h3><p>To use the Travis CI Pro API with an access token stored in an environment
+<h3>Check status using Pro API</h3>
+<p>To use the Travis CI Pro API with an access token stored in an environment
 variable:</p>
-<pre class="prettyprint source lang-sh"><code>travis-status --pro --token &quot;$TRAVIS_TOKEN&quot;</code></pre><h3>Use from JavaScript</h3><p>The <code>travis-status</code> module can be used to retrieve information from the Travis
+<pre class="prettyprint source lang-sh"><code>travis-status --pro --token &quot;$TRAVIS_TOKEN&quot;
+</code></pre>
+<h3>Use from JavaScript</h3>
+<p>The <code>travis-status</code> module can be used to retrieve information from the Travis
 CI API as follows:</p>
 <pre class="prettyprint source lang-js"><code>var travisStatus = require('travis-status');
 // Note:  Most options match camelized command-line option names
@@ -101,14 +122,17 @@ var options = {
 };
 travisStatus(options).then(function(apiObject) {
   console.log(apiObject);
-});</code></pre><p>If the calling code already knows the relevant git information (e.g. repo
+});
+</code></pre>
+<p>If the calling code already knows the relevant git information (e.g. repo
 name, branch name, commit hash), it is recommended to use the
 <a href="https://github.com/pwmckenna/node-travis-ci"><code>travis-ci</code></a> module directly
 (and consult <a href="lib/travis-status-http.js"><code>lib/travis-status-http.js</code></a> for an
 example of how to use a more recent version of
 <a href="https://github.com/request/request"><code>request</code></a> to enable gzip, proxy, and/or
 HTTP keep-alive support where appropriate).</p>
-<h3>Use interactively from JavaScript</h3><p>To prompt the user for input (to confirm and store the repo name) set the
+<h3>Use interactively from JavaScript</h3>
+<p>To prompt the user for input (to confirm and store the repo name) set the
 <code>interactive</code> option to <code>true</code>:</p>
 <pre class="prettyprint source lang-js"><code>var stream = require('stream');
 var travisStatus = require('travis-status');
@@ -123,7 +147,10 @@ var options = {
 travisStatus(options).then(function(apiObject) {
   console.log(apiObject);
 });
-// read prompts from options.err, respond on options.in</code></pre><h3>Emulate command-line from JavaScript</h3><p>To call the module using command-line arguments, require
+// read prompts from options.err, respond on options.in
+</code></pre>
+<h3>Emulate command-line from JavaScript</h3>
+<p>To call the module using command-line arguments, require
 <code>travis-status/bin/travis-status</code>:</p>
 <pre class="prettyprint source lang-js"><code>var stream = require('stream');
 var travisStatusCmd = require('travis-status/bin/travis-status');
@@ -137,18 +164,25 @@ travisStatusCmd(['node', 'travis-status', '--quiet'], options, function(err, exi
   if (err) { console.error(err); }
   process.exit(exitCode);
 });
-// read prompts from options.err, respond on options.in</code></pre><p>More examples can be found in the <a href="https://kevinoid.github.io/travis-status/spec">test
+// read prompts from options.err, respond on options.in
+</code></pre>
+<p>More examples can be found in the <a href="https://kevinoid.github.io/travis-status/spec">test
 specifications</a>.</p>
-<h2>API Docs</h2><p>Command-line usage information is available via <code>--help</code>:</p>
-<pre class="prettyprint source lang-sh"><code>travis-status --help</code></pre><p>To use this module as a library, see the <a href="https://kevinoid.github.io/travis-status/api">API
+<h2>API Docs</h2>
+<p>Command-line usage information is available via <code>--help</code>:</p>
+<pre class="prettyprint source lang-sh"><code>travis-status --help
+</code></pre>
+<p>To use this module as a library, see the <a href="https://kevinoid.github.io/travis-status/api">API
 Documentation</a>.</p>
-<h2>Contributing</h2><p>Contributions are welcome and very much appreciated!  Please add tests to
+<h2>Contributing</h2>
+<p>Contributions are welcome and very much appreciated!  Please add tests to
 cover any changes and ensure <code>npm test</code> passes.</p>
 <p>If the desired change is large, complex, backwards-incompatible, can have
 significantly differing implementations, or may not be in scope for this
 project, opening an issue before writing the code can avoid frustration and
 save a lot of time and effort.</p>
-<h2>License</h2><p>This package is available under the terms of the
+<h2>License</h2>
+<p>This package is available under the terms of the
 <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p></article>
     </section>
 
@@ -166,7 +200,7 @@ save a lot of time and effort.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Aug 12 2018 07:41:43 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Aug 09 2019 11:01:36 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

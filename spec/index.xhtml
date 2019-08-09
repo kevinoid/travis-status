@@ -692,8 +692,8 @@ return promise;</code></pre></dd>
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -706,8 +706,8 @@ return promise;</code></pre></dd>
 travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -722,8 +722,8 @@ return promise;</code></pre></dd>
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -739,8 +739,8 @@ travisRequestMock = sinon.mock()
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(errTest);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 30000}))
+const promise =
+  checker[methodName](...args.concat({wait: 30000}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -757,8 +757,8 @@ travisRequestMock = sinon.mock()
 travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 30000}))
+const promise =
+  checker[methodName](...args.concat({wait: 30000}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -773,8 +773,8 @@ return promise;</code></pre></dd>
                 <dt>rejects with TypeError for non-number wait</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
+const promise =
+  checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -787,8 +787,8 @@ return promise;</code></pre></dd>
                 <dt>rejects with RangeError for negative wait</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: -5}))
+const promise =
+  checker[methodName](...args.concat({wait: -5}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -826,8 +826,8 @@ return promise;</code></pre></dd>
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -840,8 +840,8 @@ return promise;</code></pre></dd>
 travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -856,8 +856,8 @@ return promise;</code></pre></dd>
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -873,8 +873,8 @@ travisRequestMock = sinon.mock()
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(errTest);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 30000}))
+const promise =
+  checker[methodName](...args.concat({wait: 30000}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -891,8 +891,8 @@ travisRequestMock = sinon.mock()
 travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 30000}))
+const promise =
+  checker[methodName](...args.concat({wait: 30000}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -907,8 +907,8 @@ return promise;</code></pre></dd>
                 <dt>rejects with TypeError for non-number wait</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
+const promise =
+  checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -921,8 +921,8 @@ return promise;</code></pre></dd>
                 <dt>rejects with RangeError for negative wait</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: -5}))
+const promise =
+  checker[methodName](...args.concat({wait: -5}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -960,8 +960,8 @@ return promise;</code></pre></dd>
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -974,8 +974,8 @@ return promise;</code></pre></dd>
 travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -990,8 +990,8 @@ return promise;</code></pre></dd>
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 10000}))
+const promise =
+  checker[methodName](...args.concat({wait: 10000}))
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -1007,8 +1007,8 @@ travisRequestMock = sinon.mock()
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(errTest);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 30000}))
+const promise =
+  checker[methodName](...args.concat({wait: 30000}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1025,8 +1025,8 @@ travisRequestMock = sinon.mock()
 travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: 30000}))
+const promise =
+  checker[methodName](...args.concat({wait: 30000}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1041,8 +1041,8 @@ return promise;</code></pre></dd>
                 <dt>rejects with TypeError for non-number wait</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
+const promise =
+  checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1055,8 +1055,8 @@ return promise;</code></pre></dd>
                 <dt>rejects with RangeError for negative wait</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
-const promise
-  = checker[methodName](...args.concat({wait: -5}))
+const promise =
+  checker[methodName](...args.concat({wait: -5}))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -2162,6 +2162,18 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   done();
 });
 travisStatus.yield(new Error(errMsg));</code></pre></dd>
+        <dt>returns TypeError for non-array-like args</dt>
+        <dd><pre><code>travisStatusCmd({}, (err) =&#x3E; {
+  assert.instanceOf(err, TypeError);
+  assert.match(err.message, /\bargs\b/);
+  done();
+});</code></pre></dd>
+        <dt>returns RangeError for single argument</dt>
+        <dd><pre><code>travisStatusCmd([&#x27;node&#x27;], (err) =&#x3E; {
+  assert.instanceOf(err, RangeError);
+  assert.match(err.message, /\bargs\b/);
+  done();
+});</code></pre></dd>
         <dt>throws for non-function callback</dt>
         <dd><pre><code>assert.throws(
   () =&#x3E; { travisStatusCmd(RUNTIME_ARGS, {}, true); },
@@ -2312,8 +2324,8 @@ request.verify();</code></pre></dd>
             <dt>can send custom accept header</dt>
             <dd><pre><code>const testAccept = &#x27;text/plain&#x27;;
 // Note:  Testing lower case properly replaces upper
-const status
-  = new TravisStatusHttp(null, {headers: {accept: testAccept}});
+const status =
+  new TravisStatusHttp(null, {headers: {accept: testAccept}});
 request = sinon.mock()
   .once()
   .withArgs(match({
@@ -2347,8 +2359,8 @@ request.verify();</code></pre></dd>
             <dt>can send custom user-agent header</dt>
             <dd><pre><code>const testUA = &#x27;Test Agent&#x27;;
 // Note:  Testing lower case properly replaces upper
-const status
-  = new TravisStatusHttp(null, {headers: {&#x27;user-agent&#x27;: testUA}});
+const status =
+  new TravisStatusHttp(null, {headers: {&#x27;user-agent&#x27;: testUA}});
 request = sinon.mock()
   .once()
   .withArgs(match({
@@ -2388,8 +2400,8 @@ status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>setAccessToken overrides options.headers.Authorization</dt>
             <dd><pre><code>const testToken = &#x27;12345&#x27;;
-const status
-  = new TravisStatusHttp(null, {headers: {Authorization: &#x27;foo&#x27;}});
+const status =
+  new TravisStatusHttp(null, {headers: {Authorization: &#x27;foo&#x27;}});
 status.setAccessToken(testToken);
 request = sinon.mock()
   .once()
