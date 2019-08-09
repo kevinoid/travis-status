@@ -363,6 +363,27 @@ describe('travis-status command', () => {
     travisStatus.yield(new Error(errMsg));
   });
 
+  it('returns TypeError for non-array-like args', (done) => {
+    travisStatusCmd({}, (err) => {
+      assert.instanceOf(err, TypeError);
+      assert.match(err.message, /\bargs\b/);
+      done();
+    });
+  });
+
+  // It's ambiguous whether the caller is expecting to pass only options or
+  // didn't realize that there are always 2 options.  Unlike [], which is
+  // always safe to interpret as "no arguments", ignoring ["-x"] could cause
+  // problems.  Return an error to avoid silently misbehaving from caller
+  // expectations.
+  it('returns RangeError for single argument', (done) => {
+    travisStatusCmd(['node'], (err) => {
+      assert.instanceOf(err, RangeError);
+      assert.match(err.message, /\bargs\b/);
+      done();
+    });
+  });
+
   it('throws for non-function callback', () => {
     assert.throws(
       () => { travisStatusCmd(RUNTIME_ARGS, {}, true); },
