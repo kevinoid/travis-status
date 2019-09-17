@@ -9,7 +9,8 @@ const assert = require('assert');
 const http = require('http');
 const https = require('https');
 const nodeify = require('promise-nodeify');
-const url = require('url');
+// TODO [engine:node@>=10]: Use URL defined globally
+const { URL } = require('url'); // eslint-disable-line no-shadow
 
 const GitStatusChecker = require('./lib/git-status-checker');
 const TravisStatusChecker = require('./lib/travis-status-checker');
@@ -125,7 +126,7 @@ function travisStatus(options, callback) {
          && requestOpts.forever === undefined
          && requestOpts.pool === undefined)) {
       const apiUrl =
-        url.parse(options.apiEndpoint || TravisStatusChecker.ORG_URI);
+        new URL(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent
         : apiUrl.protocol === 'http:' ? http.Agent
           : null;
