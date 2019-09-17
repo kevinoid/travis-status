@@ -3,6 +3,10 @@
   "extends": "@kevinoid/eslint-config/node.js",
 
   "rules": {
+    // allow dangling underscores in identifiers
+    // due to the existing style used in this project
+    "no-underscore-dangle": "off",
+
     // Allow requiring devDependencies for build and test
     "import/no-extraneous-dependencies": ["error", {
       "devDependencies": [
