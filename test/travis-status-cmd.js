@@ -6,7 +6,7 @@
 'use strict';
 
 const ansiStyles = require('ansi-styles');
-const {assert} = require('chai');
+const { assert } = require('chai');
 const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
@@ -16,7 +16,7 @@ const SlugDetectionError = require('../lib/slug-detection-error');
 const apiResponses = require('../test-lib/api-responses');
 const stateInfo = require('../lib/state-info');
 
-const {match} = sinon;
+const { match } = sinon;
 
 // Simulate arguments passed by the node runtime
 const RUNTIME_ARGS = ['node', 'travis-status'];
@@ -31,8 +31,8 @@ describe('travis-status command', () => {
     {
       '..': function travisStatusInjected(...args) {
         return travisStatus.apply(this, args);
-      }
-    }
+      },
+    },
   );
 
   // Ensure that expectations are not carried over between tests
@@ -45,7 +45,7 @@ describe('travis-status command', () => {
       .once()
       .withArgs(
         match.any,
-        match.func
+        match.func,
       );
     travisStatusCmd([], sinon.mock().never());
     travisStatus.verify();
@@ -56,7 +56,7 @@ describe('travis-status command', () => {
       .once()
       .withArgs(
         match.any,
-        match.func
+        match.func,
       );
     const result = travisStatusCmd(RUNTIME_ARGS, sinon.mock().never());
     travisStatus.verify();
@@ -68,14 +68,14 @@ describe('travis-status command', () => {
     travisStatus = sinon.mock()
       .once()
       .withArgs(
-        match({interactive: true}),
-        match.func
+        match({ interactive: true }),
+        match.func,
       );
     const outStream = new stream.PassThrough();
     outStream.isTTY = true;
     const options = {
       out: outStream,
-      err: new stream.PassThrough()
+      err: new stream.PassThrough(),
     };
     travisStatusCmd(RUNTIME_ARGS, options, sinon.mock().never());
     travisStatus.verify();
@@ -87,7 +87,7 @@ describe('travis-status command', () => {
         .once()
         .withArgs(
           expectObj,
-          match.func
+          match.func,
         );
       const allArgs = RUNTIME_ARGS.concat(args);
       travisStatusCmd(allArgs, sinon.mock().never());
@@ -101,7 +101,7 @@ describe('travis-status command', () => {
       const errStream = new stream.PassThrough();
       const options = {
         out: outStream,
-        err: errStream
+        err: errStream,
       };
       const allArgs = RUNTIME_ARGS.concat(args);
       travisStatusCmd(allArgs, options, (err, code) => {
@@ -121,7 +121,7 @@ describe('travis-status command', () => {
       travisStatus = sinon.stub();
       const options = {
         out: new stream.PassThrough(),
-        err: new stream.PassThrough()
+        err: new stream.PassThrough(),
       };
       const allArgs = RUNTIME_ARGS.concat(args);
       travisStatusCmd(allArgs, options, (err, code) => {
@@ -131,7 +131,7 @@ describe('travis-status command', () => {
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state})
+        apiResponses.repo({ state }),
       );
     });
   }
@@ -148,93 +148,93 @@ describe('travis-status command', () => {
         || requestOpts.strictSSL === true, 'not insecure'),
     storeRepo: undefined,
     token: undefined,
-    wait: undefined
+    wait: undefined,
   }));
   expectArgsAs(
     ['--api-endpoint', 'https://example.com'],
-    match({apiEndpoint: 'https://example.com'})
+    match({ apiEndpoint: 'https://example.com' }),
   );
-  expectArgsAs(['--branch', 'branchname'], match({branch: 'branchname'}));
-  expectArgsAs(['--branch'], match({branch: true}));
-  expectArgsAs(['--commit', 'v1.0.0'], match({commit: 'v1.0.0'}));
-  expectArgsAs(['--commit'], match({commit: 'HEAD'}));
+  expectArgsAs(['--branch', 'branchname'], match({ branch: 'branchname' }));
+  expectArgsAs(['--branch'], match({ branch: true }));
+  expectArgsAs(['--commit', 'v1.0.0'], match({ commit: 'v1.0.0' }));
+  expectArgsAs(['--commit'], match({ commit: 'HEAD' }));
   expectArgsAs(['--debug'], match.object);
   expectArgsAs(['--debug-http'], match.object);
   expectArgsAs(['--explode'], match.object);
-  expectArgsAs(['--insecure'], match({requestOpts: match({strictSSL: false})}));
-  expectArgsAs(['--interactive'], match({interactive: true}));
-  expectArgsAs(['--org'], match({apiEndpoint: 'https://api.travis-ci.org/'}));
-  expectArgsAs(['--pro'], match({apiEndpoint: 'https://api.travis-ci.com/'}));
-  expectArgsAs(['--repo', 'foo/bar'], match({repo: 'foo/bar'}));
+  expectArgsAs(['--insecure'], match({ requestOpts: match({ strictSSL: false }) }));
+  expectArgsAs(['--interactive'], match({ interactive: true }));
+  expectArgsAs(['--org'], match({ apiEndpoint: 'https://api.travis-ci.org/' }));
+  expectArgsAs(['--pro'], match({ apiEndpoint: 'https://api.travis-ci.com/' }));
+  expectArgsAs(['--repo', 'foo/bar'], match({ repo: 'foo/bar' }));
   expectArgsAs(['--skip-completion-check'], match.object);
   expectArgsAs(['--skip-version-check'], match.object);
   expectArgsAs(
     ['--staging'],
-    match({apiEndpoint: 'https://api-staging.travis-ci.org/'})
+    match({ apiEndpoint: 'https://api-staging.travis-ci.org/' }),
   );
   expectArgsAs(
     ['--org', '--staging'],
-    match({apiEndpoint: 'https://api-staging.travis-ci.org/'})
+    match({ apiEndpoint: 'https://api-staging.travis-ci.org/' }),
   );
   expectArgsAs(
     ['--pro', '--staging'],
-    match({apiEndpoint: 'https://api-staging.travis-ci.com/'})
+    match({ apiEndpoint: 'https://api-staging.travis-ci.com/' }),
   );
-  expectArgsAs(['--store-repo', 'foo/bar'], match({storeRepo: 'foo/bar'}));
-  expectArgsAs(['--token', '12345'], match({token: '12345'}));
-  expectArgsAs(['--wait', '60'], match({wait: 60000}));
-  expectArgsAs(['--wait'], match({wait: Infinity}));
+  expectArgsAs(['--store-repo', 'foo/bar'], match({ storeRepo: 'foo/bar' }));
+  expectArgsAs(['--token', '12345'], match({ token: '12345' }));
+  expectArgsAs(['--wait', '60'], match({ wait: 60000 }));
+  expectArgsAs(['--wait'], match({ wait: Infinity }));
   expectArgsAs(['-E'], match.object);
-  expectArgsAs(['-I'], match({requestOpts: match({strictSSL: false})}));
-  expectArgsAs(['-R', 'foo/bar'], match({storeRepo: 'foo/bar'}));
-  expectArgsAs(['-b', 'branchname'], match({branch: 'branchname'}));
-  expectArgsAs(['-b'], match({branch: true}));
-  expectArgsAs(['-c', 'v1.0.0'], match({commit: 'v1.0.0'}));
-  expectArgsAs(['-c'], match({commit: 'HEAD'}));
+  expectArgsAs(['-I'], match({ requestOpts: match({ strictSSL: false }) }));
+  expectArgsAs(['-R', 'foo/bar'], match({ storeRepo: 'foo/bar' }));
+  expectArgsAs(['-b', 'branchname'], match({ branch: 'branchname' }));
+  expectArgsAs(['-b'], match({ branch: true }));
+  expectArgsAs(['-c', 'v1.0.0'], match({ commit: 'v1.0.0' }));
+  expectArgsAs(['-c'], match({ commit: 'HEAD' }));
   expectArgsAs(
     ['-e', 'https://example.com'],
-    match({apiEndpoint: 'https://example.com'})
+    match({ apiEndpoint: 'https://example.com' }),
   );
-  expectArgsAs(['-i'], match({interactive: true}));
-  expectArgsAs(['-r', 'foo/bar'], match({repo: 'foo/bar'}));
-  expectArgsAs(['-t', '12345'], match({token: '12345'}));
-  expectArgsAs(['-w', '60'], match({wait: 60000}));
-  expectArgsAs(['-w'], match({wait: Infinity}));
+  expectArgsAs(['-i'], match({ interactive: true }));
+  expectArgsAs(['-r', 'foo/bar'], match({ repo: 'foo/bar' }));
+  expectArgsAs(['-t', '12345'], match({ token: '12345' }));
+  expectArgsAs(['-w', '60'], match({ wait: 60000 }));
+  expectArgsAs(['-w'], match({ wait: Infinity }));
 
   // Check odd argument combinations are handled correctly
   // Like travis.rb:  Store --store-repo but use last of repo/storeRepo
   expectArgsAs(
     ['--repo', 'foo/bar', '--store-repo', 'baz/quux'],
-    match({repo: 'baz/quux', storeRepo: 'baz/quux'})
+    match({ repo: 'baz/quux', storeRepo: 'baz/quux' }),
   );
   expectArgsAs(
     ['--store-repo', 'foo/bar', '--repo', 'baz/quux'],
-    match({repo: 'baz/quux', storeRepo: 'foo/bar'})
+    match({ repo: 'baz/quux', storeRepo: 'foo/bar' }),
   );
   // Like travis.rb: Last endpoint specified wins
   expectArgsAs(
     ['--api-endpoint', 'https://example.com', '--org', '--pro'],
-    match({apiEndpoint: 'https://api.travis-ci.com/'})
+    match({ apiEndpoint: 'https://api.travis-ci.com/' }),
   );
   expectArgsAs(
     ['--pro', '--org', '--api-endpoint', 'https://example.com'],
-    match({apiEndpoint: 'https://example.com'})
+    match({ apiEndpoint: 'https://example.com' }),
   );
   // Like travis.rb: --staging only affects arguments before it
   expectArgsAs(
     ['--pro', '--staging'],
-    match({apiEndpoint: 'https://api-staging.travis-ci.com/'})
+    match({ apiEndpoint: 'https://api-staging.travis-ci.com/' }),
   );
   expectArgsAs(
     ['--staging', '--pro'],
-    match({apiEndpoint: 'https://api.travis-ci.com/'})
+    match({ apiEndpoint: 'https://api.travis-ci.com/' }),
   );
 
   // Check argument errors are handled correctly
   expectArgsErr(['-w', 'nope'], /\bwait\b/i);
   expectArgsErr(
     ['--unknown'],
-    /\b(unknown|recognized|unsupported)\b.+--unknown\b/i
+    /\b(unknown|recognized|unsupported)\b.+--unknown\b/i,
   );
   expectArgsErr(['extraarg'], /\barguments?\b/i);
 
@@ -261,7 +261,7 @@ describe('travis-status command', () => {
       const errStream = new stream.PassThrough();
       const options = {
         out: outStream,
-        err: errStream
+        err: errStream,
       };
       const allArgs = RUNTIME_ARGS.concat(arg);
       travisStatusCmd(allArgs, options, (err, code) => {
@@ -273,7 +273,7 @@ describe('travis-status command', () => {
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state: 'failed'})
+        apiResponses.repo({ state: 'failed' }),
       );
     });
   });
@@ -287,7 +287,7 @@ describe('travis-status command', () => {
       const errStream = new stream.PassThrough();
       const options = {
         out: outStream,
-        err: errStream
+        err: errStream,
       };
       const buildNum = 500;
       const state = 'passed';
@@ -298,7 +298,7 @@ describe('travis-status command', () => {
         assert.strictEqual(
           String(outStream.read()),
           // We are strict about this format since other programs may use it
-          `build #${buildNum} ${state}\n`
+          `build #${buildNum} ${state}\n`,
         );
         assert.strictEqual(errStream.read(), null);
         done();
@@ -306,8 +306,8 @@ describe('travis-status command', () => {
       travisStatus.yield(
         null,
         isBranch
-          ? apiResponses.branch({number: buildNum, state})
-          : apiResponses.repo({number: buildNum, state})
+          ? apiResponses.branch({ number: buildNum, state })
+          : apiResponses.repo({ number: buildNum, state }),
       );
     });
   });
@@ -320,7 +320,7 @@ describe('travis-status command', () => {
       const errStream = new stream.PassThrough();
       const options = {
         out: outStream,
-        err: errStream
+        err: errStream,
       };
       const allArgs = RUNTIME_ARGS.concat(['--interactive']);
       travisStatusCmd(allArgs, options, (err, code) => {
@@ -329,14 +329,14 @@ describe('travis-status command', () => {
         const outString = String(outStream.read());
         assert.include(
           outString,
-          ansiStyles[color].open + state + ansiStyles[color].close
+          ansiStyles[color].open + state + ansiStyles[color].close,
         );
         assert.strictEqual(errStream.read(), null);
         done();
       });
       travisStatus.yield(
         null,
-        apiResponses.repo({state})
+        apiResponses.repo({ state }),
       );
     });
   });
@@ -347,7 +347,7 @@ describe('travis-status command', () => {
     const errStream = new stream.PassThrough();
     const options = {
       out: outStream,
-      err: errStream
+      err: errStream,
     };
     const errMsg = 'super duper test error';
     const allArgs = RUNTIME_ARGS.concat(['--interactive']);
@@ -388,7 +388,7 @@ describe('travis-status command', () => {
     assert.throws(
       () => { travisStatusCmd(RUNTIME_ARGS, {}, true); },
       TypeError,
-      /\bcallback\b/
+      /\bcallback\b/,
     );
   });
 
@@ -401,7 +401,7 @@ describe('travis-status command', () => {
   });
 
   it('returns Error for non-Readable in', (done) => {
-    travisStatusCmd([], {in: new stream.Writable()}, (err) => {
+    travisStatusCmd([], { in: new stream.Writable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.in\b/);
       done();
@@ -409,7 +409,7 @@ describe('travis-status command', () => {
   });
 
   it('returns Error for non-Writable out', (done) => {
-    travisStatusCmd([], {out: new stream.Readable()}, (err) => {
+    travisStatusCmd([], { out: new stream.Readable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.out\b/);
       done();
@@ -417,7 +417,7 @@ describe('travis-status command', () => {
   });
 
   it('returns Error for non-Writable err', (done) => {
-    travisStatusCmd([], {err: new stream.Readable()}, (err) => {
+    travisStatusCmd([], { err: new stream.Readable() }, (err) => {
       assert.instanceOf(err, TypeError);
       assert.match(err.message, /\boptions.err\b/);
       done();
@@ -430,7 +430,7 @@ describe('travis-status command', () => {
     const errStream = new stream.PassThrough();
     const options = {
       out: outStream,
-      err: errStream
+      err: errStream,
     };
     const errMsg = 'super duper test error';
     const allArgs = RUNTIME_ARGS.concat(['--interactive']);
@@ -452,7 +452,7 @@ describe('travis-status command', () => {
     const errStream = new stream.PassThrough();
     const options = {
       out: outStream,
-      err: errStream
+      err: errStream,
     };
     const errMsg = 'super duper test error';
     travisStatusCmd(RUNTIME_ARGS, options, (err, code) => {
@@ -473,7 +473,7 @@ describe('travis-status command', () => {
     const errStream = new stream.PassThrough();
     const options = {
       out: outStream,
-      err: errStream
+      err: errStream,
     };
     travisStatusCmd(RUNTIME_ARGS, options, (err, code) => {
       assert.ifError(err);
@@ -495,12 +495,12 @@ describe('travis-status command', () => {
     travisStatus = sinon.stub();
     const options = {
       out: new stream.PassThrough(),
-      err: new stream.PassThrough()
+      err: new stream.PassThrough(),
     };
     const result = travisStatusCmd(RUNTIME_ARGS, options);
     travisStatus.yield(
       null,
-      apiResponses.repo()
+      apiResponses.repo(),
     );
     return result.then((code) => {
       assert.strictEqual(code, 0);
@@ -512,7 +512,7 @@ describe('travis-status command', () => {
     const result = travisStatusCmd(RUNTIME_ARGS, true);
     return result.then(
       sinon.mock().never(),
-      (err) => { assert.instanceOf(err, TypeError); }
+      (err) => { assert.instanceOf(err, TypeError); },
     );
   });
 });

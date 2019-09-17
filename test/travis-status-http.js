@@ -5,14 +5,14 @@
 
 'use strict';
 
-const {assert} = require('chai');
+const { assert } = require('chai');
 const http = require('http');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
 const packageJson = require('../package.json');
 
-const {match} = sinon;
+const { match } = sinon;
 
 describe('TravisStatusHttp', () => {
   // In order to test the TravisStatusHttp module in isolation, we need to mock
@@ -24,8 +24,8 @@ describe('TravisStatusHttp', () => {
     {
       request: function requestInjected(...args) {
         return request.apply(this, args);
-      }
-    }
+      },
+    },
   );
 
   it('throws TypeError for non-string endpoint', () => {
@@ -33,7 +33,7 @@ describe('TravisStatusHttp', () => {
       // eslint-disable-next-line no-new
       () => { new TravisStatusHttp(true); },
       TypeError,
-      /\bendpoint\b/
+      /\bendpoint\b/,
     );
   });
 
@@ -42,7 +42,7 @@ describe('TravisStatusHttp', () => {
       // eslint-disable-next-line no-new
       () => { new TravisStatusHttp(null, true); },
       TypeError,
-      /\boptions\b/
+      /\boptions\b/,
     );
   });
 
@@ -57,8 +57,8 @@ describe('TravisStatusHttp', () => {
               const travisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
               return travisRE.test(accept)
                 && / application\/json(?:,|$)/.test(accept);
-            }, 'match Travis and JSON media types')
-          })
+            }, 'match Travis and JSON media types'),
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -68,14 +68,14 @@ describe('TravisStatusHttp', () => {
       const testAccept = 'text/plain';
       // Note:  Testing lower case properly replaces upper
       const status =
-        new TravisStatusHttp(null, {headers: {accept: testAccept}});
+        new TravisStatusHttp(null, { headers: { accept: testAccept } });
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
             Accept: undefined,
-            accept: testAccept
-          })
+            accept: testAccept,
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -85,7 +85,7 @@ describe('TravisStatusHttp', () => {
       const status = new TravisStatusHttp();
       request = sinon.mock()
         .once()
-        .withArgs(match({gzip: true}));
+        .withArgs(match({ gzip: true }));
       status.request('GET', '/repos', () => {});
       request.verify();
     });
@@ -98,8 +98,8 @@ describe('TravisStatusHttp', () => {
         .once()
         .withArgs(match({
           headers: match({
-            'User-Agent': match(uaVersionRE)
-          })
+            'User-Agent': match(uaVersionRE),
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -109,14 +109,14 @@ describe('TravisStatusHttp', () => {
       const testUA = 'Test Agent';
       // Note:  Testing lower case properly replaces upper
       const status =
-        new TravisStatusHttp(null, {headers: {'user-agent': testUA}});
+        new TravisStatusHttp(null, { headers: { 'user-agent': testUA } });
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
             'User-Agent': undefined,
-            'user-agent': testUA
-          })
+            'user-agent': testUA,
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -130,8 +130,8 @@ describe('TravisStatusHttp', () => {
         .once()
         .withArgs(match({
           headers: match({
-            Authorization: `token ${testToken}`
-          })
+            Authorization: `token ${testToken}`,
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -146,8 +146,8 @@ describe('TravisStatusHttp', () => {
         .once()
         .withArgs(match({
           headers: match({
-            Authorization: `token ${quotedToken}`
-          })
+            Authorization: `token ${quotedToken}`,
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -156,14 +156,14 @@ describe('TravisStatusHttp', () => {
     it('setAccessToken overrides options.headers.Authorization', () => {
       const testToken = '12345';
       const status =
-        new TravisStatusHttp(null, {headers: {Authorization: 'foo'}});
+        new TravisStatusHttp(null, { headers: { Authorization: 'foo' } });
       status.setAccessToken(testToken);
       request = sinon.mock()
         .once()
         .withArgs(match({
           headers: match({
-            Authorization: `token ${testToken}`
-          })
+            Authorization: `token ${testToken}`,
+          }),
         }));
       status.request('GET', '/repos', () => {});
       request.verify();
@@ -186,10 +186,10 @@ describe('TravisStatusHttp', () => {
         statusMessage: 'Test Message',
         headers: {
           'Content-Type': 'application/json',
-          test: 'ok'
-        }
+          test: 'ok',
+        },
       };
-      const testBody = {test: 'stuff'};
+      const testBody = { test: 'stuff' };
       const testBodyStr = JSON.stringify(testBody);
       const response = new http.IncomingMessage();
       Object.assign(response, errProps);
@@ -197,8 +197,8 @@ describe('TravisStatusHttp', () => {
       status.request('GET', '/repos', (err) => {
         assert.strictEqual(err.message, errProps.statusMessage);
         assert.deepEqual(
-          Object.assign({}, err),
-          Object.assign({body: testBody}, errProps)
+          { ...err },
+          { body: testBody, ...errProps },
         );
       });
       request.verify();
@@ -211,8 +211,8 @@ describe('TravisStatusHttp', () => {
         statusMessage: 'Test Message',
         headers: {
           'Content-Type': 'text/plain',
-          test: 'ok'
-        }
+          test: 'ok',
+        },
       };
       const testBody = 'Body?';
       let testErr;
@@ -223,8 +223,8 @@ describe('TravisStatusHttp', () => {
       status.request('GET', '/repos', (err) => {
         assert.strictEqual(err.message, testErr.message);
         assert.deepEqual(
-          Object.assign({}, err),
-          Object.assign({body: testBody}, errProps)
+          { ...err },
+          { body: testBody, ...errProps },
         );
       });
       request.verify();
@@ -237,8 +237,8 @@ describe('TravisStatusHttp', () => {
         statusMessage: 'Test Message',
         headers: {
           'Content-Type': 'text/plain',
-          test: 'ok'
-        }
+          test: 'ok',
+        },
       };
       const testBody = 'Body?';
       const response = new http.IncomingMessage();
@@ -247,8 +247,8 @@ describe('TravisStatusHttp', () => {
       status.request('GET', '/repos', (err) => {
         assert.strictEqual(err.message, errProps.statusMessage);
         assert.deepEqual(
-          Object.assign({}, err),
-          Object.assign({body: testBody}, errProps)
+          { ...err },
+          { body: testBody, ...errProps },
         );
       });
       request.verify();
@@ -261,10 +261,10 @@ describe('TravisStatusHttp', () => {
         statusMessage: 'Test Message',
         headers: {
           'Content-Type': 'application/json',
-          test: 'ok'
-        }
+          test: 'ok',
+        },
       };
-      const testBody = {prop: 'OK'};
+      const testBody = { prop: 'OK' };
       const testBodyStr = JSON.stringify(testBody);
       const response = new http.IncomingMessage();
       Object.assign(response, errProps);

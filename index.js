@@ -34,7 +34,7 @@ function checkBuildCommit(build, localCommit) {
   assert.strictEqual(
     buildCommit.sha,
     localCommit.sha,
-    message
+    message,
   );
   return build;
 }
@@ -117,7 +117,7 @@ function travisStatus(options, callback) {
     // If the caller didn't request an agent behavior, control it ourselves.
     // Each function call will use HTTP keep-alive for the duration of the
     // function, but not after completion, which callers may not expect.
-    let {requestOpts} = options;
+    let { requestOpts } = options;
     if (!requestOpts
         || (requestOpts.agent === undefined
          && requestOpts.agentClass === undefined
@@ -130,13 +130,13 @@ function travisStatus(options, callback) {
         : apiUrl.protocol === 'http:' ? http.Agent
           : null;
       if (Agent) {
-        agent = new Agent({keepAlive: true});
+        agent = new Agent({ keepAlive: true });
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
         // If Agent doesn't support keepAlive/destroy, we don't need/want it.
         if (typeof agent.destroy === 'function') {
-          requestOpts = Object.assign({}, requestOpts);
+          requestOpts = { ...requestOpts };
           requestOpts.agent = agent;
-          options = Object.assign({}, options);
+          options = { ...options };
           options.requestOpts = requestOpts;
         } else {
           agent = undefined;
@@ -174,7 +174,7 @@ function travisStatus(options, callback) {
   if (options.commit) {
     localCommitP = gitChecker.resolveHash(options.commit)
       .then((resolved) => {
-        const localCommit = {sha: resolved};
+        const localCommit = { sha: resolved };
         if (resolved !== options.commit) {
           localCommit.name = options.commit;
         }
@@ -204,9 +204,9 @@ function travisStatus(options, callback) {
       // Add build information to result
       resultP = repoP.then((repo) => travisChecker.getBuild(
         repo.repo.slug,
-        repo.repo.last_build_id
+        repo.repo.last_build_id,
       )
-        .then((build) => Object.assign({}, repo, build)));
+        .then((build) => ({ ...repo, ...build })));
     } else {
       resultP = repoP;
     }
@@ -227,7 +227,7 @@ function travisStatus(options, callback) {
   if (agent) {
     cleanupP = checkedResultP.then(
       (result) => { agent.destroy(); return result; },
-      (err) => { agent.destroy(); return Promise.reject(err); }
+      (err) => { agent.destroy(); return Promise.reject(err); },
     );
   } else {
     cleanupP = checkedResultP;

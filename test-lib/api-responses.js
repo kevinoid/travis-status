@@ -15,7 +15,7 @@ function cloneDeep(obj) {
 /* eslint camelcase: ["error", {"properties": "never"}], max-len: "off" */
 
 apiResponses.branch = function branch(opts) {
-  opts = Object(opts);
+  opts = new Object(opts);
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
   return cloneDeep({
     branch: {
@@ -30,17 +30,17 @@ apiResponses.branch = function branch(opts) {
           'iojs',
           4,
           0.12,
-          0.1
+          0.1,
         ],
         sudo: false,
         script: [
-          'npm run test-cov'
+          'npm run test-cov',
         ],
         after_success: [
-          'npm run upload-cov'
+          'npm run upload-cov',
         ],
         group: 'stable',
-        dist: 'precise'
+        dist: 'precise',
       },
       state: opts.state || 'passed',
       started_at: '2016-02-16T16:48:30Z',
@@ -51,9 +51,9 @@ apiResponses.branch = function branch(opts) {
         109649464,
         109649465,
         109649466,
-        109649467
+        109649467,
       ],
-      pull_request: false
+      pull_request: false,
     },
     commit: {
       id: 31008785,
@@ -65,13 +65,13 @@ apiResponses.branch = function branch(opts) {
       author_email: 'kevin@kevinlocke.name',
       committer_name: 'Kevin Locke',
       committer_email: 'kevin@kevinlocke.name',
-      compare_url: `https://github.com/${opts.slug || 'owner/repo'}/compare/a73ca1cf3143...${sha.slice(0, 12)}`
-    }
+      compare_url: `https://github.com/${opts.slug || 'owner/repo'}/compare/a73ca1cf3143...${sha.slice(0, 12)}`,
+    },
   });
 };
 
 apiResponses.build = function build(opts) {
-  opts = Object(opts);
+  opts = new Object(opts);
   const buildId = opts.buildId || 109649462;
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
   return cloneDeep({
@@ -91,17 +91,17 @@ apiResponses.build = function build(opts) {
           'iojs',
           4,
           0.12,
-          0.1
+          0.1,
         ],
         sudo: false,
         script: [
-          'npm run test-cov'
+          'npm run test-cov',
         ],
         after_success: [
-          'npm run upload-cov'
+          'npm run upload-cov',
         ],
         group: 'stable',
-        dist: 'precise'
+        dist: 'precise',
       },
       state: opts.state || 'passed',
       started_at: '2016-02-16T16:48:30Z',
@@ -112,8 +112,8 @@ apiResponses.build = function build(opts) {
         109649464,
         109649465,
         109649466,
-        109649467
-      ]
+        109649467,
+      ],
     },
     commit: {
       id: 31008785,
@@ -126,7 +126,7 @@ apiResponses.build = function build(opts) {
       author_email: 'kevin@kevinlocke.name',
       committer_name: 'Kevin Locke',
       committer_email: 'kevin@kevinlocke.name',
-      compare_url: `https://github.com/${opts.slug || 'owner/repo'}/compare/a73ca1cf3143...${sha.slice(0, 12)}`
+      compare_url: `https://github.com/${opts.slug || 'owner/repo'}/compare/a73ca1cf3143...${sha.slice(0, 12)}`,
     },
     jobs: [
       {
@@ -142,21 +142,21 @@ apiResponses.build = function build(opts) {
           node_js: 'node',
           sudo: false,
           script: [
-            'npm run test-cov'
+            'npm run test-cov',
           ],
           after_success: [
-            'npm run upload-cov'
+            'npm run upload-cov',
           ],
           group: 'stable',
           dist: 'precise',
-          os: 'linux'
+          os: 'linux',
         },
         started_at: '2016-02-16T16:48:30Z',
         finished_at: '2016-02-16T16:49:16Z',
         queue: 'builds.docker',
         allow_failure: false,
         tags: null,
-        annotation_ids: []
+        annotation_ids: [],
       },
       {
         id: 109649464,
@@ -171,21 +171,21 @@ apiResponses.build = function build(opts) {
           node_js: 'iojs',
           sudo: false,
           script: [
-            'npm run test-cov'
+            'npm run test-cov',
           ],
           after_success: [
-            'npm run upload-cov'
+            'npm run upload-cov',
           ],
           group: 'stable',
           dist: 'precise',
-          os: 'linux'
+          os: 'linux',
         },
         started_at: '2016-02-16T16:48:31Z',
         finished_at: '2016-02-16T16:49:16Z',
         queue: 'builds.docker',
         allow_failure: false,
         tags: null,
-        annotation_ids: []
+        annotation_ids: [],
       },
       {
         id: 109649465,
@@ -200,21 +200,21 @@ apiResponses.build = function build(opts) {
           node_js: 4,
           sudo: false,
           script: [
-            'npm run test-cov'
+            'npm run test-cov',
           ],
           after_success: [
-            'npm run upload-cov'
+            'npm run upload-cov',
           ],
           group: 'stable',
           dist: 'precise',
-          os: 'linux'
+          os: 'linux',
         },
         started_at: '2016-02-16T16:48:39Z',
         finished_at: '2016-02-16T16:49:28Z',
         queue: 'builds.docker',
         allow_failure: false,
         tags: null,
-        annotation_ids: []
+        annotation_ids: [],
       },
       {
         id: 109649466,
@@ -229,21 +229,21 @@ apiResponses.build = function build(opts) {
           node_js: 0.12,
           sudo: false,
           script: [
-            'npm run test-cov'
+            'npm run test-cov',
           ],
           after_success: [
-            'npm run upload-cov'
+            'npm run upload-cov',
           ],
           group: 'stable',
           dist: 'precise',
-          os: 'linux'
+          os: 'linux',
         },
         started_at: '2016-02-16T16:48:32Z',
         finished_at: '2016-02-16T16:49:30Z',
         queue: 'builds.docker',
         allow_failure: false,
         tags: null,
-        annotation_ids: []
+        annotation_ids: [],
       },
       {
         id: 109649467,
@@ -258,29 +258,29 @@ apiResponses.build = function build(opts) {
           node_js: 0.1,
           sudo: false,
           script: [
-            'npm run test-cov'
+            'npm run test-cov',
           ],
           after_success: [
-            'npm run upload-cov'
+            'npm run upload-cov',
           ],
           group: 'stable',
           dist: 'precise',
-          os: 'linux'
+          os: 'linux',
         },
         started_at: '2016-02-16T16:48:31Z',
         finished_at: '2016-02-16T16:49:00Z',
         queue: 'builds.docker',
         allow_failure: false,
         tags: null,
-        annotation_ids: []
-      }
+        annotation_ids: [],
+      },
     ],
-    annotations: []
+    annotations: [],
   });
 };
 
 apiResponses.repo = function repo(opts) {
-  opts = Object(opts);
+  opts = new Object(opts);
   return cloneDeep({
     repo: {
       id: 7584951,
@@ -294,8 +294,8 @@ apiResponses.repo = function repo(opts) {
       last_build_language: null,
       last_build_started_at: '2016-02-16T16:48:30Z',
       last_build_finished_at: '2016-02-16T16:49:30Z',
-      github_language: 'JavaScript'
-    }
+      github_language: 'JavaScript',
+    },
   });
 };
 

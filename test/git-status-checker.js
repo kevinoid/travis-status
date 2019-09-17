@@ -5,9 +5,9 @@
 
 'use strict';
 
-const {assert} = require('chai');
+const { assert } = require('chai');
 const path = require('path');
-const {read} = require('promised-read');
+const { read } = require('promised-read');
 const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
@@ -27,18 +27,18 @@ const BRANCH_REMOTES = {
   branch1: 'remote1/master',
   branch2: 'remote2/master',
   branchnourl: 'nourl/master',
-  branchnotslug: 'notslug/master'
+  branchnotslug: 'notslug/master',
 };
 const REMOTES = {
   notslug: 'foo',
   origin: 'https://github.com/owner/repo',
   remote1: 'git@github.com:owner1/repo1.git',
-  remote2: 'https://github.com/owner2/repo2.git'
+  remote2: 'https://github.com/owner2/repo2.git',
 };
 const REMOTE_SLUGS = {
   origin: 'owner/repo',
   remote1: 'owner1/repo1',
-  remote2: 'owner2/repo2'
+  remote2: 'owner2/repo2',
 };
 /** Path to repository in which tests are run. */
 const TEST_REPO_PATH = path.join(__dirname, '..', 'test-repo');
@@ -111,34 +111,34 @@ describe('GitStatusChecker', () => {
       // eslint-disable-next-line no-new
       () => { new GitStatusChecker(true); },
       TypeError,
-      /\boptions\b/
+      /\boptions\b/,
     );
   });
 
   it('throws TypeError for non-Readable in', () => {
     assert.throws(
       // eslint-disable-next-line no-new
-      () => { new GitStatusChecker({in: new stream.Writable()}); },
+      () => { new GitStatusChecker({ in: new stream.Writable() }); },
       TypeError,
-      /\boptions.in\b/
+      /\boptions.in\b/,
     );
   });
 
   it('throws TypeError for non-Writable out', () => {
     assert.throws(
       // eslint-disable-next-line no-new
-      () => { new GitStatusChecker({out: new stream.Readable()}); },
+      () => { new GitStatusChecker({ out: new stream.Readable() }); },
       TypeError,
-      /\boptions.out\b/
+      /\boptions.out\b/,
     );
   });
 
   it('returns Error for non-Writable err', () => {
     assert.throws(
       // eslint-disable-next-line no-new
-      () => { new GitStatusChecker({err: new stream.Readable()}); },
+      () => { new GitStatusChecker({ err: new stream.Readable() }); },
       TypeError,
-      /\boptions.err\b/
+      /\boptions.err\b/,
     );
   });
 
@@ -147,7 +147,7 @@ describe('GitStatusChecker', () => {
       // Canonical example
       'owner/repo',
       // Numbers and hyphens are fine
-      'owner-1/repo-1'
+      'owner-1/repo-1',
     ];
     GOOD_SLUGS.forEach((slug) => {
       it(`accepts "${slug}"`, () => {
@@ -171,13 +171,13 @@ describe('GitStatusChecker', () => {
       ' owner/repo',
       'owner /repo',
       'owner/ repo',
-      'owner/repo '
+      'owner/repo ',
     ];
     BAD_SLUGS.forEach((slug) => {
       it(`rejects "${slug}"`, () => {
         assert.throws(
           () => { GitStatusChecker.checkSlugFormat(slug); },
-          InvalidSlugError
+          InvalidSlugError,
         );
       });
     });
@@ -206,7 +206,7 @@ describe('GitStatusChecker', () => {
         sinon.mock().never(),
         (err) => {
           assert(err);
-        }
+        },
       );
     });
   });
@@ -241,9 +241,9 @@ describe('GitStatusChecker', () => {
               (configSlug) => {
                 assert.fail(configSlug, null, 'slug should not be stored');
               },
-              (errGit) => (errGit.code === 1 ? null : Promise.reject(errGit))
+              (errGit) => (errGit.code === 1 ? null : Promise.reject(errGit)),
             );
-        }
+        },
       );
     });
   });
@@ -270,7 +270,7 @@ describe('GitStatusChecker', () => {
       const errStream = new stream.PassThrough();
       const checker = new GitStatusChecker({
         out: outStream,
-        err: errStream
+        err: errStream,
       });
       const testSlug = 'foobar';
       return checker.tryStoreSlug(testSlug).then((slug) => {
@@ -283,7 +283,7 @@ describe('GitStatusChecker', () => {
             (configSlug) => {
               assert.fail(configSlug, null, 'slug should not be stored');
             },
-            (errGit) => (errGit.code === 1 ? null : Promise.reject(errGit))
+            (errGit) => (errGit.code === 1 ? null : Promise.reject(errGit)),
           );
       });
     });
@@ -292,12 +292,12 @@ describe('GitStatusChecker', () => {
   describe('#confirmSlug()', () => {
     it('prompts user for confirmation', () => {
       const inStream = new stream.PassThrough();
-      const outStream = new stream.PassThrough({encoding: 'utf8'});
-      const errStream = new stream.PassThrough({encoding: 'utf8'});
+      const outStream = new stream.PassThrough({ encoding: 'utf8' });
+      const errStream = new stream.PassThrough({ encoding: 'utf8' });
       const checker = new GitStatusChecker({
         in: inStream,
         out: outStream,
-        err: errStream
+        err: errStream,
       });
 
       const testSlug = 'foo/bar';
@@ -320,12 +320,12 @@ describe('GitStatusChecker', () => {
 
     it('prompts user for slug if not confirmed', () => {
       const inStream = new stream.PassThrough();
-      const outStream = new stream.PassThrough({encoding: 'utf8'});
-      const errStream = new stream.PassThrough({encoding: 'utf8'});
+      const outStream = new stream.PassThrough({ encoding: 'utf8' });
+      const errStream = new stream.PassThrough({ encoding: 'utf8' });
       const checker = new GitStatusChecker({
         in: inStream,
         out: outStream,
-        err: errStream
+        err: errStream,
       });
 
       const testSlug1 = 'foo/bar';
@@ -355,12 +355,12 @@ describe('GitStatusChecker', () => {
 
     it('re-prompts user if slug is invalid', () => {
       const inStream = new stream.PassThrough();
-      const outStream = new stream.PassThrough({encoding: 'utf8'});
-      const errStream = new stream.PassThrough({encoding: 'utf8'});
+      const outStream = new stream.PassThrough({ encoding: 'utf8' });
+      const errStream = new stream.PassThrough({ encoding: 'utf8' });
       const checker = new GitStatusChecker({
         in: inStream,
         out: outStream,
-        err: errStream
+        err: errStream,
       });
 
       const testSlug1 = 'foo/bar';
@@ -387,7 +387,7 @@ describe('GitStatusChecker', () => {
           assert.strictEqual(outStream.read(), null);
           assert.match(errorMsg, /invalid/i);
           // Prompt may be part of error message or not
-          if (errorMsg.indexOf(testSlug1) >= 0) {
+          if (errorMsg.includes(testSlug1)) {
             return errorMsg;
           }
           return read(errStream);
@@ -408,12 +408,12 @@ describe('GitStatusChecker', () => {
 
     it('rejects with EOFError if input ends', () => {
       const inStream = new stream.PassThrough();
-      const outStream = new stream.PassThrough({encoding: 'utf8'});
-      const errStream = new stream.PassThrough({encoding: 'utf8'});
+      const outStream = new stream.PassThrough({ encoding: 'utf8' });
+      const errStream = new stream.PassThrough({ encoding: 'utf8' });
       const checker = new GitStatusChecker({
         in: inStream,
         out: outStream,
-        err: errStream
+        err: errStream,
       });
 
       const testSlug = 'foo/bar';
@@ -427,7 +427,7 @@ describe('GitStatusChecker', () => {
             // Doesn't print error message itself, but calling code will
             assert.strictEqual(outStream.read(), null);
             assert.strictEqual(errStream.read(), null);
-          }
+          },
         );
       const promptP = read(errStream)
         .then((promptMsg) => {
@@ -470,7 +470,7 @@ describe('GitStatusChecker', () => {
           sinon.mock().never(),
           (err) => {
             assert.match(err.message, /branch/i);
-          }
+          },
         );
     });
   });
@@ -488,7 +488,7 @@ describe('GitStatusChecker', () => {
       it(`resolves ${remoteSlug} for ${branchName}`, () => {
         const checker = new GitStatusChecker({
           out: new stream.PassThrough(),
-          err: new stream.PassThrough()
+          err: new stream.PassThrough(),
         });
         return git('checkout', branchName)
           .then(() => checker.detectSlug())
@@ -501,7 +501,7 @@ describe('GitStatusChecker', () => {
     it('defaults to origin if branch has no remote', () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
-        err: new stream.PassThrough()
+        err: new stream.PassThrough(),
       });
       return git('checkout', 'master')
         .then(() => checker.detectSlug())
@@ -513,7 +513,7 @@ describe('GitStatusChecker', () => {
     it('defaults to origin if not on branch', () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
-        err: new stream.PassThrough()
+        err: new stream.PassThrough(),
       });
       return git('checkout', 'HEAD^')
         .then(() => checker.detectSlug())
@@ -525,7 +525,7 @@ describe('GitStatusChecker', () => {
     it('rejects with SlugDetectionError for remote with no URL', () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
-        err: new stream.PassThrough()
+        err: new stream.PassThrough(),
       });
       return git('checkout', 'branchnourl')
         .then(() => checker.detectSlug())
@@ -534,14 +534,14 @@ describe('GitStatusChecker', () => {
           (err) => {
             assert.strictEqual(err.name, 'SlugDetectionError');
             assert.match(err.message, /remote/i);
-          }
+          },
         );
     });
 
     it('rejects with SlugDetectionError for remote without slug', () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
-        err: new stream.PassThrough()
+        err: new stream.PassThrough(),
       });
       return git('checkout', 'branchnotslug')
         .then(() => checker.detectSlug())
@@ -550,7 +550,7 @@ describe('GitStatusChecker', () => {
           (err) => {
             assert.strictEqual(err.name, 'SlugDetectionError');
             assert.match(err.message, /URL/i);
-          }
+          },
         );
     });
 
@@ -560,7 +560,7 @@ describe('GitStatusChecker', () => {
       const checker = new GitStatusChecker({
         interactive: true,
         out: outStream,
-        err: errStream
+        err: errStream,
       });
       const testSlug = 'prompt/slug';
       const mock = sinon.mock(checker);
@@ -579,10 +579,10 @@ describe('GitStatusChecker', () => {
 
     it('prints result without confirmation if not interactive', () => {
       const outStream = new stream.PassThrough();
-      const errStream = new stream.PassThrough({encoding: 'utf8'});
+      const errStream = new stream.PassThrough({ encoding: 'utf8' });
       const checker = new GitStatusChecker({
         out: outStream,
-        err: errStream
+        err: errStream,
       });
       const mock = sinon.mock(checker);
       mock.expects('confirmSlug').never();

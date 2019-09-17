@@ -8,8 +8,8 @@
 
 // Set NODE_DEBUG for request before importing it
 if (require.main === module
-    && (process.argv.indexOf('--debug') >= 0
-     || process.argv.indexOf('--debug-http') >= 0)) {
+    && (process.argv.includes('--debug')
+     || process.argv.includes('--debug-http'))) {
   const nodeDebug = process.env.NODE_DEBUG;
   if (!nodeDebug) {
     process.env.NODE_DEBUG = 'request';
@@ -19,7 +19,7 @@ if (require.main === module
 }
 
 const Chalk = require('chalk').constructor;
-const {Command} = require('commander');
+const { Command } = require('commander');
 const util = require('util');
 
 const packageJson = require('../package.json');
@@ -76,7 +76,7 @@ function travisStatusCmd(args, options, callback) {
       // Fake args to keep Commander.js happy
       args = [
         process.execPath,
-        __filename
+        __filename,
       ];
     } else if (typeof args !== 'object'
                || Math.floor(args.length) !== args.length) {
@@ -91,14 +91,12 @@ function travisStatusCmd(args, options, callback) {
       throw new TypeError('options must be an object');
     }
 
-    options = Object.assign(
-      {
-        in: process.stdin,
-        out: process.stdout,
-        err: process.stderr
-      },
-      options
-    );
+    options = {
+      in: process.stdin,
+      out: process.stdout,
+      err: process.stderr,
+      ...options,
+    };
 
     if (!options.in || typeof options.in.read !== 'function') {
       throw new TypeError('options.in must be a stream.Readable');
@@ -178,14 +176,14 @@ function travisStatusCmd(args, options, callback) {
     Object.defineProperty(
       process,
       'stdout',
-      {configurable: true, enumerable: true, value: options.out}
+      { configurable: true, enumerable: true, value: options.out },
     );
   }
   if (options.err) {
     Object.defineProperty(
       process,
       'stderr',
-      {configurable: true, enumerable: true, value: options.err}
+      { configurable: true, enumerable: true, value: options.err },
     );
   }
   if (options.out || options.err) {
@@ -196,8 +194,8 @@ function travisStatusCmd(args, options, callback) {
         configurable: true,
         enumerable: true,
         // eslint-disable-next-line no-console
-        value: new console.Console(process.stdout, process.stderr)
-      }
+        value: new console.Console(process.stdout, process.stderr),
+      },
     );
   }
   try {
@@ -235,7 +233,7 @@ function travisStatusCmd(args, options, callback) {
     enabled: command.interactive,
     // Note:  level: 0 overrides enabled: true, so must be specified here in
     // case supports-color returns false causing 0 default level.
-    level: 1
+    level: 1,
   });
 
   if (command.args.length > 0) {
@@ -263,7 +261,7 @@ function travisStatusCmd(args, options, callback) {
 
   // Use HTTP keep-alive to avoid unnecessary reconnections
   command.requestOpts = {
-    forever: true
+    forever: true,
   };
 
   if (command.insecure) {
@@ -276,7 +274,7 @@ function travisStatusCmd(args, options, callback) {
       options.err.write(chalk.red(
         'Can\'t figure out GitHub repo name. '
         + 'Ensure you\'re in the repo directory, or specify the repo name via '
-        + 'the -r option (e.g. travis-status -r <owner>/<repo>)\n'
+        + 'the -r option (e.g. travis-status -r <owner>/<repo>)\n',
       ));
       callback(null, 1);
       return;
@@ -318,7 +316,7 @@ if (require.main === module) {
   const mainOptions = {
     in: process.stdin,
     out: process.stdout,
-    err: process.stderr
+    err: process.stderr,
   };
   travisStatusCmd(process.argv, mainOptions, (err, code) => {
     if (err) {

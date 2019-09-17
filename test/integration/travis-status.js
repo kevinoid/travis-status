@@ -5,7 +5,7 @@
 
 'use strict';
 
-const {assert} = require('chai');
+const { assert } = require('chai');
 const enableDestroy = require('server-destroy');
 const http = require('http');
 const sinon = require('sinon');
@@ -14,10 +14,10 @@ const packageJson = require('../../package.json');
 const apiResponses = require('../../test-lib/api-responses');
 const travisStatus = require('../..');
 
-const {match} = sinon;
+const { match } = sinon;
 
 function checkRequest(req) {
-  const {accept} = req.headers;
+  const { accept } = req.headers;
   const acceptTravisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
   if (!acceptTravisRE.test(accept)) {
     throw new Error(`Accept does not start with Travis Media Type: ${
@@ -46,7 +46,7 @@ describe('travisStatus integration', () => {
   let apiUrl;
   let connCount = 0;
   let server;
-  const testApiResponses = Object.assign({}, apiResponses);
+  const testApiResponses = { ...apiResponses };
   before((done) => {
     server = http.createServer((req, res) => {
       checkRequest(req);
@@ -58,16 +58,16 @@ describe('travisStatus integration', () => {
       if ((parts = /^\/repos\/(.*)\/branches\/(.*)$/.exec(req.url))) {
         json = testApiResponses.branch({
           slug: parts[1],
-          branch: parts[2]
+          branch: parts[2],
         });
       } else if ((parts = /^(?:\/repos\/(.*))?\/builds\/(.*)$/.exec(req.url))) {
         json = testApiResponses.build({
           slug: parts[1],
-          buildId: parts[2]
+          buildId: parts[2],
         });
       } else if ((parts = /^\/repos\/(.*)$/.exec(req.url))) {
         json = testApiResponses.repo({
-          slug: parts[1]
+          slug: parts[1],
         });
       } else {
         throw new Error(`Unrecognized API URL: ${req.url}`);
@@ -124,7 +124,7 @@ describe('travisStatus integration', () => {
   it('fetches branch state', () => {
     const testSlug = 'foo/bar';
     const testBranch = 'branch1';
-    const testOpts = {slug: testSlug, branch: testBranch};
+    const testOpts = { slug: testSlug, branch: testBranch };
     const testResult = apiResponses.branch(testOpts);
     apiMock.expects('branch')
       .once().withExactArgs(match(testOpts))
@@ -134,7 +134,7 @@ describe('travisStatus integration', () => {
     const options = {
       apiEndpoint: apiUrl,
       branch: testBranch,
-      repo: testSlug
+      repo: testSlug,
     };
     return travisStatus(options).then((result) => {
       assert.deepEqual(result, testResult);
@@ -145,7 +145,7 @@ describe('travisStatus integration', () => {
 
   it('fetches repo state', () => {
     const testSlug = 'foo/bar';
-    const testOpts = {slug: testSlug};
+    const testOpts = { slug: testSlug };
     const testResult = apiResponses.repo(testOpts);
     apiMock.expects('branch').never();
     apiMock.expects('build').never();
@@ -154,7 +154,7 @@ describe('travisStatus integration', () => {
       .returns(testResult);
     const options = {
       apiEndpoint: apiUrl,
-      repo: testSlug
+      repo: testSlug,
     };
     return travisStatus(options).then((result) => {
       assert.deepEqual(result, testResult);
@@ -170,24 +170,24 @@ describe('travisStatus integration', () => {
     const testOpts = {
       buildId: testBuildId,
       sha: testCommit,
-      slug: testSlug
+      slug: testSlug,
     };
     const testBuild = apiResponses.build(testOpts);
     const testRepo = apiResponses.repo(testOpts);
     apiMock.expects('branch').never();
     apiMock.expects('build')
-      .once().withExactArgs(match({buildId: String(testBuildId)}))
+      .once().withExactArgs(match({ buildId: String(testBuildId) }))
       .returns(testBuild);
     apiMock.expects('repo')
-      .once().withExactArgs(match({slug: testSlug}))
+      .once().withExactArgs(match({ slug: testSlug }))
       .returns(testRepo);
     const options = {
       apiEndpoint: apiUrl,
       commit: testCommit,
-      repo: testSlug
+      repo: testSlug,
     };
     return travisStatus(options).then((result) => {
-      assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
+      assert.deepEqual(result, { ...testRepo, ...testBuild });
       apiMock.verify();
       // If Agent doesn't have .destroy(), travisStatus can't do keep-alive.
       // TODO:  Check that travisStatusCmd does.
@@ -199,13 +199,13 @@ describe('travisStatus integration', () => {
 
   it('fetches repo state with wait', () => {
     const testSlug = 'foo/bar';
-    const pendingResult = apiResponses.repo({slug: testSlug, state: 'started'});
-    const passedResult = apiResponses.repo({slug: testSlug});
+    const pendingResult = apiResponses.repo({ slug: testSlug, state: 'started' });
+    const passedResult = apiResponses.repo({ slug: testSlug });
     apiMock.expects('branch').never();
     apiMock.expects('build').never();
     const expect = apiMock.expects('repo')
       .atLeast(2)
-      .withExactArgs(match({slug: testSlug}));
+      .withExactArgs(match({ slug: testSlug }));
     // We don't want to over-specify the timeout/backoff values.
     // So extra calls are added to ensure it is long enough to exceed the
     // keep-alive timeout.
@@ -216,7 +216,7 @@ describe('travisStatus integration', () => {
     const options = {
       apiEndpoint: apiUrl,
       repo: testSlug,
-      wait: Infinity
+      wait: Infinity,
     };
     const promise = travisStatus(options).then((result) => {
       assert.deepEqual(result, passedResult);
