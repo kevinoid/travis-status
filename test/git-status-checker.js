@@ -26,6 +26,7 @@ let origCWD;
 const BRANCH_REMOTES = {
   branch1: 'remote1/master',
   branch2: 'remote2/master',
+  branch3: 'remote3/master',
   branchnourl: 'nourl/master',
   branchnotslug: 'notslug/master',
 };
@@ -34,11 +35,13 @@ const REMOTES = {
   origin: 'https://github.com/owner/repo',
   remote1: 'git@github.com:owner1/repo1.git',
   remote2: 'https://github.com/owner2/repo2.git',
+  remote3: 'https::https://github.com/owner3/repo3.git',
 };
 const REMOTE_SLUGS = {
   origin: 'owner/repo',
   remote1: 'owner1/repo1',
   remote2: 'owner2/repo2',
+  remote3: 'owner3/repo3',
 };
 /** Path to repository in which tests are run. */
 const TEST_REPO_PATH = path.join(__dirname, '..', 'test-repo');
