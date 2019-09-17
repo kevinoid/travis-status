@@ -161,7 +161,10 @@ describe('travis-status command', () => {
   expectArgsAs(['--debug'], match.object);
   expectArgsAs(['--debug-http'], match.object);
   expectArgsAs(['--explode'], match.object);
-  expectArgsAs(['--insecure'], match({ requestOpts: match({ strictSSL: false }) }));
+  expectArgsAs(
+    ['--insecure'],
+    match({ requestOpts: match({ strictSSL: false }) }),
+  );
   expectArgsAs(['--interactive'], match({ interactive: true }));
   expectArgsAs(['--org'], match({ apiEndpoint: 'https://api.travis-ci.org/' }));
   expectArgsAs(['--pro'], match({ apiEndpoint: 'https://api.travis-ci.com/' }));

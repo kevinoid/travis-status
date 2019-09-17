@@ -199,7 +199,8 @@ describe('travisStatus integration', () => {
 
   it('fetches repo state with wait', () => {
     const testSlug = 'foo/bar';
-    const pendingResult = apiResponses.repo({ slug: testSlug, state: 'started' });
+    const pendingResult =
+      apiResponses.repo({ slug: testSlug, state: 'started' });
     const passedResult = apiResponses.repo({ slug: testSlug });
     apiMock.expects('branch').never();
     apiMock.expects('build').never();
