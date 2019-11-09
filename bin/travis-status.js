@@ -18,7 +18,7 @@ if (require.main === module
   }
 }
 
-const Chalk = require('chalk').constructor;
+const Chalk = require('chalk').Instance;
 const { Command } = require('commander');
 const util = require('util');
 
@@ -230,10 +230,7 @@ function travisStatusCmd(args, options, callback) {
   }
 
   const chalk = new Chalk({
-    enabled: command.interactive,
-    // Note:  level: 0 overrides enabled: true, so must be specified here in
-    // case supports-color returns false causing 0 default level.
-    level: 1,
+    level: command.interactive ? 1 : 0,
   });
 
   if (command.args.length > 0) {

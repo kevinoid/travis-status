@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "caseless": "^0.12.0",
-    "chalk": "^2.0.0",
+    "chalk": "^3.0.0",
     "commander": "^4.0.0",
     "promise-nodeify": "^3.0.0",
     "promised-read": "^2.0.0",
