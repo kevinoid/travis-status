@@ -33,9 +33,10 @@
 
 'use strict';
 
-const Chalk = require('chalk').constructor;
+const Chalk = require('chalk').Instance;
 const util = require('util');
-const url = require('url');
+// TODO [engine:node@>=10]: Use URL defined globally
+const { URL } = require('url'); // eslint-disable-line no-shadow
 
 const InvalidSlugError = require('./invalid-slug-error');
 const Shortline = require('./shortline');
@@ -81,14 +82,12 @@ function GitStatusChecker(options) {
     throw new TypeError('options must be an object');
   }
 
-  options = Object.assign(
-    {
-      in: process.stdin,
-      out: process.stdout,
-      err: process.stderr
-    },
-    options
-  );
+  options = {
+    in: process.stdin,
+    out: process.stdout,
+    err: process.stderr,
+    ...options,
+  };
 
   if (!options.in || typeof options.in.read !== 'function') {
     throw new TypeError('options.in must be a stream.Readable');
@@ -102,11 +101,11 @@ function GitStatusChecker(options) {
 
   this._options = options;
   this._chalk = new Chalk({
-    enabled: Boolean(
-      options.interactive !== undefined
-        ? options.interactive
-        : options.out.isTTY
-    )
+    level:
+      options.interactive === true ? 1
+        : options.interactive === false ? 0
+          : options.out.isTTY ? 1
+            : 0,
   });
 }
 
@@ -182,7 +181,7 @@ GitStatusChecker.prototype.storeSlug = function storeSlug(slug) {
  * @private
  */
 GitStatusChecker.prototype.tryStoreSlug = function tryStoreSlug(slug) {
-  const {err} = this._options;
+  const { err } = this._options;
   return this.storeSlug(slug)
     .catch((errStore) => {
       err.write(`Error storing slug in git config: ${errStore}`);
@@ -198,7 +197,7 @@ GitStatusChecker.prototype.tryStoreSlug = function tryStoreSlug(slug) {
 GitStatusChecker.prototype.confirmSlug = function confirmSlug(slug) {
   const shortline = new Shortline({
     input: this._options.in,
-    output: this._options.err
+    output: this._options.err,
   });
   const question = `Detected repository as ${this._chalk.yellow(slug)
   } is this correct? `;
@@ -213,10 +212,10 @@ GitStatusChecker.prototype.confirmSlug = function confirmSlug(slug) {
       return shortline.ask('Repository slug (owner/name): ', {
         default: slug,
         responses: {
-          notValid: GitStatusChecker.SLUG_INVALID
+          notValid: GitStatusChecker.SLUG_INVALID,
         },
         trim: true,
-        validate: GitStatusChecker.SLUG_VALID_RE
+        validate: GitStatusChecker.SLUG_VALID_RE,
       });
     });
 };
@@ -234,31 +233,29 @@ GitStatusChecker.prototype.detectBranch = function detectBranch() {
         const errMsg = `Unable to determine current branch: ${
           err.stderr || 'detached HEAD'}`;
         return Promise.reject(new Error(errMsg));
-      }
+      },
     );
 };
 
-/** Gets the path portion of a git URL.
+/** Gets the pathname portion of a git URL.
  * @param {string} gitUrl Git URL to parse.
- * @return {string} Path portion of the URL.
+ * @return {string} Pathname portion of the URL.
  * @private
  */
-function gitUrlPath(gitUrl) {
-  // Foreign URL for remote helper
-  // See transport_get in transport.c
-  // Note:  url.parse considers second : as part of path.  So check this first.
-  const foreignParts = /^([A-Za-z0-9][A-Za-z0-9+.-]*)::(.*)$/.exec(gitUrl);
-  if (foreignParts) {
-    return foreignParts[2];
+function gitUrlPathname(gitUrl) {
+  // Strip explicit transport from "foreign URL"
+  // See https://git-scm.com/docs/git-remote-helpers
+  // Matches parsing in transport_get in transport.c
+  gitUrl = gitUrl.replace(/^([A-Za-z0-9][A-Za-z0-9+.-]*)::/, '');
+
+  // Try parsing as a typical URL
+  try {
+    return new URL(gitUrl).pathname;
+  } catch (err) {
+    // Invalid URL, continue
   }
 
-  // Typical URL
-  const gitUrlObj = url.parse(gitUrl);
-  if (gitUrlObj.protocol) {
-    return gitUrlObj.path;
-  }
-
-  // SCP-like syntax.  Host can be wrapped in [] to disambiguate path.
+  // Try SCP-like syntax.  Host can be wrapped in [] to disambiguate path.
   // See parse_connect_url and host_end in connect.c
   const scpParts = /^([^@/]+)@(\[[^]\/]+\]|[^:/]+):(.*)$/.exec(gitUrl);
   if (scpParts) {
@@ -291,18 +288,18 @@ GitStatusChecker.prototype.detectSlug = function detectSlug() {
         // ls-remote prints its argument when it doesn't have a URL
         if (remoteUrl === remoteName) {
           return Promise.reject(new SlugDetectionError(
-            `No URL for '${remoteName}' remote`
+            `No URL for '${remoteName}' remote`,
           ));
         }
         return remoteUrl;
       }))
     .then((remoteUrl) => {
-      const path = gitUrlPath(remoteUrl);
+      const path = gitUrlPathname(remoteUrl);
       const match = /([^/]+\/[^/]+?)(?:\/?\.git)?$/.exec(path);
       return match
         ? match[1]
         : Promise.reject(new SlugDetectionError(
-          `Unable to extract slug from URL &lt;${remoteUrl}>`
+          `Unable to extract slug from URL &lt;${remoteUrl}>`,
         ));
     });
 
@@ -327,7 +324,7 @@ GitStatusChecker.prototype.loadSlug = function loadSlug() {
     .then(
       getTrimmedStdout,
       // git config exits with code 1 if the configuration value is not set
-      (err) => (err.code === 1 ? null : Promise.reject(err))
+      (err) => (err.code === 1 ? null : Promise.reject(err)),
     );
 };
 
@@ -366,7 +363,7 @@ module.exports = GitStatusChecker;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Aug 09 2019 11:01:36 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Nov 16 2019 18:26:09 GMT-0700 (Mountain Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

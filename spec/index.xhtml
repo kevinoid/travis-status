@@ -30,28 +30,28 @@ section section section section {
   // eslint-disable-next-line no-new
   () =&#x3E; { new GitStatusChecker(true); },
   TypeError,
-  /\boptions\b/
+  /\boptions\b/,
 );</code></pre></dd>
         <dt>throws TypeError for non-Readable in</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
-  () =&#x3E; { new GitStatusChecker({in: new stream.Writable()}); },
+  () =&#x3E; { new GitStatusChecker({ in: new stream.Writable() }); },
   TypeError,
-  /\boptions.in\b/
+  /\boptions.in\b/,
 );</code></pre></dd>
         <dt>throws TypeError for non-Writable out</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
-  () =&#x3E; { new GitStatusChecker({out: new stream.Readable()}); },
+  () =&#x3E; { new GitStatusChecker({ out: new stream.Readable() }); },
   TypeError,
-  /\boptions.out\b/
+  /\boptions.out\b/,
 );</code></pre></dd>
         <dt>returns Error for non-Writable err</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
-  () =&#x3E; { new GitStatusChecker({err: new stream.Readable()}); },
+  () =&#x3E; { new GitStatusChecker({ err: new stream.Readable() }); },
   TypeError,
-  /\boptions.err\b/
+  /\boptions.err\b/,
 );</code></pre></dd>
         <section class="suite">
           <h1>.checkSlugFormat()</h1>
@@ -65,57 +65,57 @@ assert.strictEqual(result, slug);</code></pre></dd>
             <dt>rejects &#x22;repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;/owner/repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;/repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner//repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/repo/&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/repo/branch&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22; owner/repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner /repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/ repo&#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/repo &#x22;</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
-  InvalidSlugError
+  InvalidSlugError,
 );</code></pre></dd>
           </dl>
         </section>
@@ -139,7 +139,7 @@ return checker.resolveHash(&#x27;notabranch&#x27;).then(
   sinon.mock().never(),
   (err) =&#x3E; {
     assert(err);
-  }
+  },
 );</code></pre></dd>
           </dl>
         </section>
@@ -169,9 +169,9 @@ return checker.storeSlug(testSlug).then(
         (configSlug) =&#x3E; {
           assert.fail(configSlug, null, &#x27;slug should not be stored&#x27;);
         },
-        (errGit) =&#x3E; (errGit.code === 1 ? null : Promise.reject(errGit))
+        (errGit) =&#x3E; (errGit.code === 1 ? null : Promise.reject(errGit)),
       );
-  }
+  },
 );</code></pre></dd>
           </dl>
         </section>
@@ -194,7 +194,7 @@ return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
 const errStream = new stream.PassThrough();
 const checker = new GitStatusChecker({
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const testSlug = &#x27;foobar&#x27;;
 return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
@@ -206,7 +206,7 @@ return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
       (configSlug) =&#x3E; {
         assert.fail(configSlug, null, &#x27;slug should not be stored&#x27;);
       },
-      (errGit) =&#x3E; (errGit.code === 1 ? null : Promise.reject(errGit))
+      (errGit) =&#x3E; (errGit.code === 1 ? null : Promise.reject(errGit)),
     );
 });</code></pre></dd>
           </dl>
@@ -216,12 +216,12 @@ return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
           <dl>
             <dt>prompts user for confirmation</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
-const outStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
-const errStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
+const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
+const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const checker = new GitStatusChecker({
   in: inStream,
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const testSlug = &#x27;foo/bar&#x27;;
 const confirmP = checker.confirmSlug(testSlug);
@@ -240,12 +240,12 @@ return read(errStream)
   });</code></pre></dd>
             <dt>prompts user for slug if not confirmed</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
-const outStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
-const errStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
+const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
+const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const checker = new GitStatusChecker({
   in: inStream,
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const testSlug1 = &#x27;foo/bar&#x27;;
 const testSlug2 = &#x27;baz/quux&#x27;;
@@ -271,12 +271,12 @@ return read(errStream)
   });</code></pre></dd>
             <dt>re-prompts user if slug is invalid</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
-const outStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
-const errStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
+const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
+const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const checker = new GitStatusChecker({
   in: inStream,
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const testSlug1 = &#x27;foo/bar&#x27;;
 const testSlug2 = &#x27;fred&#x27;;
@@ -301,7 +301,7 @@ return read(errStream)
     assert.strictEqual(outStream.read(), null);
     assert.match(errorMsg, /invalid/i);
     // Prompt may be part of error message or not
-    if (errorMsg.indexOf(testSlug1) &#x3E;= 0) {
+    if (errorMsg.includes(testSlug1)) {
       return errorMsg;
     }
     return read(errStream);
@@ -320,12 +320,12 @@ return read(errStream)
   });</code></pre></dd>
             <dt>rejects with EOFError if input ends</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
-const outStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
-const errStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
+const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
+const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const checker = new GitStatusChecker({
   in: inStream,
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const testSlug = &#x27;foo/bar&#x27;;
 const confirmP = checker.confirmSlug(testSlug)
@@ -338,7 +338,7 @@ const confirmP = checker.confirmSlug(testSlug)
       // Doesn&#x27;t print error message itself, but calling code will
       assert.strictEqual(outStream.read(), null);
       assert.strictEqual(errStream.read(), null);
-    }
+    },
   );
 const promptP = read(errStream)
   .then((promptMsg) =&#x3E; {
@@ -376,7 +376,7 @@ return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
     sinon.mock().never(),
     (err) =&#x3E; {
       assert.match(err.message, /branch/i);
-    }
+    },
   );</code></pre></dd>
           </dl>
         </section>
@@ -386,7 +386,7 @@ return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
             <dt>resolves owner1/repo1 for branch1</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 });
 return git(&#x27;checkout&#x27;, branchName)
   .then(() =&#x3E; checker.detectSlug())
@@ -396,7 +396,17 @@ return git(&#x27;checkout&#x27;, branchName)
             <dt>resolves owner2/repo2 for branch2</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
+});
+return git(&#x27;checkout&#x27;, branchName)
+  .then(() =&#x3E; checker.detectSlug())
+  .then((slug) =&#x3E; {
+    assert.strictEqual(slug, remoteSlug);
+  });</code></pre></dd>
+            <dt>resolves owner3/repo3 for branch3</dt>
+            <dd><pre><code>const checker = new GitStatusChecker({
+  out: new stream.PassThrough(),
+  err: new stream.PassThrough(),
 });
 return git(&#x27;checkout&#x27;, branchName)
   .then(() =&#x3E; checker.detectSlug())
@@ -406,7 +416,7 @@ return git(&#x27;checkout&#x27;, branchName)
             <dt>defaults to origin if branch has no remote</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 });
 return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
   .then(() =&#x3E; checker.detectSlug())
@@ -416,7 +426,7 @@ return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
             <dt>defaults to origin if not on branch</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 });
 return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
   .then(() =&#x3E; checker.detectSlug())
@@ -426,7 +436,7 @@ return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
             <dt>rejects with SlugDetectionError for remote with no URL</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 });
 return git(&#x27;checkout&#x27;, &#x27;branchnourl&#x27;)
   .then(() =&#x3E; checker.detectSlug())
@@ -435,12 +445,12 @@ return git(&#x27;checkout&#x27;, &#x27;branchnourl&#x27;)
     (err) =&#x3E; {
       assert.strictEqual(err.name, &#x27;SlugDetectionError&#x27;);
       assert.match(err.message, /remote/i);
-    }
+    },
   );</code></pre></dd>
             <dt>rejects with SlugDetectionError for remote without slug</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 });
 return git(&#x27;checkout&#x27;, &#x27;branchnotslug&#x27;)
   .then(() =&#x3E; checker.detectSlug())
@@ -449,7 +459,7 @@ return git(&#x27;checkout&#x27;, &#x27;branchnotslug&#x27;)
     (err) =&#x3E; {
       assert.strictEqual(err.name, &#x27;SlugDetectionError&#x27;);
       assert.match(err.message, /URL/i);
-    }
+    },
   );</code></pre></dd>
             <dt>prompts for confirmation if interactive</dt>
             <dd><pre><code>const outStream = new stream.PassThrough();
@@ -457,7 +467,7 @@ const errStream = new stream.PassThrough();
 const checker = new GitStatusChecker({
   interactive: true,
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const testSlug = &#x27;prompt/slug&#x27;;
 const mock = sinon.mock(checker);
@@ -473,10 +483,10 @@ return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
   });</code></pre></dd>
             <dt>prints result without confirmation if not interactive</dt>
             <dd><pre><code>const outStream = new stream.PassThrough();
-const errStream = new stream.PassThrough({encoding: &#x27;utf8&#x27;});
+const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const checker = new GitStatusChecker({
   out: outStream,
-  err: errStream
+  err: errStream,
 });
 const mock = sinon.mock(checker);
 mock.expects(&#x27;confirmSlug&#x27;).never();
@@ -542,7 +552,7 @@ return checker.findSlug().then((slug) =&#x3E; {
         <dt>fetches branch state</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testBranch = &#x27;branch1&#x27;;
-const testOpts = {slug: testSlug, branch: testBranch};
+const testOpts = { slug: testSlug, branch: testBranch };
 const testResult = apiResponses.branch(testOpts);
 apiMock.expects(&#x27;branch&#x27;)
   .once().withExactArgs(match(testOpts))
@@ -552,7 +562,7 @@ apiMock.expects(&#x27;repo&#x27;).never();
 const options = {
   apiEndpoint: apiUrl,
   branch: testBranch,
-  repo: testSlug
+  repo: testSlug,
 };
 return travisStatus(options).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
@@ -561,7 +571,7 @@ return travisStatus(options).then((result) =&#x3E; {
 });</code></pre></dd>
         <dt>fetches repo state</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
-const testOpts = {slug: testSlug};
+const testOpts = { slug: testSlug };
 const testResult = apiResponses.repo(testOpts);
 apiMock.expects(&#x27;branch&#x27;).never();
 apiMock.expects(&#x27;build&#x27;).never();
@@ -570,7 +580,7 @@ apiMock.expects(&#x27;repo&#x27;)
   .returns(testResult);
 const options = {
   apiEndpoint: apiUrl,
-  repo: testSlug
+  repo: testSlug,
 };
 return travisStatus(options).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
@@ -584,24 +594,24 @@ const testBuildId = 123456;
 const testOpts = {
   buildId: testBuildId,
   sha: testCommit,
-  slug: testSlug
+  slug: testSlug,
 };
 const testBuild = apiResponses.build(testOpts);
 const testRepo = apiResponses.repo(testOpts);
 apiMock.expects(&#x27;branch&#x27;).never();
 apiMock.expects(&#x27;build&#x27;)
-  .once().withExactArgs(match({buildId: String(testBuildId)}))
+  .once().withExactArgs(match({ buildId: String(testBuildId) }))
   .returns(testBuild);
 apiMock.expects(&#x27;repo&#x27;)
-  .once().withExactArgs(match({slug: testSlug}))
+  .once().withExactArgs(match({ slug: testSlug }))
   .returns(testRepo);
 const options = {
   apiEndpoint: apiUrl,
   commit: testCommit,
-  repo: testSlug
+  repo: testSlug,
 };
 return travisStatus(options).then((result) =&#x3E; {
-  assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
+  assert.deepEqual(result, { ...testRepo, ...testBuild });
   apiMock.verify();
   // If Agent doesn&#x27;t have .destroy(), travisStatus can&#x27;t do keep-alive.
   // TODO:  Check that travisStatusCmd does.
@@ -611,13 +621,14 @@ return travisStatus(options).then((result) =&#x3E; {
 });</code></pre></dd>
         <dt>fetches repo state with wait</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
-const pendingResult = apiResponses.repo({slug: testSlug, state: &#x27;started&#x27;});
-const passedResult = apiResponses.repo({slug: testSlug});
+const pendingResult =
+  apiResponses.repo({ slug: testSlug, state: &#x27;started&#x27; });
+const passedResult = apiResponses.repo({ slug: testSlug });
 apiMock.expects(&#x27;branch&#x27;).never();
 apiMock.expects(&#x27;build&#x27;).never();
 const expect = apiMock.expects(&#x27;repo&#x27;)
   .atLeast(2)
-  .withExactArgs(match({slug: testSlug}));
+  .withExactArgs(match({ slug: testSlug }));
 // We don&#x27;t want to over-specify the timeout/backoff values.
 // So extra calls are added to ensure it is long enough to exceed the
 // keep-alive timeout.
@@ -628,7 +639,7 @@ expect.onCall(5).returns(passedResult);
 const options = {
   apiEndpoint: apiUrl,
   repo: testSlug,
-  wait: Infinity
+  wait: Infinity,
 };
 const promise = travisStatus(options).then((result) =&#x3E; {
   assert.deepEqual(result, passedResult);
@@ -645,17 +656,17 @@ return promise;</code></pre></dd>
   // eslint-disable-next-line no-new
   () =&#x3E; { new TravisStatusChecker(true); },
   TypeError,
-  /\boptions\b/
+  /\boptions\b/,
 );</code></pre></dd>
         <dt>passes {pro: true} to Travis when apiEndpoint is PRO_URI</dt>
         <dd><pre><code>TravisMock = sinon.mock()
   .once()
   .withExactArgs(
-    match({pro: true})
+    match({ pro: true }),
   );
 // eslint-disable-next-line no-new
 new TravisStatusChecker({
-  apiEndpoint: TravisStatusChecker.PRO_URI
+  apiEndpoint: TravisStatusChecker.PRO_URI,
 });
 TravisMock.verify();</code></pre></dd>
         <dt>passes options.token to agent.setAccessToken</dt>
@@ -665,7 +676,7 @@ const mock = sinon.mock(travisHttpMock);
 mock.expects(&#x27;setAccessToken&#x27;).once().withExactArgs(testToken);
 // eslint-disable-next-line no-new
 new TravisStatusChecker({
-  token: testToken
+  token: testToken,
 });
 mock.verify();</code></pre></dd>
         <section class="suite">
@@ -693,7 +704,7 @@ return promise;</code></pre></dd>
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -707,7 +718,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -723,7 +734,7 @@ return promise;</code></pre></dd>
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -740,12 +751,12 @@ travisRequestMock = sinon.mock()
   .yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 30000}))
+  checker[methodName](...args.concat({ wait: 30000 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err, errTest);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -758,12 +769,12 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 30000}))
+  checker[methodName](...args.concat({ wait: 30000 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err, errTest);
-      }
+      },
     );
 for (let i = 1; i &#x3C; 31; i += 1) {
   clock.tick(1000);
@@ -774,13 +785,13 @@ return promise;</code></pre></dd>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
+  checker[methodName](...args.concat({ wait: &#x27;hello&#x27; }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;TypeError&#x27;);
         assert.match(err.message, /\bwait\b/);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -788,13 +799,13 @@ return promise;</code></pre></dd>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: -5}))
+  checker[methodName](...args.concat({ wait: -5 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;RangeError&#x27;);
         assert.match(err.message, /\bwait\b/);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -827,7 +838,7 @@ return promise;</code></pre></dd>
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -841,7 +852,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -857,7 +868,7 @@ return promise;</code></pre></dd>
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -874,12 +885,12 @@ travisRequestMock = sinon.mock()
   .yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 30000}))
+  checker[methodName](...args.concat({ wait: 30000 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err, errTest);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -892,12 +903,12 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 30000}))
+  checker[methodName](...args.concat({ wait: 30000 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err, errTest);
-      }
+      },
     );
 for (let i = 1; i &#x3C; 31; i += 1) {
   clock.tick(1000);
@@ -908,13 +919,13 @@ return promise;</code></pre></dd>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
+  checker[methodName](...args.concat({ wait: &#x27;hello&#x27; }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;TypeError&#x27;);
         assert.match(err.message, /\bwait\b/);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -922,13 +933,13 @@ return promise;</code></pre></dd>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: -5}))
+  checker[methodName](...args.concat({ wait: -5 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;RangeError&#x27;);
         assert.match(err.message, /\bwait\b/);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -961,7 +972,7 @@ return promise;</code></pre></dd>
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -975,7 +986,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -991,7 +1002,7 @@ return promise;</code></pre></dd>
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 10000}))
+  checker[methodName](...args.concat({ wait: 10000 }))
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -1008,12 +1019,12 @@ travisRequestMock = sinon.mock()
   .yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 30000}))
+  checker[methodName](...args.concat({ wait: 30000 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err, errTest);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -1026,12 +1037,12 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: 30000}))
+  checker[methodName](...args.concat({ wait: 30000 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err, errTest);
-      }
+      },
     );
 for (let i = 1; i &#x3C; 31; i += 1) {
   clock.tick(1000);
@@ -1042,13 +1053,13 @@ return promise;</code></pre></dd>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: &#x27;hello&#x27;}))
+  checker[methodName](...args.concat({ wait: &#x27;hello&#x27; }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;TypeError&#x27;);
         assert.match(err.message, /\bwait\b/);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -1056,13 +1067,13 @@ return promise;</code></pre></dd>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({wait: -5}))
+  checker[methodName](...args.concat({ wait: -5 }))
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;RangeError&#x27;);
         assert.match(err.message, /\bwait\b/);
-      }
+      },
     );
 travisRequestMock.verify();
 return promise;</code></pre></dd>
@@ -1080,7 +1091,7 @@ return promise;</code></pre></dd>
   .once()
   .withArgs(
     match.any,
-    match.func
+    match.func,
   );
 travisStatusCmd([], sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
@@ -1089,7 +1100,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     match.any,
-    match.func
+    match.func,
   );
 const result = travisStatusCmd(RUNTIME_ARGS, sinon.mock().never());
 travisStatus.verify();
@@ -1098,14 +1109,14 @@ assert.strictEqual(result, undefined);</code></pre></dd>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
-    match({interactive: true}),
-    match.func
+    match({ interactive: true }),
+    match.func,
   );
 const outStream = new stream.PassThrough();
 outStream.isTTY = true;
 const options = {
   out: outStream,
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 travisStatusCmd(RUNTIME_ARGS, options, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
@@ -1114,7 +1125,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1124,7 +1135,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1134,7 +1145,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1144,7 +1155,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1154,7 +1165,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1164,7 +1175,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1174,7 +1185,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1184,7 +1195,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1194,7 +1205,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1204,7 +1215,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1214,7 +1225,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1224,7 +1235,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1234,7 +1245,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1244,7 +1255,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1254,7 +1265,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1264,7 +1275,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1274,7 +1285,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1284,7 +1295,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1294,7 +1305,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1304,7 +1315,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1314,7 +1325,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1324,7 +1335,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1334,7 +1345,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1344,7 +1355,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1354,7 +1365,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1364,7 +1375,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1374,7 +1385,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1384,7 +1395,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1394,7 +1405,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1404,7 +1415,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1414,7 +1425,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1424,7 +1435,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1434,7 +1445,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1444,7 +1455,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1454,7 +1465,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1464,7 +1475,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1474,7 +1485,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1484,7 +1495,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1494,7 +1505,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1504,7 +1515,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1514,7 +1525,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1524,7 +1535,7 @@ travisStatus.verify();</code></pre></dd>
   .once()
   .withArgs(
     expectObj,
-    match.func
+    match.func,
   );
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, sinon.mock().never());
@@ -1534,7 +1545,7 @@ travisStatus.verify();</code></pre></dd>
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1549,7 +1560,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1564,7 +1575,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1578,7 +1589,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1588,13 +1599,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -x exits with code 1 if build canceled</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1604,13 +1615,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -x exits with code 1 if build errored</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1620,13 +1631,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -x exits with code 1 if build failed</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1636,13 +1647,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --exit-code exits with code 1 if build canceled</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1652,13 +1663,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --exit-code exits with code 1 if build errored</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1668,13 +1679,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --exit-code exits with code 1 if build failed</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1684,13 +1695,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>normally exits with code 0 if build queued</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1700,13 +1711,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build created</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1716,13 +1727,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build queued</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1732,13 +1743,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build received</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1748,13 +1759,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build started</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1764,13 +1775,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build created</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1780,13 +1791,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build queued</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1796,13 +1807,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build received</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1812,13 +1823,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build started</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const allArgs = RUNTIME_ARGS.concat(args);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1828,7 +1839,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>-q exits without printing state</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1836,7 +1847,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat(arg);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1848,7 +1859,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state: &#x27;failed&#x27;})
+  apiResponses.repo({ state: &#x27;failed&#x27; }),
 );</code></pre></dd>
         <dt>--quiet exits without printing state</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1856,7 +1867,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat(arg);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1868,7 +1879,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state: &#x27;failed&#x27;})
+  apiResponses.repo({ state: &#x27;failed&#x27; }),
 );</code></pre></dd>
         <dt>prints build number and state for repo to stdout</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1876,7 +1887,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const buildNum = 500;
 const state = &#x27;passed&#x27;;
@@ -1887,7 +1898,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.strictEqual(
     String(outStream.read()),
     // We are strict about this format since other programs may use it
-    &#x60;build #${buildNum} ${state}\n&#x60;
+    &#x60;build #${buildNum} ${state}\n&#x60;,
   );
   assert.strictEqual(errStream.read(), null);
   done();
@@ -1895,8 +1906,8 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 travisStatus.yield(
   null,
   isBranch
-    ? apiResponses.branch({number: buildNum, state})
-    : apiResponses.repo({number: buildNum, state})
+    ? apiResponses.branch({ number: buildNum, state })
+    : apiResponses.repo({ number: buildNum, state }),
 );</code></pre></dd>
         <dt>prints build number and state for branch to stdout</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1904,7 +1915,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const buildNum = 500;
 const state = &#x27;passed&#x27;;
@@ -1915,7 +1926,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.strictEqual(
     String(outStream.read()),
     // We are strict about this format since other programs may use it
-    &#x60;build #${buildNum} ${state}\n&#x60;
+    &#x60;build #${buildNum} ${state}\n&#x60;,
   );
   assert.strictEqual(errStream.read(), null);
   done();
@@ -1923,8 +1934,8 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 travisStatus.yield(
   null,
   isBranch
-    ? apiResponses.branch({number: buildNum, state})
-    : apiResponses.repo({number: buildNum, state})
+    ? apiResponses.branch({ number: buildNum, state })
+    : apiResponses.repo({ number: buildNum, state }),
 );</code></pre></dd>
         <dt>prints canceled in red if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1932,7 +1943,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1941,14 +1952,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints created in yellow if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1956,7 +1967,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1965,14 +1976,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints errored in red if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -1980,7 +1991,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -1989,14 +2000,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints failed in red if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2004,7 +2015,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -2013,14 +2024,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints passed in green if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2028,7 +2039,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -2037,14 +2048,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints queued in yellow if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2052,7 +2063,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -2061,14 +2072,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints ready in green if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2076,7 +2087,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -2085,14 +2096,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints received in yellow if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2100,7 +2111,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -2109,14 +2120,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints started in yellow if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2124,7 +2135,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
@@ -2133,14 +2144,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   const outString = String(outStream.read());
   assert.include(
     outString,
-    ansiStyles[color].open + state + ansiStyles[color].close
+    ansiStyles[color].open + state + ansiStyles[color].close,
   );
   assert.strictEqual(errStream.read(), null);
   done();
 });
 travisStatus.yield(
   null,
-  apiResponses.repo({state})
+  apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints error messages in red if interactive</dt>
         <dd><pre><code>travisStatus = sinon.stub();
@@ -2148,7 +2159,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const errMsg = &#x27;super duper test error&#x27;;
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
@@ -2178,7 +2189,7 @@ travisStatus.yield(new Error(errMsg));</code></pre></dd>
         <dd><pre><code>assert.throws(
   () =&#x3E; { travisStatusCmd(RUNTIME_ARGS, {}, true); },
   TypeError,
-  /\bcallback\b/
+  /\bcallback\b/,
 );</code></pre></dd>
         <dt>returns Error for non-object options</dt>
         <dd><pre><code>travisStatusCmd([], true, (err) =&#x3E; {
@@ -2187,19 +2198,19 @@ travisStatus.yield(new Error(errMsg));</code></pre></dd>
   done();
 });</code></pre></dd>
         <dt>returns Error for non-Readable in</dt>
-        <dd><pre><code>travisStatusCmd([], {in: new stream.Writable()}, (err) =&#x3E; {
+        <dd><pre><code>travisStatusCmd([], { in: new stream.Writable() }, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions.in\b/);
   done();
 });</code></pre></dd>
         <dt>returns Error for non-Writable out</dt>
-        <dd><pre><code>travisStatusCmd([], {out: new stream.Readable()}, (err) =&#x3E; {
+        <dd><pre><code>travisStatusCmd([], { out: new stream.Readable() }, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions.out\b/);
   done();
 });</code></pre></dd>
         <dt>returns Error for non-Writable err</dt>
-        <dd><pre><code>travisStatusCmd([], {err: new stream.Readable()}, (err) =&#x3E; {
+        <dd><pre><code>travisStatusCmd([], { err: new stream.Readable() }, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions.err\b/);
   done();
@@ -2210,7 +2221,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const errMsg = &#x27;super duper test error&#x27;;
 const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
@@ -2230,7 +2241,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 const errMsg = &#x27;super duper test error&#x27;;
 travisStatusCmd(RUNTIME_ARGS, options, (err, code) =&#x3E; {
@@ -2249,7 +2260,7 @@ const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
-  err: errStream
+  err: errStream,
 };
 travisStatusCmd(RUNTIME_ARGS, options, (err, code) =&#x3E; {
   assert.ifError(err);
@@ -2267,12 +2278,12 @@ assert(result instanceof Promise);</code></pre></dd>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
-  err: new stream.PassThrough()
+  err: new stream.PassThrough(),
 };
 const result = travisStatusCmd(RUNTIME_ARGS, options);
 travisStatus.yield(
   null,
-  apiResponses.repo()
+  apiResponses.repo(),
 );
 return result.then((code) =&#x3E; {
   assert.strictEqual(code, 0);
@@ -2282,7 +2293,7 @@ return result.then((code) =&#x3E; {
 const result = travisStatusCmd(RUNTIME_ARGS, true);
 return result.then(
   sinon.mock().never(),
-  (err) =&#x3E; { assert.instanceOf(err, TypeError); }
+  (err) =&#x3E; { assert.instanceOf(err, TypeError); },
 );</code></pre></dd>
       </dl>
     </section>
@@ -2294,14 +2305,14 @@ return result.then(
   // eslint-disable-next-line no-new
   () =&#x3E; { new TravisStatusHttp(true); },
   TypeError,
-  /\bendpoint\b/
+  /\bendpoint\b/,
 );</code></pre></dd>
         <dt>throws TypeError for non-object options</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new TravisStatusHttp(null, true); },
   TypeError,
-  /\boptions\b/
+  /\boptions\b/,
 );</code></pre></dd>
         <section class="suite">
           <h1>#request()</h1>
@@ -2316,8 +2327,8 @@ request = sinon.mock()
         const travisRE = /^application\/vnd\.travis-ci\.2\+json(?:,|$)/;
         return travisRE.test(accept)
           &#x26;&#x26; / application\/json(?:,|$)/.test(accept);
-      }, &#x27;match Travis and JSON media types&#x27;)
-    })
+      }, &#x27;match Travis and JSON media types&#x27;),
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
@@ -2325,14 +2336,14 @@ request.verify();</code></pre></dd>
             <dd><pre><code>const testAccept = &#x27;text/plain&#x27;;
 // Note:  Testing lower case properly replaces upper
 const status =
-  new TravisStatusHttp(null, {headers: {accept: testAccept}});
+  new TravisStatusHttp(null, { headers: { accept: testAccept } });
 request = sinon.mock()
   .once()
   .withArgs(match({
     headers: match({
       Accept: undefined,
-      accept: testAccept
-    })
+      accept: testAccept,
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
@@ -2340,7 +2351,7 @@ request.verify();</code></pre></dd>
             <dd><pre><code>const status = new TravisStatusHttp();
 request = sinon.mock()
   .once()
-  .withArgs(match({gzip: true}));
+  .withArgs(match({ gzip: true }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>sends User-Agent including module version by default</dt>
@@ -2351,8 +2362,8 @@ request = sinon.mock()
   .once()
   .withArgs(match({
     headers: match({
-      &#x27;User-Agent&#x27;: match(uaVersionRE)
-    })
+      &#x27;User-Agent&#x27;: match(uaVersionRE),
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
@@ -2360,14 +2371,14 @@ request.verify();</code></pre></dd>
             <dd><pre><code>const testUA = &#x27;Test Agent&#x27;;
 // Note:  Testing lower case properly replaces upper
 const status =
-  new TravisStatusHttp(null, {headers: {&#x27;user-agent&#x27;: testUA}});
+  new TravisStatusHttp(null, { headers: { &#x27;user-agent&#x27;: testUA } });
 request = sinon.mock()
   .once()
   .withArgs(match({
     headers: match({
       &#x27;User-Agent&#x27;: undefined,
-      &#x27;user-agent&#x27;: testUA
-    })
+      &#x27;user-agent&#x27;: testUA,
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
@@ -2379,8 +2390,8 @@ request = sinon.mock()
   .once()
   .withArgs(match({
     headers: match({
-      Authorization: &#x60;token ${testToken}&#x60;
-    })
+      Authorization: &#x60;token ${testToken}&#x60;,
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
@@ -2393,22 +2404,22 @@ request = sinon.mock()
   .once()
   .withArgs(match({
     headers: match({
-      Authorization: &#x60;token ${quotedToken}&#x60;
-    })
+      Authorization: &#x60;token ${quotedToken}&#x60;,
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>setAccessToken overrides options.headers.Authorization</dt>
             <dd><pre><code>const testToken = &#x27;12345&#x27;;
 const status =
-  new TravisStatusHttp(null, {headers: {Authorization: &#x27;foo&#x27;}});
+  new TravisStatusHttp(null, { headers: { Authorization: &#x27;foo&#x27; } });
 status.setAccessToken(testToken);
 request = sinon.mock()
   .once()
   .withArgs(match({
     headers: match({
-      Authorization: &#x60;token ${testToken}&#x60;
-    })
+      Authorization: &#x60;token ${testToken}&#x60;,
+    }),
   }));
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
@@ -2427,10 +2438,10 @@ const errProps = {
   statusMessage: &#x27;Test Message&#x27;,
   headers: {
     &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
-    test: &#x27;ok&#x27;
-  }
+    test: &#x27;ok&#x27;,
+  },
 };
-const testBody = {test: &#x27;stuff&#x27;};
+const testBody = { test: &#x27;stuff&#x27; };
 const testBodyStr = JSON.stringify(testBody);
 const response = new http.IncomingMessage();
 Object.assign(response, errProps);
@@ -2438,8 +2449,8 @@ request = sinon.mock().once().yields(null, response, testBodyStr);
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
   assert.strictEqual(err.message, errProps.statusMessage);
   assert.deepEqual(
-    Object.assign({}, err),
-    Object.assign({body: testBody}, errProps)
+    { ...err },
+    { body: testBody, ...errProps },
   );
 });
 request.verify();</code></pre></dd>
@@ -2450,8 +2461,8 @@ const errProps = {
   statusMessage: &#x27;Test Message&#x27;,
   headers: {
     &#x27;Content-Type&#x27;: &#x27;text/plain&#x27;,
-    test: &#x27;ok&#x27;
-  }
+    test: &#x27;ok&#x27;,
+  },
 };
 const testBody = &#x27;Body?&#x27;;
 let testErr;
@@ -2462,8 +2473,8 @@ request = sinon.mock().once().yields(null, response, testBody);
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
   assert.strictEqual(err.message, testErr.message);
   assert.deepEqual(
-    Object.assign({}, err),
-    Object.assign({body: testBody}, errProps)
+    { ...err },
+    { body: testBody, ...errProps },
   );
 });
 request.verify();</code></pre></dd>
@@ -2474,8 +2485,8 @@ const errProps = {
   statusMessage: &#x27;Test Message&#x27;,
   headers: {
     &#x27;Content-Type&#x27;: &#x27;text/plain&#x27;,
-    test: &#x27;ok&#x27;
-  }
+    test: &#x27;ok&#x27;,
+  },
 };
 const testBody = &#x27;Body?&#x27;;
 const response = new http.IncomingMessage();
@@ -2484,8 +2495,8 @@ request = sinon.mock().once().yields(null, response, testBody);
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
   assert.strictEqual(err.message, errProps.statusMessage);
   assert.deepEqual(
-    Object.assign({}, err),
-    Object.assign({body: testBody}, errProps)
+    { ...err },
+    { body: testBody, ...errProps },
   );
 });
 request.verify();</code></pre></dd>
@@ -2496,10 +2507,10 @@ const errProps = {
   statusMessage: &#x27;Test Message&#x27;,
   headers: {
     &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
-    test: &#x27;ok&#x27;
-  }
+    test: &#x27;ok&#x27;,
+  },
 };
-const testBody = {prop: &#x27;OK&#x27;};
+const testBody = { prop: &#x27;OK&#x27; };
 const testBodyStr = JSON.stringify(testBody);
 const response = new http.IncomingMessage();
 Object.assign(response, errProps);
@@ -2549,7 +2560,7 @@ travisCheckerMock.expects(&#x27;getRepo&#x27;)
   .once().withArgs(testSlug).returns(Promise.resolve(testResult));
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-return travisStatus({interactive: true}).then((result) =&#x3E; {
+return travisStatus({ interactive: true }).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
   gitCheckerMock.verify();
   travisCheckerMock.verify();
@@ -2567,7 +2578,7 @@ travisCheckerMock.expects(&#x27;getRepo&#x27;)
   .once().withArgs(testSlug).returns(Promise.resolve(testResult));
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-return travisStatus({repo: testSlug}).then((result) =&#x3E; {
+return travisStatus({ repo: testSlug }).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
   gitCheckerMock.verify();
   travisCheckerMock.verify();
@@ -2586,7 +2597,7 @@ travisCheckerMock.expects(&#x27;getRepo&#x27;)
   .once().withArgs(testSlug).returns(Promise.resolve(testResult));
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-return travisStatus({storeRepo: testSlug}).then((result) =&#x3E; {
+return travisStatus({ storeRepo: testSlug }).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
   gitCheckerMock.verify();
   travisCheckerMock.verify();
@@ -2606,7 +2617,7 @@ travisCheckerMock.expects(&#x27;getRepo&#x27;)
   .once().withArgs(testSlug).returns(Promise.resolve(testResult));
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-const options = {repo: testSlug, storeRepo: testSlug2};
+const options = { repo: testSlug, storeRepo: testSlug2 };
 return travisStatus(options).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
   gitCheckerMock.verify();
@@ -2628,7 +2639,7 @@ travisCheckerMock.expects(&#x27;getBranch&#x27;)
   .once().withArgs(testSlug, testBranch)
   .returns(Promise.resolve(testResult));
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-const options = {branch: testBranch, repo: testSlug};
+const options = { branch: testBranch, repo: testSlug };
 return travisStatus(options).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
   gitCheckerMock.verify();
@@ -2651,7 +2662,7 @@ travisCheckerMock.expects(&#x27;getBranch&#x27;)
   .once().withArgs(testSlug, testBranch)
   .returns(Promise.resolve(testResult));
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-const options = {branch: true, repo: testSlug};
+const options = { branch: true, repo: testSlug };
 return travisStatus(options).then((result) =&#x3E; {
   assert.deepEqual(result, testResult);
   gitCheckerMock.verify();
@@ -2663,9 +2674,9 @@ const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
 const testCommit = commitIsHash ? testHash : &#x27;v2.0.0&#x27;;
 const testRepo = apiResponses.repo({
-  slug: testSlug
+  slug: testSlug,
 });
-const testBuild = apiResponses.build({sha: apiHash});
+const testBuild = apiResponses.build({ sha: apiHash });
 gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;resolveHash&#x27;)
@@ -2680,11 +2691,11 @@ travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;)
   .once().withArgs(testSlug, testRepo.repo.last_build_id)
   .returns(Promise.resolve(testBuild));
-const statusP = travisStatus({commit: testCommit, repo: testSlug});
+const statusP = travisStatus({ commit: testCommit, repo: testSlug });
 let testP;
 if (isSameHash) {
   testP = statusP.then((result) =&#x3E; {
-    assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
+    assert.deepEqual(result, { ...testRepo, ...testBuild });
   });
 } else {
   testP = statusP.then(
@@ -2694,7 +2705,7 @@ if (isSameHash) {
       assert.include(err.message, testCommit);
       assert.include(err.message, testHash);
       assert.include(err.message, apiHash);
-    }
+    },
   );
 }
 return testP.then(() =&#x3E; {
@@ -2707,9 +2718,9 @@ const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
 const testCommit = commitIsHash ? testHash : &#x27;v2.0.0&#x27;;
 const testRepo = apiResponses.repo({
-  slug: testSlug
+  slug: testSlug,
 });
-const testBuild = apiResponses.build({sha: apiHash});
+const testBuild = apiResponses.build({ sha: apiHash });
 gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;resolveHash&#x27;)
@@ -2724,11 +2735,11 @@ travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;)
   .once().withArgs(testSlug, testRepo.repo.last_build_id)
   .returns(Promise.resolve(testBuild));
-const statusP = travisStatus({commit: testCommit, repo: testSlug});
+const statusP = travisStatus({ commit: testCommit, repo: testSlug });
 let testP;
 if (isSameHash) {
   testP = statusP.then((result) =&#x3E; {
-    assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
+    assert.deepEqual(result, { ...testRepo, ...testBuild });
   });
 } else {
   testP = statusP.then(
@@ -2738,7 +2749,7 @@ if (isSameHash) {
       assert.include(err.message, testCommit);
       assert.include(err.message, testHash);
       assert.include(err.message, apiHash);
-    }
+    },
   );
 }
 return testP.then(() =&#x3E; {
@@ -2751,9 +2762,9 @@ const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
 const testCommit = commitIsHash ? testHash : &#x27;v2.0.0&#x27;;
 const testRepo = apiResponses.repo({
-  slug: testSlug
+  slug: testSlug,
 });
-const testBuild = apiResponses.build({sha: apiHash});
+const testBuild = apiResponses.build({ sha: apiHash });
 gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;resolveHash&#x27;)
@@ -2768,11 +2779,11 @@ travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;)
   .once().withArgs(testSlug, testRepo.repo.last_build_id)
   .returns(Promise.resolve(testBuild));
-const statusP = travisStatus({commit: testCommit, repo: testSlug});
+const statusP = travisStatus({ commit: testCommit, repo: testSlug });
 let testP;
 if (isSameHash) {
   testP = statusP.then((result) =&#x3E; {
-    assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
+    assert.deepEqual(result, { ...testRepo, ...testBuild });
   });
 } else {
   testP = statusP.then(
@@ -2782,7 +2793,7 @@ if (isSameHash) {
       assert.include(err.message, testCommit);
       assert.include(err.message, testHash);
       assert.include(err.message, apiHash);
-    }
+    },
   );
 }
 return testP.then(() =&#x3E; {
@@ -2795,9 +2806,9 @@ const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
 const testCommit = commitIsHash ? testHash : &#x27;v2.0.0&#x27;;
 const testRepo = apiResponses.repo({
-  slug: testSlug
+  slug: testSlug,
 });
-const testBuild = apiResponses.build({sha: apiHash});
+const testBuild = apiResponses.build({ sha: apiHash });
 gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;resolveHash&#x27;)
@@ -2812,11 +2823,11 @@ travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;)
   .once().withArgs(testSlug, testRepo.repo.last_build_id)
   .returns(Promise.resolve(testBuild));
-const statusP = travisStatus({commit: testCommit, repo: testSlug});
+const statusP = travisStatus({ commit: testCommit, repo: testSlug });
 let testP;
 if (isSameHash) {
   testP = statusP.then((result) =&#x3E; {
-    assert.deepEqual(result, Object.assign({}, testRepo, testBuild));
+    assert.deepEqual(result, { ...testRepo, ...testBuild });
   });
 } else {
   testP = statusP.then(
@@ -2826,7 +2837,7 @@ if (isSameHash) {
       assert.include(err.message, testCommit);
       assert.include(err.message, testHash);
       assert.include(err.message, apiHash);
-    }
+    },
   );
 }
 return testP.then(() =&#x3E; {
@@ -2840,13 +2851,13 @@ return testP.then(() =&#x3E; {
       (err) =&#x3E; {
         assert.strictEqual(err.name, &#x27;TypeError&#x27;);
         assert.match(err.message, /\boptions\b/);
-      }
+      },
     )</code></pre></dd>
         <dt>throws TypeError for non-function callback</dt>
         <dd><pre><code>assert.throws(
   () =&#x3E; { travisStatus({}, true); },
   TypeError,
-  /\bcallback\b/
+  /\bcallback\b/,
 );</code></pre></dd>
         <dt>rejects with InvalidSlugError for invalid options.repo</dt>
         <dd><pre><code>gitChecker = new GitStatusChecker();
@@ -2858,13 +2869,13 @@ const travisCheckerMock = sinon.mock(travisChecker);
 travisCheckerMock.expects(&#x27;getRepo&#x27;).never();
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-return travisStatus({repo: &#x27;invalid&#x27;}).then(
+return travisStatus({ repo: &#x27;invalid&#x27; }).then(
   sinon.mock().never(),
   (err) =&#x3E; {
     assert.strictEqual(err.name, &#x27;InvalidSlugError&#x27;);
     gitCheckerMock.verify();
     travisCheckerMock.verify();
-  }
+  },
 );</code></pre></dd>
         <dt>rejects with InvalidSlugError for invalid options.storeRepo</dt>
         <dd><pre><code>gitChecker = new GitStatusChecker();
@@ -2876,13 +2887,13 @@ const travisCheckerMock = sinon.mock(travisChecker);
 travisCheckerMock.expects(&#x27;getRepo&#x27;).never();
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-return travisStatus({storeRepo: &#x27;invalid&#x27;}).then(
+return travisStatus({ storeRepo: &#x27;invalid&#x27; }).then(
   sinon.mock().never(),
   (err) =&#x3E; {
     assert.strictEqual(err.name, &#x27;InvalidSlugError&#x27;);
     gitCheckerMock.verify();
     travisCheckerMock.verify();
-  }
+  },
 );</code></pre></dd>
         <dt>yields result to callback without returning Promise</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
@@ -2916,7 +2927,7 @@ const travisCheckerMock = sinon.mock(travisChecker);
 travisCheckerMock.expects(&#x27;getRepo&#x27;).never();
 travisCheckerMock.expects(&#x27;getBranch&#x27;).never();
 travisCheckerMock.expects(&#x27;getBuild&#x27;).never();
-const retVal = travisStatus({repo: &#x27;invalid&#x27;}, (err) =&#x3E; {
+const retVal = travisStatus({ repo: &#x27;invalid&#x27; }, (err) =&#x3E; {
   assert.strictEqual(err.name, &#x27;InvalidSlugError&#x27;);
   gitCheckerMock.verify();
   travisCheckerMock.verify();
