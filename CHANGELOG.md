@@ -1,5 +1,13 @@
 # Change Log
 
+## [4.0.1](https://github.com/kevinoid/travis-status/tree/v4.0.1) (2019-11-16)
+[Full Changelog](https://github.com/kevinoid/travis-status/compare/v4.0.0...4.0.1)
+
+- Use `URL` instead of `url` for URL parsing.
+- Improve handling explicit transport in foreign URL.
+- Update `chalk` to `^3.0.0`.
+- Update `commander` to `^4.0.0`.
+
 ## [4.0.0](https://github.com/kevinoid/travis-status/tree/4.0.0) (2019-08-09)
 [Full Changelog](https://github.com/kevinoid/travis-status/compare/v3.0.1...4.0.0)
 
