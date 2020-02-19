@@ -225,7 +225,7 @@ describe('GitStatusChecker', () => {
 
         return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
           .then((result) => {
-            const configSlug = result[0].trimRight();
+            const configSlug = result[0].trimEnd();
             assert.strictEqual(configSlug, testSlug);
           });
       });
@@ -262,7 +262,7 @@ describe('GitStatusChecker', () => {
 
         return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
           .then((result) => {
-            const configSlug = result[0].trimRight();
+            const configSlug = result[0].trimEnd();
             assert.strictEqual(configSlug, testSlug);
           });
       });

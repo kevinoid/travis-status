@@ -9,8 +9,6 @@ const assert = require('assert');
 const http = require('http');
 const https = require('https');
 const nodeify = require('promise-nodeify');
-// TODO [engine:node@>=10]: Use URL defined globally
-const { URL } = require('url'); // eslint-disable-line no-shadow
 
 const GitStatusChecker = require('./lib/git-status-checker');
 const TravisStatusChecker = require('./lib/travis-status-checker');
