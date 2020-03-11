@@ -48,7 +48,7 @@
     "chalk": "^3.0.0",
     "commander": "^4.0.0",
     "promise-nodeify": "^3.0.0",
-    "promised-read": "^2.0.0",
+    "promised-read": "^3.0.0",
     "request": "^2.68.0",
     "travis-ci": "2.2.0"
   },
