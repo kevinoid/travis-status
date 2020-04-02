@@ -153,7 +153,7 @@ return checker.storeSlug(testSlug).then((slug) =&#x3E; {
   assert.strictEqual(slug, testSlug);
   return git(&#x27;config&#x27;, &#x27;--get&#x27;, GitStatusChecker.SLUG_CONFIG_NAME)
     .then((result) =&#x3E; {
-      const configSlug = result[0].trimRight();
+      const configSlug = result[0].trimEnd();
       assert.strictEqual(configSlug, testSlug);
     });
 });</code></pre></dd>
@@ -185,7 +185,7 @@ return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
   assert.strictEqual(slug, testSlug);
   return git(&#x27;config&#x27;, &#x27;--get&#x27;, GitStatusChecker.SLUG_CONFIG_NAME)
     .then((result) =&#x3E; {
-      const configSlug = result[0].trimRight();
+      const configSlug = result[0].trimEnd();
       assert.strictEqual(configSlug, testSlug);
     });
 });</code></pre></dd>
