@@ -34,14 +34,14 @@
     "lint-js": "eslint --report-unused-disable-directives . && echo ESLint passed.",
     "postpublish": "git -C doc push && git push --follow-tags origin master gh-pages && echo Remember to update GitHub Releases from CHANGELOG.md",
     "postversion": "rimraf doc && git clone -b gh-pages -l -q . doc && npm run doc && git -C doc add . && git -C doc commit -n -m \"Docs for v$npm_package_version\"",
-    "preversion": "npm run test-cov && nyc check-coverage --statements 94 && check-audit && depcheck --ignores greenkeeper-lockfile --ignore-dirs doc && david && git-branch-is master && node ./bin/travis-status.js -b master -c -w -x && appveyor-status -b master -c -w -p kevinoid/travis-status",
+    "preversion": "npm run test-cov && nyc check-coverage --statements 94 && depcheck --ignore-dirs doc && david && git-branch-is master && node ./bin/travis-status.js -b master -c -w -x && appveyor-status -b master -c -w -p kevinoid/travis-status",
     "test": "npm run lint && npm run test-unit",
     "test-cov": "npm run lint && npm run test-unit-cov",
     "test-unit": "mocha --recursive test",
     "test-unit-cov": "nyc mocha --recursive test",
     "upload-cov": "codecov < ./coverage/lcov.info && coveralls < ./coverage/lcov.info",
     "version": "npm run changelog && echo && echo === Please edit CHANGELOG.md as desired, then exit === && echo && $npm_config_shell && git commit -m \"Update CHANGELOG.md for $npm_package_version\" CHANGELOG.md",
-    "version-deps": "npm install conventional-changelog-cli david depcheck git-branch-is npm-audit-resolver travis-status"
+    "version-deps": "npm install conventional-changelog-cli david depcheck git-branch-is travis-status"
   },
   "dependencies": {
     "caseless": "^0.12.0",
@@ -53,7 +53,7 @@
     "travis-ci": "2.2.0"
   },
   "devDependencies": {
-    "@kevinoid/eslint-config": "^4.0.0",
+    "@kevinoid/eslint-config": "^6.0.0",
     "ansi-styles": "^4.0.0",
     "chai": "^4.0.0",
     "codecov": "^3.0.0",
@@ -63,7 +63,7 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-unicorn": "^16.0.0",
+    "eslint-plugin-unicorn": "^18.0.0",
     "greenkeeper-lockfile": "^1.15.1",
     "has-ansi": "^4.0.0",
     "jsdoc": "^3.6.0",
