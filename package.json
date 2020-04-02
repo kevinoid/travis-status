@@ -64,7 +64,6 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-unicorn": "^18.0.0",
-    "greenkeeper-lockfile": "^1.15.1",
     "has-ansi": "^4.0.0",
     "jsdoc": "^3.6.0",
     "mocha": "^7.0.0",
