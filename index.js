@@ -92,7 +92,7 @@ function checkBuildCommit(build, localCommit) {
 function travisStatus(options, callback) {
   if (!callback && typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (callback && typeof callback !== 'function') {
