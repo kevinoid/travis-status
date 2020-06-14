@@ -14,6 +14,9 @@ function cloneDeep(obj) {
 // The JSON is copied almost verbatim from the API responses.
 /* eslint camelcase: ["error", {"properties": "never"}], max-len: "off" */
 
+// Use null to match values returned by the Travis CI API
+/* eslint-disable unicorn/no-null */
+
 apiResponses.branch = function branch(opts) {
   opts = opts || {};
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';

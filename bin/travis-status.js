@@ -58,7 +58,7 @@ const debug = util.debuglog('travis-status');
 function travisStatusCmd(args, options, callback) {
   if (!callback && typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (!callback) {
@@ -203,9 +203,11 @@ function travisStatusCmd(args, options, callback) {
   try {
     command.parse(args);
   } catch (errParse) {
-    const exitCode = errParse === errExit ? errExit.code || 0 : null;
+    const exitCode = errParse === errExit ? errExit.code || 0 : undefined;
     process.nextTick(() => {
-      if (exitCode !== null) {
+      if (exitCode !== undefined) {
+        // Use null to preserve current API
+        // eslint-disable-next-line unicorn/no-null
         callback(null, exitCode);
       } else {
         callback(errParse);
@@ -238,6 +240,8 @@ function travisStatusCmd(args, options, callback) {
   if (command.args.length > 0) {
     options.err.write(`${chalk.red('too many arguments')}\n${
       command.helpInformation()}`);
+    // Use null to preserve current API
+    // eslint-disable-next-line unicorn/no-null
     process.nextTick(() => { callback(null, 1); });
     return undefined;
   }
@@ -247,6 +251,8 @@ function travisStatusCmd(args, options, callback) {
     if (Number.isNaN(wait)) {
       const waitErr = chalk.red(`invalid wait time "${command.wait}"`);
       options.err.write(`${waitErr}\n`);
+      // Use null to preserve current API
+      // eslint-disable-next-line unicorn/no-null
       process.nextTick(() => { callback(null, 1); });
       return undefined;
     }
@@ -275,12 +281,16 @@ function travisStatusCmd(args, options, callback) {
         + 'Ensure you\'re in the repo directory, or specify the repo name via '
         + 'the -r option (e.g. travis-status -r <owner>/<repo>)\n',
       ));
+      // Use null to preserve current API
+      // eslint-disable-next-line unicorn/no-null
       callback(null, 1);
       return;
     }
 
     if (err) {
       options.err.write(`${chalk.red(err.message)}\n`);
+      // Use null to preserve current API
+      // eslint-disable-next-line unicorn/no-null
       callback(null, 1);
       return;
     }
@@ -301,6 +311,8 @@ function travisStatusCmd(args, options, callback) {
       code = 1;
     }
 
+    // Use null to preserve current API
+    // eslint-disable-next-line unicorn/no-null
     callback(null, code);
   });
 

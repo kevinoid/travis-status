@@ -129,7 +129,7 @@ function travisStatus(options, callback) {
         new URL(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent
         : apiUrl.protocol === 'http:' ? http.Agent
-          : null;
+          : undefined;
       if (Agent) {
         agent = new Agent({ keepAlive: true });
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
