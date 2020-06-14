@@ -14,11 +14,12 @@ const GitStatusChecker = require('./lib/git-status-checker');
 const TravisStatusChecker = require('./lib/travis-status-checker');
 
 /** Checks that a build has an expected commit hash.
+ *
  * @param {!{commit:!{sha: string}}} build Build (or branch) object returned
  * by the Travis CI API.
  * @param {!{sha: string, name: ?string}} localCommit Expected commit
  * information.
- * @return {!Object} <code>build</code>
+ * @returns {!object} <code>build</code>
  * @throws AssertionError If <code>build.commit.sha</code> is not equal to
  * <code>expected</code>.
  */
@@ -44,11 +45,11 @@ function checkBuildCommit(build, localCommit) {
  *   apiEndpoint: string|undefined,
  *   branch: string|boolean|undefined,
  *   commit: string|undefined,
- *   err: stream.Writable|undefined,
- *   in: stream.Readable|undefined,
- *   out: stream.Writable|undefined,
+ *   err: module:stream.Writable|undefined,
+ *   in: module:stream.Readable|undefined,
+ *   out: module:stream.Writable|undefined,
  *   repo: string|undefined,
- *   requestOpts: Object|undefined,
+ *   requestOpts: object|undefined,
  *   storeRepo: string|undefined,
  *   token: string|undefined,
  *   wait: number|undefined
@@ -58,15 +59,16 @@ function checkBuildCommit(build, localCommit) {
  * @property {(string|boolean)=} branch query latest build for named branch,
  * or the current branch
  * @property {string=} commit require build to be for a specific commit
- * @property {stream.Writable=} err Stream to which errors (and non-output
- * status messages) are written. (default: <code>process.stderr</code>)
- * @property {stream.Readable=} in Stream from which input is read. (default:
- * <code>process.stdin</code>)
- * @property {stream.Writable=} out Stream to which output is written.
+ * @property {module:stream.Writable=} err Stream to which errors (and
+ * non-output status messages) are written.
+ * (default: <code>process.stderr</code>)
+ * @property {module:stream.Readable=} in Stream from which input is read.
+ * (default: <code>process.stdin</code>)
+ * @property {module:stream.Writable=} out Stream to which output is written.
  * (default: <code>process.stdout</code>)
  * @property {string=} repo repository to use (default: will try to detect from
  * current git clone)
- * @property {Object=} requestOpts Options for Travis CI API requests (suitable
+ * @property {object=} requestOpts Options for Travis CI API requests (suitable
  * for the {@link https://www.npmjs.com/package/request request module}).
  * Callers are encouraged to pass the <code>agent</code> or
  * <code>forever</code> options to leverage TCP keep-alive across requests.
@@ -81,10 +83,10 @@ function checkBuildCommit(build, localCommit) {
 /** Gets the current Travis CI status of a repo/branch.
  *
  * @param {?TravisStatusOptions=} options Options.
- * @param {?function(Error, Object=)=} callback Callback function called
+ * @param {?function(Error, object=)=} callback Callback function called
  * with the current build information from the Travis CI API, or an
  * <code>Error</code> if it could not be retrieved.
- * @return {!Promise<!Object>|undefined} If <code>callback</code> is not given,
+ * @returns {!Promise<!object>|undefined} If <code>callback</code> is not given,
  * a <code>Promise</code> with the current build information from the Travis CI
  * API, or <code>Error</code> if it could not be retrieved.
  * Otherwise <code>undefined</code>.
