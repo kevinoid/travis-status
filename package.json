@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@kevinoid/eslint-config": "^11.0.0",
-    "ansi-styles": "^4.0.0",
+    "ansi-styles": "^5.0.0",
     "chai": "^4.0.0",
     "codecov": "^3.0.0",
     "coveralls": "^3.0.0",
