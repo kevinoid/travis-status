@@ -116,8 +116,17 @@ function travisStatusCmd(args, options, callback) {
     return undefined;
   }
 
+  const stdout = options.out || process.stdout;
+  const stderr = options.err || process.stderr;
+
   const command = new Command()
     .exitOverride()
+    .configureOutput({
+      writeOut: (str) => stdout.write(str),
+      writeErr: (str) => stderr.write(str),
+      getOutHelpWidth: () => stdout.columns,
+      getErrHelpWidth: () => stderr.columns,
+    })
     .description('Checks status of the latest build.')
     // Note:  Option order matches travis.rb with new ones at bottom
     .option('-i, --interactive', 'be interactive and colorful')
@@ -166,37 +175,6 @@ function travisStatusCmd(args, options, callback) {
       'wait if build is pending (timeout in seconds)')
     .version(packageJson.version);
 
-  // Patch stdout and stderr for Commander
-  // See: https://github.com/tj/commander.js/pull/444
-  const stdoutDesc = Object.getOwnPropertyDescriptor(process, 'stdout');
-  const stderrDesc = Object.getOwnPropertyDescriptor(process, 'stderr');
-  const consoleDesc = Object.getOwnPropertyDescriptor(global, 'console');
-  if (options.out) {
-    Object.defineProperty(
-      process,
-      'stdout',
-      { configurable: true, enumerable: true, value: options.out },
-    );
-  }
-  if (options.err) {
-    Object.defineProperty(
-      process,
-      'stderr',
-      { configurable: true, enumerable: true, value: options.err },
-    );
-  }
-  if (options.out || options.err) {
-    Object.defineProperty(
-      global,
-      'console',
-      {
-        configurable: true,
-        enumerable: true,
-        // eslint-disable-next-line no-console
-        value: new console.Console(process.stdout, process.stderr),
-      },
-    );
-  }
   try {
     command.parse(args);
   } catch (errParse) {
@@ -212,10 +190,6 @@ function travisStatusCmd(args, options, callback) {
       }
     });
     return undefined;
-  } finally {
-    Object.defineProperty(process, 'stdout', stdoutDesc);
-    Object.defineProperty(process, 'stderr', stderrDesc);
-    Object.defineProperty(global, 'console', consoleDesc);
   }
 
   const cmdOpts = command.opts();
