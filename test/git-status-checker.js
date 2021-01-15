@@ -23,12 +23,13 @@ const rimrafP = util.promisify(rimraf);
 // Global variables
 let origCWD;
 
+const defaultBranch = 'main';
 const BRANCH_REMOTES = {
-  branch1: 'remote1/master',
-  branch2: 'remote2/master',
-  branch3: 'remote3/master',
-  branchnourl: 'nourl/master',
-  branchnotslug: 'notslug/master',
+  branch1: `remote1/${defaultBranch}`,
+  branch2: `remote2/${defaultBranch}`,
+  branch3: `remote3/${defaultBranch}`,
+  branchnourl: `nourl/${defaultBranch}`,
+  branchnotslug: `notslug/${defaultBranch}`,
 };
 const REMOTES = {
   notslug: 'foo',
@@ -46,12 +47,30 @@ const REMOTE_SLUGS = {
 /** Path to repository in which tests are run. */
 const TEST_REPO_PATH = path.join(__dirname, '..', 'test-repo');
 
+async function gitInit(repoPath) {
+  try {
+    // git-init(1) in 2.30.0 warns that default branch subject to change.
+    // It may also have non-default global- or user-configuration.
+    // Specify --initial-branch to avoid depending on default
+    await git('init', '-q', `--initial-branch=${defaultBranch}`, repoPath);
+  } catch {
+    // git < 2.28.0 doesn't understand --initial-branch, default is master
+    await git('init', '-q', repoPath);
+    if (defaultBranch !== 'master') {
+      await git(
+        '-C', repoPath,
+        'symbolic-ref', 'HEAD', `refs/heads/${defaultBranch}`,
+      );
+    }
+  }
+}
+
 before('setup test repository', function() {
   // Some git versions can run quite slowly on Windows
   this.timeout(isWindows ? 8000 : 4000);
 
   return rimrafP(TEST_REPO_PATH)
-    .then(() => git('init', '-q', TEST_REPO_PATH))
+    .then(() => gitInit(TEST_REPO_PATH))
     // The user name and email must be configured for the later git commands
     // to work.  On Travis CI (and probably others) there is no global config
     .then(() => git('-C', TEST_REPO_PATH,
@@ -445,14 +464,14 @@ describe('GitStatusChecker', () => {
   });
 
   describe('#detectBranch()', () => {
-    after(() => git('checkout', 'master'));
+    after(() => git('checkout', defaultBranch));
 
-    it('resolves master on master', () => {
+    it(`resolves master on ${defaultBranch}`, () => {
       const checker = new GitStatusChecker();
-      return git('checkout', 'master')
+      return git('checkout', defaultBranch)
         .then(() => checker.detectBranch())
         .then((branch) => {
-          assert.strictEqual(branch, 'master');
+          assert.strictEqual(branch, defaultBranch);
         });
     });
 
@@ -479,7 +498,7 @@ describe('GitStatusChecker', () => {
   });
 
   describe('#detectSlug()', () => {
-    after(() => git('checkout', 'master'));
+    after(() => git('checkout', defaultBranch));
 
     Object.keys(BRANCH_REMOTES).forEach((branchName) => {
       const remoteName = BRANCH_REMOTES[branchName].split('/')[0];
@@ -506,7 +525,7 @@ describe('GitStatusChecker', () => {
         out: new stream.PassThrough(),
         err: new stream.PassThrough(),
       });
-      return git('checkout', 'master')
+      return git('checkout', defaultBranch)
         .then(() => checker.detectSlug())
         .then((slug) => {
           assert.strictEqual(slug, REMOTE_SLUGS.origin);
@@ -570,7 +589,7 @@ describe('GitStatusChecker', () => {
       mock.expects('confirmSlug')
         .once().withExactArgs(REMOTE_SLUGS.origin).returns(testSlug);
 
-      return git('checkout', 'master')
+      return git('checkout', defaultBranch)
         .then(() => checker.detectSlug())
         .then((slug) => {
           assert.strictEqual(slug, testSlug);
@@ -590,7 +609,7 @@ describe('GitStatusChecker', () => {
       const mock = sinon.mock(checker);
       mock.expects('confirmSlug').never();
 
-      return git('checkout', 'master')
+      return git('checkout', defaultBranch)
         .then(() => checker.detectSlug())
         .then((slug) => {
           assert.strictEqual(slug, REMOTE_SLUGS.origin);
