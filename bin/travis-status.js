@@ -117,6 +117,7 @@ function travisStatusCmd(args, options, callback) {
   }
 
   const command = new Command()
+    .exitOverride()
     .description('Checks status of the latest build.')
     // Note:  Option order matches travis.rb with new ones at bottom
     .option('-i, --interactive', 'be interactive and colorful')
@@ -165,17 +166,11 @@ function travisStatusCmd(args, options, callback) {
       'wait if build is pending (timeout in seconds)')
     .version(packageJson.version);
 
-  // Patch stdout, stderr, and exit for Commander
+  // Patch stdout and stderr for Commander
   // See: https://github.com/tj/commander.js/pull/444
-  const exitDesc = Object.getOwnPropertyDescriptor(process, 'exit');
   const stdoutDesc = Object.getOwnPropertyDescriptor(process, 'stdout');
   const stderrDesc = Object.getOwnPropertyDescriptor(process, 'stderr');
   const consoleDesc = Object.getOwnPropertyDescriptor(global, 'console');
-  const errExit = new Error('process.exit() called');
-  process.exit = function throwOnExit(code) {
-    errExit.code = code;
-    throw errExit;
-  };
   if (options.out) {
     Object.defineProperty(
       process,
@@ -205,7 +200,8 @@ function travisStatusCmd(args, options, callback) {
   try {
     command.parse(args);
   } catch (errParse) {
-    const exitCode = errParse === errExit ? errExit.code || 0 : undefined;
+    const exitCode =
+      errParse.exitCode !== undefined ? errParse.exitCode : undefined;
     process.nextTick(() => {
       if (exitCode !== undefined) {
         // Use null to preserve current API
@@ -217,7 +213,6 @@ function travisStatusCmd(args, options, callback) {
     });
     return undefined;
   } finally {
-    Object.defineProperty(process, 'exit', exitDesc);
     Object.defineProperty(process, 'stdout', stdoutDesc);
     Object.defineProperty(process, 'stderr', stderrDesc);
     Object.defineProperty(global, 'console', consoleDesc);
