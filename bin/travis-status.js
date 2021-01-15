@@ -221,20 +221,22 @@ function travisStatusCmd(args, options, callback) {
     Object.defineProperty(global, 'console', consoleDesc);
   }
 
-  if (command.commit === true) {
-    command.commit = 'HEAD';
+  const cmdOpts = command.opts();
+
+  if (cmdOpts.commit === true) {
+    cmdOpts.commit = 'HEAD';
   }
-  if (typeof command.interactive === 'undefined') {
+  if (typeof cmdOpts.interactive === 'undefined') {
     // Note:  Same default as travis.rb
     // Need cast to Boolean so undefined becomes false to disable Chalk
-    command.interactive = Boolean(options.out.isTTY);
+    cmdOpts.interactive = Boolean(options.out.isTTY);
   }
-  if (command.wait === true) {
-    command.wait = Infinity;
+  if (cmdOpts.wait === true) {
+    cmdOpts.wait = Infinity;
   }
 
   const chalk = new Chalk({
-    level: command.interactive ? 1 : 0,
+    level: cmdOpts.interactive ? 1 : 0,
   });
 
   if (command.args.length > 0) {
@@ -246,34 +248,34 @@ function travisStatusCmd(args, options, callback) {
     return undefined;
   }
 
-  if (hasOwnProperty.call(command, 'wait')) {
-    const wait = Number(command.wait);
+  if (hasOwnProperty.call(cmdOpts, 'wait')) {
+    const wait = Number(cmdOpts.wait);
     if (Number.isNaN(wait)) {
-      const waitErr = chalk.red(`invalid wait time "${command.wait}"`);
+      const waitErr = chalk.red(`invalid wait time "${cmdOpts.wait}"`);
       options.err.write(`${waitErr}\n`);
       // Use null to preserve current API
       // eslint-disable-next-line unicorn/no-null
       process.nextTick(() => { callback(null, 1); });
       return undefined;
     }
-    command.wait = wait * 1000;
+    cmdOpts.wait = wait * 1000;
   }
 
   // Pass through options
-  command.in = options.in;
-  command.out = options.out;
-  command.err = options.err;
+  cmdOpts.in = options.in;
+  cmdOpts.out = options.out;
+  cmdOpts.err = options.err;
 
   // Use HTTP keep-alive to avoid unnecessary reconnections
-  command.requestOpts = {
+  cmdOpts.requestOpts = {
     forever: true,
   };
 
-  if (command.insecure) {
-    command.requestOpts.strictSSL = false;
+  if (cmdOpts.insecure) {
+    cmdOpts.requestOpts.strictSSL = false;
   }
 
-  travisStatus(command, (err, build) => {
+  travisStatus(cmdOpts, (err, build) => {
     if (err && err.name === 'SlugDetectionError') {
       debug('Error detecting repo slug', err);
       options.err.write(chalk.red(
@@ -297,7 +299,7 @@ function travisStatusCmd(args, options, callback) {
 
     const state = build.repo ? build.repo.last_build_state : build.branch.state;
 
-    if (!command.quiet) {
+    if (!cmdOpts.quiet) {
       const color = stateInfo.colors[state] || 'yellow';
       const number =
         build.repo ? build.repo.last_build_number : build.branch.number;
@@ -306,8 +308,8 @@ function travisStatusCmd(args, options, callback) {
     }
 
     let code = 0;
-    if ((command.exitCode && stateInfo.isUnsuccessful[state])
-        || (command.failPending && stateInfo.isPending[state])) {
+    if ((cmdOpts.exitCode && stateInfo.isUnsuccessful[state])
+        || (cmdOpts.failPending && stateInfo.isPending[state])) {
       code = 1;
     }
 
