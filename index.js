@@ -126,6 +126,7 @@ function travisStatus(options, callback) {
          && requestOpts.forever === undefined
          && requestOpts.pool === undefined)) {
       const apiUrl =
+        // eslint-disable-next-line unicorn/consistent-destructuring
         new URL(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent
         : apiUrl.protocol === 'http:' ? http.Agent

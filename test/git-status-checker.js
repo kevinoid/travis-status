@@ -12,14 +12,14 @@ const { read } = require('promised-read');
 const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
-const util = require('util');
+const { promisify } = require('util');
 
 const GitStatusChecker = require('../lib/git-status-checker');
 const InvalidSlugError = require('../lib/invalid-slug-error');
 const git = require('../lib/git');
 
 const isWindows = /^win/i.test(process.platform);
-const rimrafP = util.promisify(rimraf);
+const rimrafP = promisify(rimraf);
 
 // Global variables
 let origCWD;
@@ -172,12 +172,12 @@ describe('GitStatusChecker', () => {
       // Numbers and hyphens are fine
       'owner-1/repo-1',
     ];
-    GOOD_SLUGS.forEach((slug) => {
+    for (const slug of GOOD_SLUGS) {
       it(`accepts "${slug}"`, () => {
         const result = GitStatusChecker.checkSlugFormat(slug);
         assert.strictEqual(result, slug);
       });
-    });
+    }
 
     const BAD_SLUGS = [
       // Missing slash (this is the only case checked by travis.rb)
@@ -196,14 +196,14 @@ describe('GitStatusChecker', () => {
       'owner/ repo',
       'owner/repo ',
     ];
-    BAD_SLUGS.forEach((slug) => {
+    for (const slug of BAD_SLUGS) {
       it(`rejects "${slug}"`, () => {
         assert.throws(
           () => { GitStatusChecker.checkSlugFormat(slug); },
           InvalidSlugError,
         );
       });
-    });
+    }
   });
 
   describe('#resolveHash()', () => {
@@ -501,25 +501,23 @@ describe('GitStatusChecker', () => {
   describe('#detectSlug()', () => {
     after(() => git('checkout', defaultBranch));
 
-    Object.keys(BRANCH_REMOTES).forEach((branchName) => {
+    for (const branchName of Object.keys(BRANCH_REMOTES)) {
       const remoteName = BRANCH_REMOTES[branchName].split('/')[0];
       const remoteSlug = REMOTE_SLUGS[remoteName];
-      if (!remoteSlug) {
-        return;
-      }
-
-      it(`resolves ${remoteSlug} for ${branchName}`, () => {
-        const checker = new GitStatusChecker({
-          out: new stream.PassThrough(),
-          err: new stream.PassThrough(),
-        });
-        return git('checkout', branchName)
-          .then(() => checker.detectSlug())
-          .then((slug) => {
-            assert.strictEqual(slug, remoteSlug);
+      if (remoteSlug) {
+        it(`resolves ${remoteSlug} for ${branchName}`, () => {
+          const checker = new GitStatusChecker({
+            out: new stream.PassThrough(),
+            err: new stream.PassThrough(),
           });
-      });
-    });
+          return git('checkout', branchName)
+            .then(() => checker.detectSlug())
+            .then((slug) => {
+              assert.strictEqual(slug, remoteSlug);
+            });
+        });
+      }
+    }
 
     it('defaults to origin if branch has no remote', () => {
       const checker = new GitStatusChecker({

@@ -37,6 +37,7 @@ describe('travis-status command', () => {
 
   // Ensure that expectations are not carried over between tests
   beforeEach(() => {
+    // eslint-disable-next-line unicorn/consistent-destructuring
     travisStatus = sinon.expectation.create('travisStatus').never();
   });
 
@@ -89,7 +90,7 @@ describe('travis-status command', () => {
           expectObj,
           match.func,
         );
-      const allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = [...RUNTIME_ARGS, ...args];
       travisStatusCmd(allArgs, sinon.mock().never());
       travisStatus.verify();
     });
@@ -103,7 +104,7 @@ describe('travis-status command', () => {
         out: outStream,
         err: errStream,
       };
-      const allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = [...RUNTIME_ARGS, ...args];
       travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.isAtLeast(code, 1);
@@ -123,7 +124,7 @@ describe('travis-status command', () => {
         out: new stream.PassThrough(),
         err: new stream.PassThrough(),
       };
-      const allArgs = RUNTIME_ARGS.concat(args);
+      const allArgs = [...RUNTIME_ARGS, ...args];
       travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, expectCode);
@@ -243,21 +244,22 @@ describe('travis-status command', () => {
 
   // Check argument behavior
   expectArgsStateCode([], 'failed', 0);
-  ['-x', '--exit-code'].forEach((arg) => {
+  for (const arg of ['-x', '--exit-code']) {
     expectArgsStateCode([arg], 'canceled', 1);
     expectArgsStateCode([arg], 'errored', 1);
     expectArgsStateCode([arg], 'failed', 1);
-  });
+  }
 
   expectArgsStateCode([], 'queued', 0);
-  ['-p', '--fail-pending'].forEach((arg) => {
+  for (const arg of ['-p', '--fail-pending']) {
     expectArgsStateCode([arg], 'created', 1);
     expectArgsStateCode([arg], 'queued', 1);
     expectArgsStateCode([arg], 'received', 1);
     expectArgsStateCode([arg], 'started', 1);
-  });
+  }
 
-  ['-q', '--quiet'].forEach((arg) => {
+  for (const arg of ['-q', '--quiet']) {
+    // eslint-disable-next-line no-loop-func
     it(`${arg} exits without printing state`, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
@@ -266,7 +268,7 @@ describe('travis-status command', () => {
         out: outStream,
         err: errStream,
       };
-      const allArgs = RUNTIME_ARGS.concat(arg);
+      const allArgs = [...RUNTIME_ARGS, arg];
       travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, 0);
@@ -279,11 +281,12 @@ describe('travis-status command', () => {
         apiResponses.repo({ state: 'failed' }),
       );
     });
-  });
+  }
 
-  [false, true].forEach((isBranch) => {
+  for (const isBranch of [false, true]) {
     const desc = `prints build number and state for ${
       isBranch ? 'branch' : 'repo'} to stdout`;
+    // eslint-disable-next-line no-loop-func
     it(desc, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
@@ -294,7 +297,10 @@ describe('travis-status command', () => {
       };
       const buildNum = 500;
       const state = 'passed';
-      const allArgs = RUNTIME_ARGS.concat(isBranch ? ['--branch'] : []);
+      const allArgs = [...RUNTIME_ARGS];
+      if (isBranch) {
+        allArgs.push('--branch');
+      }
       travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, 0);
@@ -313,10 +319,11 @@ describe('travis-status command', () => {
           : apiResponses.repo({ number: buildNum, state }),
       );
     });
-  });
+  }
 
-  Object.keys(stateInfo.colors).forEach((state) => {
+  for (const state of Object.keys(stateInfo.colors)) {
     const color = stateInfo.colors[state];
+    // eslint-disable-next-line no-loop-func
     it(`prints ${state} in ${color} if interactive`, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
@@ -325,7 +332,7 @@ describe('travis-status command', () => {
         out: outStream,
         err: errStream,
       };
-      const allArgs = RUNTIME_ARGS.concat(['--interactive']);
+      const allArgs = [...RUNTIME_ARGS, '--interactive'];
       travisStatusCmd(allArgs, options, (err, code) => {
         assert.ifError(err);
         assert.strictEqual(code, 0);
@@ -342,7 +349,7 @@ describe('travis-status command', () => {
         apiResponses.repo({ state }),
       );
     });
-  });
+  }
 
   it('prints error messages in red if interactive', (done) => {
     travisStatus = sinon.stub();
@@ -353,7 +360,7 @@ describe('travis-status command', () => {
       err: errStream,
     };
     const errMsg = 'super duper test error';
-    const allArgs = RUNTIME_ARGS.concat(['--interactive']);
+    const allArgs = [...RUNTIME_ARGS, '--interactive'];
     travisStatusCmd(allArgs, options, (err, code) => {
       assert.ifError(err);
       assert.isAtLeast(code, 1);
@@ -436,7 +443,7 @@ describe('travis-status command', () => {
       err: errStream,
     };
     const errMsg = 'super duper test error';
-    const allArgs = RUNTIME_ARGS.concat(['--interactive']);
+    const allArgs = [...RUNTIME_ARGS, '--interactive'];
     travisStatusCmd(allArgs, options, (err, code) => {
       assert.ifError(err);
       assert.isAtLeast(code, 1);

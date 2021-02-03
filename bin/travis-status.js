@@ -20,13 +20,13 @@ if (require.main === module
 
 const Chalk = require('chalk').Instance;
 const { Command } = require('commander');
-const util = require('util');
+const { debuglog } = require('util');
 
 const packageJson = require('../package.json');
 const stateInfo = require('../lib/state-info');
 const travisStatus = require('..');
 
-const debug = util.debuglog('travis-status');
+const debug = debuglog('travis-status');
 
 /** Options for command entry points.
  *

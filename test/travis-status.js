@@ -194,12 +194,13 @@ describe('travisStatus', () => {
     });
   });
 
-  [true, false].forEach((isSameHash) => {
-    [true, false].forEach((commitIsHash) => {
+  for (const isSameHash of [true, false]) {
+    for (const commitIsHash of [true, false]) {
       const desc =
         `${isSameHash ? 'resolves combined result' : 'rejects with Error'
         } for ${
           commitIsHash ? 'same commit hash' : 'matching commit name'}`;
+      // eslint-disable-next-line no-loop-func
       it(desc, () => {
         const testSlug = 'foo/bar';
         const testHash = '692064aac95441e2dae7f1780fccc536143a0863';
@@ -245,8 +246,8 @@ describe('travisStatus', () => {
           travisCheckerMock.verify();
         });
       });
-    });
-  });
+    }
+  }
 
   it('rejects with TypeError for non-object options', () => travisStatus(true)
     .then(
