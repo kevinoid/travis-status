@@ -200,7 +200,6 @@ describe('travisStatus', () => {
         `${isSameHash ? 'resolves combined result' : 'rejects with Error'
         } for ${
           commitIsHash ? 'same commit hash' : 'matching commit name'}`;
-      // eslint-disable-next-line no-loop-func
       it(desc, () => {
         const testSlug = 'foo/bar';
         const testHash = '692064aac95441e2dae7f1780fccc536143a0863';

@@ -259,7 +259,6 @@ describe('travis-status command', () => {
   }
 
   for (const arg of ['-q', '--quiet']) {
-    // eslint-disable-next-line no-loop-func
     it(`${arg} exits without printing state`, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
@@ -286,7 +285,6 @@ describe('travis-status command', () => {
   for (const isBranch of [false, true]) {
     const desc = `prints build number and state for ${
       isBranch ? 'branch' : 'repo'} to stdout`;
-    // eslint-disable-next-line no-loop-func
     it(desc, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
@@ -323,7 +321,6 @@ describe('travis-status command', () => {
 
   for (const state of Object.keys(stateInfo.colors)) {
     const color = stateInfo.colors[state];
-    // eslint-disable-next-line no-loop-func
     it(`prints ${state} in ${color} if interactive`, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
