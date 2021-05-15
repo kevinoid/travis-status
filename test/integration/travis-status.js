@@ -11,8 +11,8 @@ const http = require('http');
 const sinon = require('sinon');
 
 const packageJson = require('../../package.json');
-const apiResponses = require('../../test-lib/api-responses');
-const travisStatus = require('../..');
+const apiResponses = require('../../test-lib/api-responses.js');
+const travisStatus = require('../../index.js');
 
 const { match } = sinon;
 

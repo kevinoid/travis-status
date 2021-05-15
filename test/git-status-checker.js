@@ -14,9 +14,9 @@ const sinon = require('sinon');
 const stream = require('stream');
 const { promisify } = require('util');
 
-const GitStatusChecker = require('../lib/git-status-checker');
-const InvalidSlugError = require('../lib/invalid-slug-error');
-const git = require('../lib/git');
+const GitStatusChecker = require('../lib/git-status-checker.js');
+const InvalidSlugError = require('../lib/invalid-slug-error.js');
+const git = require('../lib/git.js');
 
 const isWindows = /^win/i.test(process.platform);
 const rimrafP = promisify(rimraf);

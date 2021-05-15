@@ -23,7 +23,7 @@ const { Command } = require('commander');
 const { debuglog } = require('util');
 
 const packageJson = require('../package.json');
-const stateInfo = require('../lib/state-info');
+const stateInfo = require('../lib/state-info.js');
 const travisStatus = require('..');
 
 const debug = debuglog('travis-status');

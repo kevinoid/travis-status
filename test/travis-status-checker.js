@@ -10,8 +10,8 @@ const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
-const apiResponses = require('../test-lib/api-responses');
-const TravisStatusHttp = require('../lib/travis-status-http');
+const apiResponses = require('../test-lib/api-responses.js');
+const TravisStatusHttp = require('../lib/travis-status-http.js');
 
 const { match } = sinon;
 

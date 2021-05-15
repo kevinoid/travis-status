@@ -11,8 +11,8 @@ const http = require('http');
 const https = require('https');
 const nodeify = require('promise-nodeify');
 
-const GitStatusChecker = require('./lib/git-status-checker');
-const TravisStatusChecker = require('./lib/travis-status-checker');
+const GitStatusChecker = require('./lib/git-status-checker.js');
+const TravisStatusChecker = require('./lib/travis-status-checker.js');
 
 /** Checks that a build has an expected commit hash.
  *

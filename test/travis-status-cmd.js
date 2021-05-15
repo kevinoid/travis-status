@@ -12,9 +12,9 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const stream = require('stream');
 
-const SlugDetectionError = require('../lib/slug-detection-error');
-const apiResponses = require('../test-lib/api-responses');
-const stateInfo = require('../lib/state-info');
+const SlugDetectionError = require('../lib/slug-detection-error.js');
+const apiResponses = require('../test-lib/api-responses.js');
+const stateInfo = require('../lib/state-info.js');
 
 const { match } = sinon;
 

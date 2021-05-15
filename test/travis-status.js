@@ -9,9 +9,9 @@ const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
-const GitStatusChecker = require('../lib/git-status-checker');
-const TravisStatusChecker = require('../lib/travis-status-checker');
-const apiResponses = require('../test-lib/api-responses');
+const GitStatusChecker = require('../lib/git-status-checker.js');
+const TravisStatusChecker = require('../lib/travis-status-checker.js');
+const apiResponses = require('../test-lib/api-responses.js');
 
 describe('travisStatus', () => {
   // In order to test travisStatus in isolation, we need to mock
