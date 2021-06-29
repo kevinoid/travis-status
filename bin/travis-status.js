@@ -110,7 +110,7 @@ function travisStatusCmd(args, options, callback) {
       throw new TypeError('options.err must be a stream.Writable');
     }
   } catch (err) {
-    process.nextTick(() => {
+    queueMicrotask(() => {
       callback(err);
     });
     return undefined;
@@ -180,7 +180,7 @@ function travisStatusCmd(args, options, callback) {
   } catch (errParse) {
     const exitCode =
       errParse.exitCode !== undefined ? errParse.exitCode : undefined;
-    process.nextTick(() => {
+    queueMicrotask(() => {
       if (exitCode !== undefined) {
         // Use null to preserve current API
         // eslint-disable-next-line unicorn/no-null
@@ -215,7 +215,7 @@ function travisStatusCmd(args, options, callback) {
       command.helpInformation()}`);
     // Use null to preserve current API
     // eslint-disable-next-line unicorn/no-null
-    process.nextTick(() => { callback(null, 1); });
+    queueMicrotask(() => { callback(null, 1); });
     return undefined;
   }
 
@@ -226,7 +226,7 @@ function travisStatusCmd(args, options, callback) {
       options.err.write(`${waitErr}\n`);
       // Use null to preserve current API
       // eslint-disable-next-line unicorn/no-null
-      process.nextTick(() => { callback(null, 1); });
+      queueMicrotask(() => { callback(null, 1); });
       return undefined;
     }
     cmdOpts.wait = wait * 1000;
