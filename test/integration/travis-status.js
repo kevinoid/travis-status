@@ -84,7 +84,11 @@ describe('travisStatus integration', () => {
     server.listen(0, 'localhost', () => {
       server.removeListener('error', done);
       const address = server.address();
-      apiUrl = `http://${address.address}:${address.port}`;
+      // IPv6 addresses must be surrounded by [] to disambiguate : for port:
+      // https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.2
+      const hostname =
+        address.family === 'IPv6' ? `[${address.address}]` : address.address;
+      apiUrl = `http://${hostname}:${address.port}`;
       done();
     });
   });
