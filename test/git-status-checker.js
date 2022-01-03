@@ -58,14 +58,20 @@ async function gitInit(repoPath) {
     // git < 2.28.0 doesn't understand --initial-branch, default is master
     await git('init', '-q', repoPath);
     if (defaultBranch !== 'master') {
+      /* eslint-disable function-call-argument-newline,function-paren-newline */
       await git(
         '-C', repoPath,
-        'symbolic-ref', 'HEAD', `refs/heads/${defaultBranch}`,
+        'symbolic-ref',
+        'HEAD',
+        `refs/heads/${defaultBranch}`,
       );
+      /* eslint-enable function-call-argument-newline,function-paren-newline */
     }
   }
 }
 
+// Put git arguments which are related on the same line for readability.
+/* eslint-disable function-call-argument-newline,function-paren-newline */
 before('setup test repository', function() {
   // Some git versions can run quite slowly on Windows
   this.timeout(isWindows ? 8000 : 4000);
@@ -74,18 +80,34 @@ before('setup test repository', function() {
     .then(() => gitInit(TEST_REPO_PATH))
     // The user name and email must be configured for the later git commands
     // to work.  On Travis CI (and probably others) there is no global config
-    .then(() => git('-C', TEST_REPO_PATH,
-      'config', 'user.name', 'Test User'))
-    .then(() => git('-C', TEST_REPO_PATH,
-      'config', 'user.email', 'test@example.com'))
-    .then(() => git('-C', TEST_REPO_PATH,
-      'commit', '-q', '-m', 'Initial Commit', '--allow-empty'))
-    .then(() => git('-C', TEST_REPO_PATH,
-      'commit', '-q', '-m', 'Second Commit', '--allow-empty'))
+    .then(() => git(
+      '-C', TEST_REPO_PATH,
+      'config', 'user.name', 'Test User',
+    ))
+    .then(() => git(
+      '-C', TEST_REPO_PATH,
+      'config', 'user.email', 'test@example.com',
+    ))
+    .then(() => git(
+      '-C', TEST_REPO_PATH,
+      'commit',
+      '-q',
+      '-m', 'Initial Commit',
+      '--allow-empty',
+    ))
+    .then(() => git(
+      '-C', TEST_REPO_PATH,
+      'commit',
+      '-q',
+      '-m', 'Second Commit',
+      '--allow-empty',
+    ))
     .then(() => Object.keys(REMOTES).reduce((p, remoteName) => p.then(() => {
       const remoteUrl = REMOTES[remoteName];
-      return git('-C', TEST_REPO_PATH,
-        'remote', 'add', remoteName, remoteUrl);
+      return git(
+        '-C', TEST_REPO_PATH,
+        'remote', 'add', remoteName, remoteUrl,
+      );
     }), Promise.resolve()))
     .then(() => Object.keys(BRANCH_REMOTES)
       .reduce((p, branchName) => p.then(() => {
@@ -102,15 +124,20 @@ before('setup test repository', function() {
             const configBranch = `branch.${branchName}`;
             const configMerge = `${configBranch}.merge`;
             const configRemote = `${configBranch}.remote`;
-            return git('-C', TEST_REPO_PATH,
-              'config', '--add', configRemote, remoteName)
-              .then(() => git('-C', TEST_REPO_PATH,
-                'config', '--add', configMerge, remoteRef));
+            return git(
+              '-C', TEST_REPO_PATH,
+              'config', '--add', configRemote, remoteName,
+            )
+              .then(() => git(
+                '-C', TEST_REPO_PATH,
+                'config', '--add', configMerge, remoteRef,
+              ));
           });
         }
         return gitBranchP;
       }), Promise.resolve()));
 });
+/* eslint-enable function-call-argument-newline,function-paren-newline */
 
 before('run from test repository', () => {
   origCWD = process.cwd();
