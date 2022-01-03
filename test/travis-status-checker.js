@@ -87,8 +87,13 @@ describe('TravisStatusChecker', () => {
     mock.verify();
   });
 
-  function apiMethod(methodName, args, travisUrlRe, pendingResponse,
-    passedResponse) {
+  function apiMethod(
+    methodName,
+    args,
+    travisUrlRe,
+    pendingResponse,
+    passedResponse,
+  ) {
     it('returns Travis CI API resource', () => {
       travisRequestMock = sinon.mock()
         .once()

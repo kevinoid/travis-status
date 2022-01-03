@@ -230,7 +230,7 @@ function travisStatus(options, callback) {
   if (agent) {
     cleanupP = checkedResultP.then(
       (result) => { agent.destroy(); return result; },
-      (err) => { agent.destroy(); return Promise.reject(err); },
+      (err) => { agent.destroy(); throw err; },
     );
   } else {
     cleanupP = checkedResultP;

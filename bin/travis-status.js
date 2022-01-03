@@ -132,17 +132,23 @@ function travisStatusCmd(args, options, callback) {
     .option('-i, --interactive', 'be interactive and colorful')
     .option('-E, --explode', 'ignored for compatibility with travis.rb')
     .option('--skip-version-check', 'ignored for compatibility with travis.rb')
-    .option('--skip-completion-check',
-      'ignored for compatibility with travis.rb')
+    .option(
+      '--skip-completion-check',
+      'ignored for compatibility with travis.rb',
+    )
     .option('-I, --insecure', 'do not verify SSL certificate of API endpoint')
     .option('-e, --api-endpoint <URL>', 'Travis API server to talk to')
-    .option('--pro',
-      `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`)
+    .option(
+      '--pro',
+      `short-cut for --api-endpoint '${travisStatus.PRO_URI}'`,
+    )
     .on('option:pro', function() {
       this.emit('option:api-endpoint', travisStatus.PRO_URI);
     })
-    .option('--org',
-      `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`)
+    .option(
+      '--org',
+      `short-cut for --api-endpoint '${travisStatus.ORG_URI}'`,
+    )
     .on('option:org', function() {
       this.emit('option:api-endpoint', travisStatus.ORG_URI);
     })
@@ -156,23 +162,35 @@ function travisStatusCmd(args, options, callback) {
     .option('-t, --token <ACCESS_TOKEN>', 'access token to use')
     .option('--debug', 'show API requests')
     .option('--debug-http', 'show HTTP(S) exchange')
-    .option('-r, --repo <SLUG>',
-      'repository to use (will try to detect from current git clone)')
-    .option('-R, --store-repo <SLUG>',
-      'like --repo, but remembers value for current directory')
+    .option(
+      '-r, --repo <SLUG>',
+      'repository to use (will try to detect from current git clone)',
+    )
+    .option(
+      '-R, --store-repo <SLUG>',
+      'like --repo, but remembers value for current directory',
+    )
     .on('option:store-repo', function(val) {
       this.emit('option:repo', val);
     })
     .option('-x, --exit-code', 'sets the exit code to 1 if the build failed')
     .option('-q, --quiet', 'does not print anything')
-    .option('-p, --fail-pending',
-      'sets the status code to 1 if the build is pending')
-    .option('-b, --branch [BRANCH]',
-      'query latest build for a branch (default: current)')
-    .option('-c, --commit [COMMIT]',
-      'require build to be for a specific commit (default: HEAD)')
-    .option('-w, --wait [TIMEOUT]',
-      'wait if build is pending (timeout in seconds)')
+    .option(
+      '-p, --fail-pending',
+      'sets the status code to 1 if the build is pending',
+    )
+    .option(
+      '-b, --branch [BRANCH]',
+      'query latest build for a branch (default: current)',
+    )
+    .option(
+      '-c, --commit [COMMIT]',
+      'require build to be for a specific commit (default: HEAD)',
+    )
+    .option(
+      '-w, --wait [TIMEOUT]',
+      'wait if build is pending (timeout in seconds)',
+    )
     .version(packageJson.version);
 
   try {
