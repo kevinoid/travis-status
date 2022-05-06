@@ -8,7 +8,7 @@
 const { assert } = require('chai');
 const path = require('path');
 const { read } = require('promised-read');
-// TODO [engine:node@>=12.10]: Use fs.rmdir({recursive: true})
+// TODO [engine:node@>=14.14]: Use fs.rm({force: true, recursive: true})
 const rimraf = require('rimraf');
 const sinon = require('sinon');
 const stream = require('stream');
