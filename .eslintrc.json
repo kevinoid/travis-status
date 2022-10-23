@@ -37,7 +37,7 @@
       ],
       "rules": {
         // Executable scripts should have a shebang
-        "node/shebang": "off"
+        "n/shebang": "off"
       }
     }
   ]
