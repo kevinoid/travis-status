@@ -8,18 +8,15 @@
 const { assert } = require('chai');
 const path = require('path');
 const { read } = require('promised-read');
-// TODO [engine:node@>=14.14]: Use fs.rm({force: true, recursive: true})
-const rimraf = require('rimraf');
+const { rm } = require('fs/promises');
 const sinon = require('sinon');
 const stream = require('stream');
-const { promisify } = require('util');
 
 const GitStatusChecker = require('../lib/git-status-checker.js');
 const InvalidSlugError = require('../lib/invalid-slug-error.js');
 const git = require('../lib/git.js');
 
 const isWindows = /^win/i.test(process.platform);
-const rimrafP = promisify(rimraf);
 
 // Global variables
 let origCWD;
@@ -76,7 +73,7 @@ before('setup test repository', function() {
   // Some git versions can run quite slowly on Windows
   this.timeout(isWindows ? 8000 : 4000);
 
-  return rimrafP(TEST_REPO_PATH)
+  return rm(TEST_REPO_PATH, { force: true, recursive: true })
     .then(() => gitInit(TEST_REPO_PATH))
     // The user name and email must be configured for the later git commands
     // to work.  On Travis CI (and probably others) there is no global config
@@ -148,7 +145,9 @@ after('restore original working directory', () => {
   process.chdir(origCWD);
 });
 
-after('remove test repository', () => rimrafP(TEST_REPO_PATH));
+after('remove test repository', () => {
+  return rm(TEST_REPO_PATH, { force: true, recursive: true });
+});
 
 function unsetTravisSlug() {
   return git('config', '--unset-all', GitStatusChecker.SLUG_CONFIG_NAME)
