@@ -75,7 +75,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unicorn": "^44.0.2",
     "has-ansi": "^4.0.0",
-    "jsdoc": "^3.6.0",
+    "jsdoc": "^4.0.0",
     "mocha": "^10.0.0",
     "nodecat": "^2.0.0",
     "proxyquire": "^2.0.0",
