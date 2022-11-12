@@ -70,7 +70,7 @@ async function gitInit(repoPath) {
 // Put git arguments which are related on the same line for readability.
 /* eslint-disable function-call-argument-newline,function-paren-newline */
 before('setup test repository', function() {
-  // Some git versions can run quite slowly on Windows
+  // Some git versions can run slowly on Windows (especially on shared CI)
   this.timeout(isWindows ? 8000 : 4000);
 
   return rm(TEST_REPO_PATH, { force: true, recursive: true })
@@ -154,7 +154,10 @@ function unsetTravisSlug() {
     .catch((err) => (err.code === 5 ? null : Promise.reject(err)));
 }
 
-describe('GitStatusChecker', () => {
+describe('GitStatusChecker', function() {
+  // Some git versions can run slowly on Windows (especially on shared CI)
+  this.timeout(isWindows ? 4000 : 2000);
+
   it('throws TypeError for non-object options', () => {
     assert.throws(
       // eslint-disable-next-line no-new
