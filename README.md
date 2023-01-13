@@ -3,7 +3,7 @@ Travis Status (for Node.js)
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/kevinoid/travis-status/node.js.yml?branch=main&style=flat&label=build)](https://github.com/kevinoid/travis-status/actions?query=branch%3Amain)
 [![Coverage](https://img.shields.io/codecov/c/github/kevinoid/travis-status/main.svg?style=flat)](https://app.codecov.io/gh/kevinoid/travis-status/branch/main)
-[![Dependency Status](https://img.shields.io/david/kevinoid/travis-status.svg?style=flat)](https://david-dm.org/kevinoid/travis-status)
+[![Dependency Status](https://img.shields.io/librariesio/release/npm/travis-status.svg?style=flat)](https://libraries.io/npm/travis-status)
 [![Supported Node Version](https://img.shields.io/node/v/travis-status.svg?style=flat)](https://www.npmjs.com/package/travis-status)
 [![Version on NPM](https://img.shields.io/npm/v/travis-status.svg?style=flat)](https://www.npmjs.com/package/travis-status)
 
