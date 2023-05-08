@@ -6,9 +6,9 @@
 
 'use strict';
 
-const assert = require('assert');
-const http = require('http');
-const https = require('https');
+const assert = require('node:assert');
+const http = require('node:http');
+const https = require('node:https');
 const nodeify = require('promise-nodeify');
 
 const GitStatusChecker = require('./lib/git-status-checker.js');
@@ -107,7 +107,7 @@ function travisStatus(options, callback) {
     if (options && typeof options !== 'object') {
       throw new TypeError('options must be an object');
     }
-    options = options || {};
+    options ||= {};
 
     if (options.repo) {
       GitStatusChecker.checkSlugFormat(options.repo);

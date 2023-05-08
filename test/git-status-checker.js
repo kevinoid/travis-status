@@ -6,11 +6,11 @@
 'use strict';
 
 const { assert } = require('chai');
-const path = require('path');
+const path = require('node:path');
 const { read } = require('promised-read');
-const { rm } = require('fs/promises');
+const { rm } = require('node:fs/promises');
 const sinon = require('sinon');
-const stream = require('stream');
+const stream = require('node:stream');
 
 const GitStatusChecker = require('../lib/git-status-checker.js');
 const InvalidSlugError = require('../lib/invalid-slug-error.js');

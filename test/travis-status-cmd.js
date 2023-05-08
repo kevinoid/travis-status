@@ -10,7 +10,7 @@ const { assert } = require('chai');
 const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
-const stream = require('stream');
+const stream = require('node:stream');
 
 const SlugDetectionError = require('../lib/slug-detection-error.js');
 const apiResponses = require('../test-lib/api-responses.js');

@@ -20,7 +20,7 @@ if (require.main === module
 
 const Chalk = require('chalk').Instance;
 const { Command } = require('commander');
-const { debuglog } = require('util');
+const { debuglog } = require('node:util');
 
 const packageJson = require('../package.json');
 const stateInfo = require('../lib/state-info.js');
@@ -156,7 +156,7 @@ function travisStatusCmd(args, options, callback) {
     .on('option:staging', function() {
       const { apiEndpoint } = this.opts();
       const newApiEndpoint = (apiEndpoint || travisStatus.ORG_URI)
-        .replace(/api/g, 'api-staging');
+        .replaceAll('api', 'api-staging');
       this.emit('option:api-endpoint', newApiEndpoint);
     })
     .option('-t, --token <ACCESS_TOKEN>', 'access token to use')
@@ -215,7 +215,7 @@ function travisStatusCmd(args, options, callback) {
   if (cmdOpts.commit === true) {
     cmdOpts.commit = 'HEAD';
   }
-  if (typeof cmdOpts.interactive === 'undefined') {
+  if (cmdOpts.interactive === undefined) {
     // Note:  Same default as travis.rb
     // Need cast to Boolean so undefined becomes false to disable Chalk
     cmdOpts.interactive = Boolean(options.out.isTTY);

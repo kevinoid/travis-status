@@ -7,7 +7,7 @@
 
 const { assert } = require('chai');
 const enableDestroy = require('server-destroy');
-const http = require('http');
+const http = require('node:http');
 const sinon = require('sinon');
 
 const packageJson = require('../../package.json');
@@ -36,7 +36,7 @@ function checkRequest(req) {
 
   const userAgent = req.headers['user-agent'];
   const uaVersionRE = new RegExp(`node-travis-status/${
-    packageJson.version.replace(/\./g, '\\.')}`);
+    packageJson.version.replaceAll('.', '\\.')}`);
   if (!uaVersionRE.test(userAgent)) {
     throw new Error('User-Agent does not include module and version');
   }

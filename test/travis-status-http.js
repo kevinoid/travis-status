@@ -6,7 +6,7 @@
 'use strict';
 
 const { assert } = require('chai');
-const http = require('http');
+const http = require('node:http');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
@@ -92,7 +92,7 @@ describe('TravisStatusHttp', () => {
 
     it('sends User-Agent including module version by default', () => {
       const uaVersionRE = new RegExp(`node-travis-status/${
-        packageJson.version.replace(/\./g, '\\.')}`);
+        packageJson.version.replaceAll('.', '\\.')}`);
       const status = new TravisStatusHttp();
       request = sinon.mock()
         .once()

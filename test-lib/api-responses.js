@@ -18,7 +18,7 @@ function cloneDeep(obj) {
 /* eslint-disable unicorn/no-null */
 
 apiResponses.branch = function branch(opts) {
-  opts = opts || {};
+  opts ||= {};
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
   return cloneDeep({
     branch: {
@@ -74,7 +74,7 @@ apiResponses.branch = function branch(opts) {
 };
 
 apiResponses.build = function build(opts) {
-  opts = opts || {};
+  opts ||= {};
   const buildId = opts.buildId || 109649462;
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
   return cloneDeep({
@@ -283,7 +283,7 @@ apiResponses.build = function build(opts) {
 };
 
 apiResponses.repo = function repo(opts) {
-  opts = opts || {};
+  opts ||= {};
   return cloneDeep({
     repo: {
       id: 7584951,
