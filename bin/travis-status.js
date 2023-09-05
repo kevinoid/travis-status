@@ -24,6 +24,8 @@ const { debuglog } = require('node:util');
 
 const packageJson = require('../package.json');
 const stateInfo = require('../lib/state-info.js');
+// https://github.com/import-js/eslint-plugin-import/issues/2844
+// eslint-disable-next-line import/extensions
 const travisStatus = require('..');
 
 const debug = debuglog('travis-status');
