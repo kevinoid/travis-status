@@ -5,13 +5,13 @@
 
 'use strict';
 
-const Travis = require('travis-ci');
 const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
+const Travis = require('travis-ci');
 
-const apiResponses = require('../test-lib/api-responses.js');
 const TravisStatusHttp = require('../lib/travis-status-http.js');
+const apiResponses = require('../test-lib/api-responses.js');
 
 const { match } = sinon;
 

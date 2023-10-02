@@ -5,16 +5,17 @@
 
 'use strict';
 
+const stream = require('node:stream');
+
 const ansiStyles = require('ansi-styles');
 const { assert } = require('chai');
 const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
-const stream = require('node:stream');
 
 const SlugDetectionError = require('../lib/slug-detection-error.js');
-const apiResponses = require('../test-lib/api-responses.js');
 const stateInfo = require('../lib/state-info.js');
+const apiResponses = require('../test-lib/api-responses.js');
 
 const { match } = sinon;
 
@@ -238,7 +239,7 @@ describe('travis-status command', () => {
   expectArgsErr(['-w', 'nope'], /\bwait\b/i);
   expectArgsErr(
     ['--unknown'],
-    /\b(unknown|recognized|unsupported)\b.+--unknown\b/i,
+    /\b(recognized|unknown|unsupported)\b.+--unknown\b/i,
   );
   expectArgsErr(['extraarg'], /\barguments?\b/i);
 

@@ -18,15 +18,16 @@ if (require.main === module
   }
 }
 
-const Chalk = require('chalk').Instance;
-const { Command } = require('commander');
 const { debuglog } = require('node:util');
 
-const packageJson = require('../package.json');
-const stateInfo = require('../lib/state-info.js');
+const Chalk = require('chalk').Instance;
+const { Command } = require('commander');
+
 // https://github.com/import-js/eslint-plugin-import/issues/2844
 // eslint-disable-next-line import/extensions
 const travisStatus = require('..');
+const stateInfo = require('../lib/state-info.js');
+const packageJson = require('../package.json');
 
 const debug = debuglog('travis-status');
 

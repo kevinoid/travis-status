@@ -5,8 +5,9 @@
 
 'use strict';
 
-const { assert } = require('chai');
 const http = require('node:http');
+
+const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 

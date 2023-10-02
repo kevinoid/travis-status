@@ -9,6 +9,7 @@
 const assert = require('node:assert');
 const http = require('node:http');
 const https = require('node:https');
+
 const nodeify = require('promise-nodeify');
 
 const GitStatusChecker = require('./lib/git-status-checker.js');

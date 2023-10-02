@@ -5,16 +5,17 @@
 
 'use strict';
 
-const { assert } = require('chai');
-const path = require('node:path');
-const { read } = require('promised-read');
 const { rm } = require('node:fs/promises');
-const sinon = require('sinon');
+const path = require('node:path');
 const stream = require('node:stream');
 
+const { assert } = require('chai');
+const { read } = require('promised-read');
+const sinon = require('sinon');
+
 const GitStatusChecker = require('../lib/git-status-checker.js');
-const InvalidSlugError = require('../lib/invalid-slug-error.js');
 const git = require('../lib/git.js');
+const InvalidSlugError = require('../lib/invalid-slug-error.js');
 
 const isWindows = /^win/i.test(process.platform);
 

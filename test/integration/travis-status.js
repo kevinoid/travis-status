@@ -5,14 +5,15 @@
 
 'use strict';
 
+const http = require('node:http');
+
 const { assert } = require('chai');
 const enableDestroy = require('server-destroy');
-const http = require('node:http');
 const sinon = require('sinon');
 
+const travisStatus = require('../../index.js');
 const packageJson = require('../../package.json');
 const apiResponses = require('../../test-lib/api-responses.js');
-const travisStatus = require('../../index.js');
 
 const { match } = sinon;
 
