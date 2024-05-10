@@ -66,7 +66,7 @@
     "@kevinoid/eslint-config": "^32.0.0",
     "ansi-styles": "^5.0.0",
     "c8": "^9.0.0",
-    "chai": "^4.0.0",
+    "chai": "^5.1.1",
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.3",
