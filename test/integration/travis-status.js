@@ -118,14 +118,14 @@ describe('travisStatus integration', () => {
   beforeEach(() => {
     realClearTimeout = clearTimeout;
     realSetTimeout = setTimeout;
-    global.clearTimeout = clearInterval;
-    global.setTimeout = function mockSetTimeout(fn, delay, ...args) {
+    globalThis.clearTimeout = clearInterval;
+    globalThis.setTimeout = function mockSetTimeout(fn, delay, ...args) {
       return setImmediate(fn, ...args);
     };
   });
   afterEach(() => {
-    global.clearTimeout = realClearTimeout;
-    global.setTimeout = realSetTimeout;
+    globalThis.clearTimeout = realClearTimeout;
+    globalThis.setTimeout = realSetTimeout;
   });
 
   it('fetches branch state', () => {

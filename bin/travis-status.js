@@ -240,7 +240,7 @@ function travisStatusCmd(args, options, callback) {
     return undefined;
   }
 
-  if (hasOwnProperty.call(cmdOpts, 'wait')) {
+  if (Object.hasOwn(cmdOpts, 'wait')) {
     const wait = Number(cmdOpts.wait);
     if (Number.isNaN(wait)) {
       const waitErr = chalk.red(`invalid wait time "${cmdOpts.wait}"`);
