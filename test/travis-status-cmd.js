@@ -38,7 +38,6 @@ describe('travis-status command', () => {
 
   // Ensure that expectations are not carried over between tests
   beforeEach(() => {
-    // eslint-disable-next-line unicorn/consistent-destructuring
     travisStatus = sinon.expectation.create('travisStatus').never();
   });
 
