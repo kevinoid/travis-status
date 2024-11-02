@@ -7,10 +7,6 @@
 
 const apiResponses = {};
 
-function cloneDeep(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
 // The JSON is copied almost verbatim from the API responses.
 /* eslint camelcase: ["error", {"properties": "never"}], max-len: "off" */
 
@@ -20,7 +16,7 @@ function cloneDeep(obj) {
 apiResponses.branch = function branch(opts) {
   opts ||= {};
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
-  return cloneDeep({
+  return structuredClone({
     branch: {
       id: 109649462,
       repository_id: 7584951,
@@ -77,7 +73,7 @@ apiResponses.build = function build(opts) {
   opts ||= {};
   const buildId = opts.buildId || 109649462;
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
-  return cloneDeep({
+  return structuredClone({
     build: {
       id: buildId,
       repository_id: 7584951,
@@ -284,7 +280,7 @@ apiResponses.build = function build(opts) {
 
 apiResponses.repo = function repo(opts) {
   opts ||= {};
-  return cloneDeep({
+  return structuredClone({
     repo: {
       id: 7584951,
       slug: opts.slug || 'owner/repo',
