@@ -16,7 +16,7 @@
   "author": "Kevin Locke <kevin@kevinlocke.name>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kevinoid/travis-status.git"
+    "url": "git+https://github.com/kevinoid/travis-status.git"
   },
   "type": "commonjs",
   "files": [
