@@ -58,7 +58,7 @@ jobs:
     - name: Run tests
       run: npm run test-unit-cov
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5.5.2
+      uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad  # v5.5.3
     - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45b  # v2.3.6
       # Ignore intermittent server errors (which are out of our control).
