@@ -22,8 +22,8 @@ const TravisStatusChecker = require('./lib/travis-status-checker.js');
  * @param {!{sha: string, name: ?string}} localCommit Expected commit
  * information.
  * @returns {!object} <code>build</code>
- * @throws AssertionError If <code>build.commit.sha</code> is not equal to
- * <code>expected</code>.
+ * @throws {module:assert.AssertionError} If <code>build.commit.sha</code> is
+ * not equal to <code>expected</code>.
  */
 function checkBuildCommit(build, localCommit) {
   const buildCommit = build.commit;
