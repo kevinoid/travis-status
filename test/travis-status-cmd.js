@@ -9,7 +9,7 @@ const stream = require('node:stream');
 
 const ansiStyles = require('ansi-styles');
 const { assert } = require('chai');
-const hasAnsi = require('has-ansi');
+const { default: hasAnsi } = require('has-ansi');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
