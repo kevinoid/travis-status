@@ -20,7 +20,7 @@ if (require.main === module
 
 const { debuglog } = require('node:util');
 
-const Chalk = require('chalk').Instance;
+const { Chalk } = require('chalk'); // eslint-disable-line unicorn/import-style
 const { Command } = require('commander');
 
 // https://github.com/import-js/eslint-plugin-import/issues/2844
