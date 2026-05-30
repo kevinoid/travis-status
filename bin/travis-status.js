@@ -8,8 +8,8 @@
 
 // Set NODE_DEBUG for request before importing it
 if (require.main === module
-    && (process.argv.includes('--debug')
-     || process.argv.includes('--debug-http'))) {
+  && (process.argv.includes('--debug')
+    || process.argv.includes('--debug-http'))) {
   const nodeDebug = process.env.NODE_DEBUG;
   if (!nodeDebug) {
     process.env.NODE_DEBUG = 'request';
@@ -84,7 +84,7 @@ function travisStatusCmd(args, options, callback) {
         __filename,
       ];
     } else if (typeof args !== 'object'
-               || Math.floor(args.length) !== args.length) {
+      || Math.floor(args.length) !== args.length) {
       throw new TypeError('args must be Array-like');
     } else if (args.length < 2) {
       throw new RangeError('non-empty args must have at least 2 elements');
@@ -301,7 +301,7 @@ function travisStatusCmd(args, options, callback) {
 
     let code = 0;
     if ((cmdOpts.exitCode && stateInfo.isUnsuccessful[state])
-        || (cmdOpts.failPending && stateInfo.isPending[state])) {
+      || (cmdOpts.failPending && stateInfo.isPending[state])) {
       code = 1;
     }
 

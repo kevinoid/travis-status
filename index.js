@@ -122,11 +122,11 @@ function travisStatus(options, callback) {
     // function, but not after completion, which callers may not expect.
     let { requestOpts } = options;
     if (!requestOpts
-        || (requestOpts.agent === undefined
-         && requestOpts.agentClass === undefined
-         && requestOpts.agentOptions === undefined
-         && requestOpts.forever === undefined
-         && requestOpts.pool === undefined)) {
+      || (requestOpts.agent === undefined
+        && requestOpts.agentClass === undefined
+        && requestOpts.agentOptions === undefined
+        && requestOpts.forever === undefined
+        && requestOpts.pool === undefined)) {
       const apiUrl =
         new URL(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent
@@ -137,10 +137,8 @@ function travisStatus(options, callback) {
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
         // If Agent doesn't support keepAlive/destroy, we don't need/want it.
         if (typeof agent.destroy === 'function') {
-          requestOpts = { ...requestOpts };
-          requestOpts.agent = agent;
-          options = { ...options };
-          options.requestOpts = requestOpts;
+          requestOpts = { ...requestOpts, agent };
+          options = { ...options, requestOpts };
         } else {
           agent = undefined;
         }

@@ -145,8 +145,8 @@ describe('travis-status command', () => {
     repo: undefined,
     // requestOpts may have defaults set.  Ensure --insecure isn't default
     requestOpts: match((requestOpts) => !requestOpts
-        || requestOpts.strictSSL === undefined
-        || requestOpts.strictSSL === true, 'not insecure'),
+      || requestOpts.strictSSL === undefined
+      || requestOpts.strictSSL === true, 'not insecure'),
     storeRepo: undefined,
     token: undefined,
     wait: undefined,
