@@ -8,7 +8,7 @@
 const apiResponses = {};
 
 // The JSON is copied almost verbatim from the API responses.
-/* eslint camelcase: ["error", {"properties": "never"}], max-len: "off" */
+/* eslint camelcase: ["error", {"properties": "never"}], @stylistic/max-len: "off" */
 
 // Use null to match values returned by the Travis CI API
 /* eslint-disable unicorn/no-null */

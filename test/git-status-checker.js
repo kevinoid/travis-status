@@ -56,20 +56,26 @@ async function gitInit(repoPath) {
     // git < 2.28.0 doesn't understand --initial-branch, default is master
     await git('init', '-q', repoPath);
     if (defaultBranch !== 'master') {
-      /* eslint-disable function-call-argument-newline,function-paren-newline */
+      /* eslint-disable
+           @stylistic/function-call-argument-newline,
+           @stylistic/function-paren-newline */
       await git(
         '-C', repoPath,
         'symbolic-ref',
         'HEAD',
         `refs/heads/${defaultBranch}`,
       );
-      /* eslint-enable function-call-argument-newline,function-paren-newline */
+      /* eslint-enable
+           @stylistic/function-call-argument-newline,
+           @stylistic/function-paren-newline */
     }
   }
 }
 
 // Put git arguments which are related on the same line for readability.
-/* eslint-disable function-call-argument-newline,function-paren-newline */
+/* eslint-disable
+     @stylistic/function-call-argument-newline,
+     @stylistic/function-paren-newline */
 before('setup test repository', function() {
   // Some git versions can run slowly on Windows (especially on shared CI)
   this.timeout(isWindows ? 8000 : 4000);
@@ -135,7 +141,9 @@ before('setup test repository', function() {
         return gitBranchP;
       }), Promise.resolve()));
 });
-/* eslint-enable function-call-argument-newline,function-paren-newline */
+/* eslint-enable
+     @stylistic/function-call-argument-newline,
+     @stylistic/function-paren-newline */
 
 before('run from test repository', () => {
   origCWD = process.cwd();

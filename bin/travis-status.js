@@ -317,7 +317,7 @@ module.exports = travisStatusCmd;
 
 if (require.main === module) {
   // This file was invoked directly.
-  /* eslint-disable no-process-exit */
+  /* eslint-disable n/no-process-exit */
   const mainOptions = {
     in: process.stdin,
     out: process.stdout,
