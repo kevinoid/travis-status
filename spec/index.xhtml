@@ -26,6 +26,7 @@ section section section section {
       <h1>GitStatusChecker</h1>
       <dl>
         <dt>throws TypeError for non-object options</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new GitStatusChecker(true); },
@@ -33,6 +34,7 @@ section section section section {
   /\boptions\b/,
 );</code></pre></dd>
         <dt>throws TypeError for non-Readable in</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new GitStatusChecker({ in: new stream.Writable() }); },
@@ -40,6 +42,7 @@ section section section section {
   /\boptions.in\b/,
 );</code></pre></dd>
         <dt>throws TypeError for non-Writable out</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new GitStatusChecker({ out: new stream.Readable() }); },
@@ -47,6 +50,7 @@ section section section section {
   /\boptions.out\b/,
 );</code></pre></dd>
         <dt>returns Error for non-Writable err</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new GitStatusChecker({ err: new stream.Readable() }); },
@@ -57,62 +61,75 @@ section section section section {
           <h1>.checkSlugFormat()</h1>
           <dl>
             <dt>accepts &#x22;owner/repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const result = GitStatusChecker.checkSlugFormat(slug);
 assert.strictEqual(result, slug);</code></pre></dd>
             <dt>accepts &#x22;owner-1/repo-1&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const result = GitStatusChecker.checkSlugFormat(slug);
 assert.strictEqual(result, slug);</code></pre></dd>
             <dt>rejects &#x22;repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;/owner/repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;/repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner//repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/repo/&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/repo/branch&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22; owner/repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner /repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/ repo&#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
 );</code></pre></dd>
             <dt>rejects &#x22;owner/repo &#x22;</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>assert.throws(
   () =&#x3E; { GitStatusChecker.checkSlugFormat(slug); },
   InvalidSlugError,
@@ -123,17 +140,20 @@ assert.strictEqual(result, slug);</code></pre></dd>
           <h1>#resolveHash()</h1>
           <dl>
             <dt>can resolve the hash of HEAD</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 return checker.resolveHash(&#x27;HEAD&#x27;).then((hash) =&#x3E; {
   assert.match(hash, /^[a-fA-F0-9]{40}$/);
   headHash = hash;
 });</code></pre></dd>
             <dt>can resolve a hash to itself</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 return checker.resolveHash(headHash).then((hash) =&#x3E; {
   assert.strictEqual(hash, headHash);
 });</code></pre></dd>
             <dt>rejects with Error for unresolvable name</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 return checker.resolveHash(&#x27;notabranch&#x27;).then(
   sinon.mock().never(),
@@ -147,6 +167,7 @@ return checker.resolveHash(&#x27;notabranch&#x27;).then(
           <h1>#storeSlug()</h1>
           <dl>
             <dt>can store a valid slug</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 const testSlug = &#x27;foo/bar&#x27;;
 return checker.storeSlug(testSlug).then((slug) =&#x3E; {
@@ -158,6 +179,7 @@ return checker.storeSlug(testSlug).then((slug) =&#x3E; {
     });
 });</code></pre></dd>
             <dt>returns Error for an invalid slug</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 const testSlug = &#x27;foobar&#x27;;
 return checker.storeSlug(testSlug).then(
@@ -179,6 +201,7 @@ return checker.storeSlug(testSlug).then(
           <h1>#tryStoreSlug()</h1>
           <dl>
             <dt>can store a valid slug</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 const testSlug = &#x27;foo/bar&#x27;;
 return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
@@ -190,6 +213,7 @@ return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
     });
 });</code></pre></dd>
             <dt>prints error message for an invalid slug</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const checker = new GitStatusChecker({
@@ -215,6 +239,7 @@ return checker.tryStoreSlug(testSlug).then((slug) =&#x3E; {
           <h1>#confirmSlug()</h1>
           <dl>
             <dt>prompts user for confirmation</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
 const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
@@ -239,6 +264,7 @@ return read(errStream)
     assert.strictEqual(errStream.read(), null);
   });</code></pre></dd>
             <dt>prompts user for slug if not confirmed</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
 const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
@@ -270,6 +296,7 @@ return read(errStream)
     assert.strictEqual(errStream.read(), null);
   });</code></pre></dd>
             <dt>re-prompts user if slug is invalid</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
 const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
@@ -319,6 +346,7 @@ return read(errStream)
     assert.strictEqual(errStream.read(), null);
   });</code></pre></dd>
             <dt>rejects with EOFError if input ends</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const inStream = new stream.PassThrough();
 const outStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
@@ -354,14 +382,16 @@ return Promise.all([confirmP, promptP]);</code></pre></dd>
         <section class="suite">
           <h1>#detectBranch()</h1>
           <dl>
-            <dt>resolves master on master</dt>
+            <dt>resolves master on main</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
-return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
+return git(&#x27;checkout&#x27;, defaultBranch)
   .then(() =&#x3E; checker.detectBranch())
   .then((branch) =&#x3E; {
-    assert.strictEqual(branch, &#x27;master&#x27;);
+    assert.strictEqual(branch, defaultBranch);
   });</code></pre></dd>
             <dt>resolves branch1 on branch1</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 return git(&#x27;checkout&#x27;, &#x27;branch1&#x27;)
   .then(() =&#x3E; checker.detectBranch())
@@ -369,6 +399,7 @@ return git(&#x27;checkout&#x27;, &#x27;branch1&#x27;)
     assert.strictEqual(branch, &#x27;branch1&#x27;);
   });</code></pre></dd>
             <dt>rejects with Error not on branch</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
   .then(() =&#x3E; checker.detectBranch())
@@ -384,6 +415,7 @@ return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
           <h1>#detectSlug()</h1>
           <dl>
             <dt>resolves owner1/repo1 for branch1</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
@@ -394,6 +426,7 @@ return git(&#x27;checkout&#x27;, branchName)
     assert.strictEqual(slug, remoteSlug);
   });</code></pre></dd>
             <dt>resolves owner2/repo2 for branch2</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
@@ -404,6 +437,7 @@ return git(&#x27;checkout&#x27;, branchName)
     assert.strictEqual(slug, remoteSlug);
   });</code></pre></dd>
             <dt>resolves owner3/repo3 for branch3</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
@@ -414,16 +448,18 @@ return git(&#x27;checkout&#x27;, branchName)
     assert.strictEqual(slug, remoteSlug);
   });</code></pre></dd>
             <dt>defaults to origin if branch has no remote</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 });
-return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
+return git(&#x27;checkout&#x27;, defaultBranch)
   .then(() =&#x3E; checker.detectSlug())
   .then((slug) =&#x3E; {
     assert.strictEqual(slug, REMOTE_SLUGS.origin);
   });</code></pre></dd>
             <dt>defaults to origin if not on branch</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
@@ -434,6 +470,7 @@ return git(&#x27;checkout&#x27;, &#x27;HEAD^&#x27;)
     assert.strictEqual(slug, REMOTE_SLUGS.origin);
   });</code></pre></dd>
             <dt>rejects with SlugDetectionError for remote with no URL</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
@@ -448,6 +485,7 @@ return git(&#x27;checkout&#x27;, &#x27;branchnourl&#x27;)
     },
   );</code></pre></dd>
             <dt>rejects with SlugDetectionError for remote without slug</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker({
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
@@ -462,6 +500,7 @@ return git(&#x27;checkout&#x27;, &#x27;branchnotslug&#x27;)
     },
   );</code></pre></dd>
             <dt>prompts for confirmation if interactive</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const checker = new GitStatusChecker({
@@ -473,7 +512,7 @@ const testSlug = &#x27;prompt/slug&#x27;;
 const mock = sinon.mock(checker);
 mock.expects(&#x27;confirmSlug&#x27;)
   .once().withExactArgs(REMOTE_SLUGS.origin).returns(testSlug);
-return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
+return git(&#x27;checkout&#x27;, defaultBranch)
   .then(() =&#x3E; checker.detectSlug())
   .then((slug) =&#x3E; {
     assert.strictEqual(slug, testSlug);
@@ -482,6 +521,7 @@ return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
     assert.strictEqual(errStream.read(), null);
   });</code></pre></dd>
             <dt>prints result without confirmation if not interactive</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough({ encoding: &#x27;utf8&#x27; });
 const checker = new GitStatusChecker({
@@ -490,7 +530,7 @@ const checker = new GitStatusChecker({
 });
 const mock = sinon.mock(checker);
 mock.expects(&#x27;confirmSlug&#x27;).never();
-return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
+return git(&#x27;checkout&#x27;, defaultBranch)
   .then(() =&#x3E; checker.detectSlug())
   .then((slug) =&#x3E; {
     assert.strictEqual(slug, REMOTE_SLUGS.origin);
@@ -505,6 +545,7 @@ return git(&#x27;checkout&#x27;, &#x27;master&#x27;)
           <h1>#loadSlug()</h1>
           <dl>
             <dt>loads slug set by #storeSlug()</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 const testSlug = &#x27;foo/bar&#x27;;
 return checker.storeSlug(testSlug)
@@ -512,6 +553,7 @@ return checker.storeSlug(testSlug)
     assert.strictEqual(slug, testSlug);
   }));</code></pre></dd>
             <dt>resolves null if slug is not set</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 return checker.loadSlug().then((slug) =&#x3E; {
   assert.strictEqual(slug, null);
@@ -522,6 +564,7 @@ return checker.loadSlug().then((slug) =&#x3E; {
           <h1>#findSlug()</h1>
           <dl>
             <dt>uses #loadSlug() result if non-null</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 const testSlug = &#x27;foo/bar&#x27;;
 const mock = sinon.mock(checker);
@@ -532,6 +575,7 @@ return checker.findSlug().then((slug) =&#x3E; {
   assert.strictEqual(slug, testSlug);
 });</code></pre></dd>
             <dt>uses #detectSlug() result if #loadSlug() is null</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/git-status-checker.js</dt>
             <dd><pre><code>const checker = new GitStatusChecker();
 const testSlug = &#x27;foo/bar&#x27;;
 const mock = sinon.mock(checker);
@@ -550,6 +594,7 @@ return checker.findSlug().then((slug) =&#x3E; {
       <h1>travisStatus integration</h1>
       <dl>
         <dt>fetches branch state</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/integration/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testBranch = &#x27;branch1&#x27;;
 const testOpts = { slug: testSlug, branch: testBranch };
@@ -570,6 +615,7 @@ return travisStatus(options).then((result) =&#x3E; {
   assert.strictEqual(connCount, 1);
 });</code></pre></dd>
         <dt>fetches repo state</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/integration/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testOpts = { slug: testSlug };
 const testResult = apiResponses.repo(testOpts);
@@ -588,6 +634,7 @@ return travisStatus(options).then((result) =&#x3E; {
   assert.strictEqual(connCount, 1);
 });</code></pre></dd>
         <dt>fetches repo and build for commit</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/integration/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testCommit = &#x27;4e2c26acca22601fb54da35485faff7c303084eb&#x27;;
 const testBuildId = 123456;
@@ -620,6 +667,7 @@ return travisStatus(options).then((result) =&#x3E; {
   }
 });</code></pre></dd>
         <dt>fetches repo state with wait</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/integration/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const pendingResult =
   apiResponses.repo({ slug: testSlug, state: &#x27;started&#x27; });
@@ -652,6 +700,7 @@ return promise;</code></pre></dd>
       <h1>TravisStatusChecker</h1>
       <dl>
         <dt>throws TypeError for non-object options</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new TravisStatusChecker(true); },
@@ -659,6 +708,7 @@ return promise;</code></pre></dd>
   /\boptions\b/,
 );</code></pre></dd>
         <dt>passes {pro: true} to Travis when apiEndpoint is PRO_URI</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
         <dd><pre><code>TravisMock = sinon.mock()
   .once()
   .withExactArgs(
@@ -670,6 +720,7 @@ new TravisStatusChecker({
 });
 TravisMock.verify();</code></pre></dd>
         <dt>passes options.token to agent.setAccessToken</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
         <dd><pre><code>const testToken = &#x27;123456&#x27;;
 travisHttpMock = new TravisStatusHttp();
 const mock = sinon.mock(travisHttpMock);
@@ -683,6 +734,7 @@ mock.verify();</code></pre></dd>
           <h1>#getBranch()</h1>
           <dl>
             <dt>returns Travis CI API resource</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
             <dd><pre><code>travisRequestMock = sinon.mock()
   .once()
   .withArgs(match(/GET/i), match(travisUrlRe))
@@ -698,19 +750,21 @@ return promise;</code></pre></dd>
               <h1>with options.wait</h1>
               <dl>
                 <dt>does not wait if state is not pending</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .once()
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>retries during wait if state is pending</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .twice()
   .withArgs(match(/GET/i), match(travisUrlRe));
@@ -718,7 +772,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -728,13 +782,14 @@ for (let i = 1; i &#x3C; 11; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>returns pending state if wait elapses</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .atLeast(1)
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -744,6 +799,7 @@ for (let i = 1; i &#x3C; 11; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>does not wait after API error</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>const errTest = new Error(&#x27;Test API error&#x27;);
 travisRequestMock = sinon.mock()
   .once()
@@ -751,7 +807,7 @@ travisRequestMock = sinon.mock()
   .yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 30000 }))
+  checker[methodName](...args, { wait: 30000 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -761,6 +817,7 @@ const promise =
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>stops waiting after API error</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>const errTest = new Error(&#x27;Test API error&#x27;);
 travisRequestMock = sinon.mock()
   .twice()
@@ -769,7 +826,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 30000 }))
+  checker[methodName](...args, { wait: 30000 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -782,10 +839,11 @@ for (let i = 1; i &#x3C; 31; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>rejects with TypeError for non-number wait</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: &#x27;hello&#x27; }))
+  checker[methodName](...args, { wait: &#x27;hello&#x27; })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -796,10 +854,11 @@ const promise =
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>rejects with RangeError for negative wait</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: -5 }))
+  checker[methodName](...args, { wait: -5 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -817,6 +876,7 @@ return promise;</code></pre></dd>
           <h1>#getBuild()</h1>
           <dl>
             <dt>returns Travis CI API resource</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
             <dd><pre><code>travisRequestMock = sinon.mock()
   .once()
   .withArgs(match(/GET/i), match(travisUrlRe))
@@ -832,19 +892,21 @@ return promise;</code></pre></dd>
               <h1>with options.wait</h1>
               <dl>
                 <dt>does not wait if state is not pending</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .once()
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>retries during wait if state is pending</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .twice()
   .withArgs(match(/GET/i), match(travisUrlRe));
@@ -852,7 +914,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -862,13 +924,14 @@ for (let i = 1; i &#x3C; 11; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>returns pending state if wait elapses</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .atLeast(1)
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -878,6 +941,7 @@ for (let i = 1; i &#x3C; 11; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>does not wait after API error</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>const errTest = new Error(&#x27;Test API error&#x27;);
 travisRequestMock = sinon.mock()
   .once()
@@ -885,7 +949,7 @@ travisRequestMock = sinon.mock()
   .yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 30000 }))
+  checker[methodName](...args, { wait: 30000 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -895,6 +959,7 @@ const promise =
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>stops waiting after API error</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>const errTest = new Error(&#x27;Test API error&#x27;);
 travisRequestMock = sinon.mock()
   .twice()
@@ -903,7 +968,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 30000 }))
+  checker[methodName](...args, { wait: 30000 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -916,10 +981,11 @@ for (let i = 1; i &#x3C; 31; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>rejects with TypeError for non-number wait</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: &#x27;hello&#x27; }))
+  checker[methodName](...args, { wait: &#x27;hello&#x27; })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -930,10 +996,11 @@ const promise =
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>rejects with RangeError for negative wait</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: -5 }))
+  checker[methodName](...args, { wait: -5 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -951,6 +1018,7 @@ return promise;</code></pre></dd>
           <h1>#getRepo()</h1>
           <dl>
             <dt>returns Travis CI API resource</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
             <dd><pre><code>travisRequestMock = sinon.mock()
   .once()
   .withArgs(match(/GET/i), match(travisUrlRe))
@@ -966,19 +1034,21 @@ return promise;</code></pre></dd>
               <h1>with options.wait</h1>
               <dl>
                 <dt>does not wait if state is not pending</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .once()
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>retries during wait if state is pending</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .twice()
   .withArgs(match(/GET/i), match(travisUrlRe));
@@ -986,7 +1056,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(null, passedResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, passedResponse);
     });
@@ -996,13 +1066,14 @@ for (let i = 1; i &#x3C; 11; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>returns pending state if wait elapses</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock()
   .atLeast(1)
   .withArgs(match(/GET/i), match(travisUrlRe))
   .yields(null, pendingResponse);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 10000 }))
+  checker[methodName](...args, { wait: 10000 })
     .then((response) =&#x3E; {
       assert.deepEqual(response, pendingResponse);
     });
@@ -1012,6 +1083,7 @@ for (let i = 1; i &#x3C; 11; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>does not wait after API error</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>const errTest = new Error(&#x27;Test API error&#x27;);
 travisRequestMock = sinon.mock()
   .once()
@@ -1019,7 +1091,7 @@ travisRequestMock = sinon.mock()
   .yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 30000 }))
+  checker[methodName](...args, { wait: 30000 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1029,6 +1101,7 @@ const promise =
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>stops waiting after API error</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>const errTest = new Error(&#x27;Test API error&#x27;);
 travisRequestMock = sinon.mock()
   .twice()
@@ -1037,7 +1110,7 @@ travisRequestMock.onFirstCall().yields(null, pendingResponse);
 travisRequestMock.onSecondCall().yields(errTest);
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: 30000 }))
+  checker[methodName](...args, { wait: 30000 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1050,10 +1123,11 @@ for (let i = 1; i &#x3C; 31; i += 1) {
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>rejects with TypeError for non-number wait</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: &#x27;hello&#x27; }))
+  checker[methodName](...args, { wait: &#x27;hello&#x27; })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1064,10 +1138,11 @@ const promise =
 travisRequestMock.verify();
 return promise;</code></pre></dd>
                 <dt>rejects with RangeError for negative wait</dt>
+                <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-checker.js</dt>
                 <dd><pre><code>travisRequestMock = sinon.mock().never();
 const checker = new TravisStatusChecker();
 const promise =
-  checker[methodName](...args.concat({ wait: -5 }))
+  checker[methodName](...args, { wait: -5 })
     .then(
       sinon.mock().never(),
       (err) =&#x3E; {
@@ -1087,6 +1162,7 @@ return promise;</code></pre></dd>
       <h1>travis-status command</h1>
       <dl>
         <dt>accepts empty arguments</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
@@ -1096,6 +1172,7 @@ return promise;</code></pre></dd>
 travisStatusCmd([], sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>returns undefined when called with a function</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
@@ -1106,6 +1183,7 @@ const result = travisStatusCmd(RUNTIME_ARGS, sinon.mock().never());
 travisStatus.verify();
 assert.strictEqual(result, undefined);</code></pre></dd>
         <dt>default interactive true for TTY stdout</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
@@ -1121,433 +1199,476 @@ const options = {
 travisStatusCmd(RUNTIME_ARGS, options, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets  as match(apiEndpoint: undefined, branch: undefined, commit: undefined, repo: undefined, requestOpts: not insecure, storeRepo: undefined, token: undefined, wait: undefined)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --api-endpoint https://example.com as match(apiEndpoint: https://example.com)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --branch branchname as match(branch: branchname)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --branch as match(branch: true)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --commit v1.0.0 as match(commit: v1.0.0)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --commit as match(commit: HEAD)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --debug as typeOf(&#x22;object&#x22;)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --debug-http as typeOf(&#x22;object&#x22;)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --explode as typeOf(&#x22;object&#x22;)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --insecure as match(requestOpts: match(strictSSL: false))</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --interactive as match(interactive: true)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --org as match(apiEndpoint: https://api.travis-ci.org/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --pro as match(apiEndpoint: https://api.travis-ci.com/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --repo foo/bar as match(repo: foo/bar)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --skip-completion-check as typeOf(&#x22;object&#x22;)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --skip-version-check as typeOf(&#x22;object&#x22;)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --staging as match(apiEndpoint: https://api-staging.travis-ci.org/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --org --staging as match(apiEndpoint: https://api-staging.travis-ci.org/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --pro --staging as match(apiEndpoint: https://api-staging.travis-ci.com/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --store-repo foo/bar as match(storeRepo: foo/bar)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --token 12345 as match(token: 12345)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --wait 60 as match(wait: 60000)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --wait as match(wait: Infinity)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -E as typeOf(&#x22;object&#x22;)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -I as match(requestOpts: match(strictSSL: false))</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -R foo/bar as match(storeRepo: foo/bar)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -b branchname as match(branch: branchname)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -b as match(branch: true)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -c v1.0.0 as match(commit: v1.0.0)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -c as match(commit: HEAD)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -e https://example.com as match(apiEndpoint: https://example.com)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -i as match(interactive: true)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -r foo/bar as match(repo: foo/bar)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -t 12345 as match(token: 12345)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -w 60 as match(wait: 60000)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets -w as match(wait: Infinity)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --repo foo/bar --store-repo baz/quux as match(repo: baz/quux, storeRepo: baz/quux)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --store-repo foo/bar --repo baz/quux as match(repo: baz/quux, storeRepo: foo/bar)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --api-endpoint https://example.com --org --pro as match(apiEndpoint: https://api.travis-ci.com/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --pro --org --api-endpoint https://example.com as match(apiEndpoint: https://example.com)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --pro --staging as match(apiEndpoint: https://api-staging.travis-ci.com/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>interprets --staging --pro as match(apiEndpoint: https://api.travis-ci.com/)</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.mock()
   .once()
   .withArgs(
     expectObj,
     match.func,
   );
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, sinon.mock().never());
 travisStatus.verify();</code></pre></dd>
         <dt>prints error and exits for -w nope</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.isAtLeast(code, 1);
@@ -1556,13 +1677,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   done();
 });</code></pre></dd>
         <dt>prints error and exits for --unknown</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.isAtLeast(code, 1);
@@ -1571,13 +1693,14 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   done();
 });</code></pre></dd>
         <dt>prints error and exits for extraarg</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
 const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.isAtLeast(code, 1);
@@ -1586,12 +1709,13 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   done();
 });</code></pre></dd>
         <dt>normally exits with code 0 if build failed</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1602,12 +1726,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -x exits with code 1 if build canceled</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1618,12 +1743,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -x exits with code 1 if build errored</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1634,12 +1760,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -x exits with code 1 if build failed</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1650,12 +1777,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --exit-code exits with code 1 if build canceled</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1666,12 +1794,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --exit-code exits with code 1 if build errored</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1682,12 +1811,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --exit-code exits with code 1 if build failed</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1698,12 +1828,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>normally exits with code 0 if build queued</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1714,12 +1845,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build created</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1730,12 +1862,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build queued</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1746,12 +1879,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build received</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1762,12 +1896,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with -p exits with code 1 if build started</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1778,12 +1913,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build created</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1794,12 +1930,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build queued</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1810,12 +1947,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build received</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1826,12 +1964,13 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>with --fail-pending exits with code 1 if build started</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
   err: new stream.PassThrough(),
 };
-const allArgs = RUNTIME_ARGS.concat(args);
+const allArgs = [...RUNTIME_ARGS, ...args];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, expectCode);
@@ -1842,6 +1981,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>-q exits without printing state</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1849,7 +1989,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat(arg);
+const allArgs = [...RUNTIME_ARGS, arg];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -1862,6 +2002,7 @@ travisStatus.yield(
   apiResponses.repo({ state: &#x27;failed&#x27; }),
 );</code></pre></dd>
         <dt>--quiet exits without printing state</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1869,7 +2010,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat(arg);
+const allArgs = [...RUNTIME_ARGS, arg];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -1882,6 +2023,7 @@ travisStatus.yield(
   apiResponses.repo({ state: &#x27;failed&#x27; }),
 );</code></pre></dd>
         <dt>prints build number and state for repo to stdout</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1891,7 +2033,10 @@ const options = {
 };
 const buildNum = 500;
 const state = &#x27;passed&#x27;;
-const allArgs = RUNTIME_ARGS.concat(isBranch ? [&#x27;--branch&#x27;] : []);
+const allArgs = [...RUNTIME_ARGS];
+if (isBranch) {
+  allArgs.push(&#x27;--branch&#x27;);
+}
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -1910,6 +2055,7 @@ travisStatus.yield(
     : apiResponses.repo({ number: buildNum, state }),
 );</code></pre></dd>
         <dt>prints build number and state for branch to stdout</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1919,7 +2065,10 @@ const options = {
 };
 const buildNum = 500;
 const state = &#x27;passed&#x27;;
-const allArgs = RUNTIME_ARGS.concat(isBranch ? [&#x27;--branch&#x27;] : []);
+const allArgs = [...RUNTIME_ARGS];
+if (isBranch) {
+  allArgs.push(&#x27;--branch&#x27;);
+}
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -1938,6 +2087,7 @@ travisStatus.yield(
     : apiResponses.repo({ number: buildNum, state }),
 );</code></pre></dd>
         <dt>prints canceled in red if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1945,7 +2095,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -1962,6 +2112,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints created in yellow if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1969,7 +2120,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -1986,6 +2137,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints errored in red if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -1993,7 +2145,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2010,6 +2162,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints failed in red if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2017,7 +2170,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2034,6 +2187,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints passed in green if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2041,7 +2195,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2058,6 +2212,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints queued in yellow if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2065,7 +2220,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2082,6 +2237,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints ready in green if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2089,7 +2245,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2106,6 +2262,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints received in yellow if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2113,7 +2270,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2130,6 +2287,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints started in yellow if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2137,7 +2295,7 @@ const options = {
   out: outStream,
   err: errStream,
 };
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.strictEqual(code, 0);
@@ -2154,6 +2312,7 @@ travisStatus.yield(
   apiResponses.repo({ state }),
 );</code></pre></dd>
         <dt>prints error messages in red if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2162,7 +2321,7 @@ const options = {
   err: errStream,
 };
 const errMsg = &#x27;super duper test error&#x27;;
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.isAtLeast(code, 1);
@@ -2174,48 +2333,56 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(new Error(errMsg));</code></pre></dd>
         <dt>returns TypeError for non-array-like args</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatusCmd({}, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\bargs\b/);
   done();
 });</code></pre></dd>
         <dt>returns RangeError for single argument</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatusCmd([&#x27;node&#x27;], (err) =&#x3E; {
   assert.instanceOf(err, RangeError);
   assert.match(err.message, /\bargs\b/);
   done();
 });</code></pre></dd>
         <dt>throws for non-function callback</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>assert.throws(
   () =&#x3E; { travisStatusCmd(RUNTIME_ARGS, {}, true); },
   TypeError,
   /\bcallback\b/,
 );</code></pre></dd>
         <dt>returns Error for non-object options</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatusCmd([], true, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions\b/);
   done();
 });</code></pre></dd>
         <dt>returns Error for non-Readable in</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatusCmd([], { in: new stream.Writable() }, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions.in\b/);
   done();
 });</code></pre></dd>
         <dt>returns Error for non-Writable out</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatusCmd([], { out: new stream.Readable() }, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions.out\b/);
   done();
 });</code></pre></dd>
         <dt>returns Error for non-Writable err</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatusCmd([], { err: new stream.Readable() }, (err) =&#x3E; {
   assert.instanceOf(err, TypeError);
   assert.match(err.message, /\boptions.err\b/);
   done();
 });</code></pre></dd>
         <dt>prints error messages in red if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2224,7 +2391,7 @@ const options = {
   err: errStream,
 };
 const errMsg = &#x27;super duper test error&#x27;;
-const allArgs = RUNTIME_ARGS.concat([&#x27;--interactive&#x27;]);
+const allArgs = [...RUNTIME_ARGS, &#x27;--interactive&#x27;];
 travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
   assert.ifError(err);
   assert.isAtLeast(code, 1);
@@ -2236,6 +2403,7 @@ travisStatusCmd(allArgs, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(new Error(errMsg));</code></pre></dd>
         <dt>prints error messages without color if not interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2255,6 +2423,7 @@ travisStatusCmd(RUNTIME_ARGS, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(new Error(errMsg));</code></pre></dd>
         <dt>prints a help message for SlugDetectionError</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const outStream = new stream.PassThrough();
 const errStream = new stream.PassThrough();
@@ -2271,10 +2440,12 @@ travisStatusCmd(RUNTIME_ARGS, options, (err, code) =&#x3E; {
 });
 travisStatus.yield(new SlugDetectionError(&#x27;oops&#x27;));</code></pre></dd>
         <dt>returns a Promise when called without a function</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const result = travisStatusCmd(RUNTIME_ARGS);
 assert(result instanceof Promise);</code></pre></dd>
         <dt>returned Promise is resolved with exit code</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const options = {
   out: new stream.PassThrough(),
@@ -2289,6 +2460,7 @@ return result.then((code) =&#x3E; {
   assert.strictEqual(code, 0);
 });</code></pre></dd>
         <dt>returned Promise is rejected with Error</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-cmd.js</dt>
         <dd><pre><code>travisStatus = sinon.stub();
 const result = travisStatusCmd(RUNTIME_ARGS, true);
 return result.then(
@@ -2301,6 +2473,7 @@ return result.then(
       <h1>TravisStatusHttp</h1>
       <dl>
         <dt>throws TypeError for non-string endpoint</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new TravisStatusHttp(true); },
@@ -2308,6 +2481,7 @@ return result.then(
   /\bendpoint\b/,
 );</code></pre></dd>
         <dt>throws TypeError for non-object options</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
         <dd><pre><code>assert.throws(
   // eslint-disable-next-line no-new
   () =&#x3E; { new TravisStatusHttp(null, true); },
@@ -2318,6 +2492,7 @@ return result.then(
           <h1>#request()</h1>
           <dl>
             <dt>accepts Travis and JSON media types by default</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const status = new TravisStatusHttp();
 request = sinon.mock()
   .once()
@@ -2333,6 +2508,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>can send custom accept header</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const testAccept = &#x27;text/plain&#x27;;
 // Note:  Testing lower case properly replaces upper
 const status =
@@ -2348,6 +2524,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>supports gzip by default</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const status = new TravisStatusHttp();
 request = sinon.mock()
   .once()
@@ -2355,8 +2532,9 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>sends User-Agent including module version by default</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const uaVersionRE = new RegExp(&#x60;node-travis-status/${
-  packageJson.version.replace(/\./g, &#x27;\\.&#x27;)}&#x60;);
+  packageJson.version.replaceAll(&#x27;.&#x27;, &#x27;\\.&#x27;)}&#x60;);
 const status = new TravisStatusHttp();
 request = sinon.mock()
   .once()
@@ -2368,6 +2546,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>can send custom user-agent header</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const testUA = &#x27;Test Agent&#x27;;
 // Note:  Testing lower case properly replaces upper
 const status =
@@ -2383,6 +2562,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>builds Authorization header from setAccessToken</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const testToken = &#x27;12345&#x27;;
 const status = new TravisStatusHttp();
 status.setAccessToken(testToken);
@@ -2396,6 +2576,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>builds quoted Authorization header from setAccessToken</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const testToken = &#x27;12345&#x22;67\\89&#x27;;
 const quotedToken = &#x27;&#x22;12345\\&#x22;67\\\\89&#x22;&#x27;;
 const status = new TravisStatusHttp();
@@ -2410,6 +2591,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>setAccessToken overrides options.headers.Authorization</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const testToken = &#x27;12345&#x27;;
 const status =
   new TravisStatusHttp(null, { headers: { Authorization: &#x27;foo&#x27; } });
@@ -2424,6 +2606,7 @@ request = sinon.mock()
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, () =&#x3E; {});
 request.verify();</code></pre></dd>
             <dt>returns errors from request</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const errTest = new Error(&#x27;Test request error&#x27;);
 const status = new TravisStatusHttp();
 request = sinon.mock().once().yields(errTest);
@@ -2432,6 +2615,7 @@ status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
 });
 request.verify();</code></pre></dd>
             <dt>returns errors for HTTP status &#x3E;= 400</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const status = new TravisStatusHttp();
 const errProps = {
   statusCode: 400,
@@ -2455,6 +2639,7 @@ status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
 });
 request.verify();</code></pre></dd>
             <dt>returns errors for non-JSON</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const status = new TravisStatusHttp();
 const errProps = {
   statusCode: 200,
@@ -2479,6 +2664,7 @@ status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
 });
 request.verify();</code></pre></dd>
             <dt>returns HTTP errors in preference to JSON</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const status = new TravisStatusHttp();
 const errProps = {
   statusCode: 400,
@@ -2501,6 +2687,7 @@ status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err) =&#x3E; {
 });
 request.verify();</code></pre></dd>
             <dt>returns body JSON without Error</dt>
+            <dt>/home/kevin/src/node-projects/travis-status/test/travis-status-http.js</dt>
             <dd><pre><code>const status = new TravisStatusHttp();
 const errProps = {
   statusCode: 200,
@@ -2516,6 +2703,7 @@ const response = new http.IncomingMessage();
 Object.assign(response, errProps);
 request = sinon.mock().once().yields(null, response, testBodyStr);
 status.request(&#x27;GET&#x27;, &#x27;/repos&#x27;, (err, body) =&#x3E; {
+  assert.ifError(err);
   assert.deepEqual(body, testBody);
 });
 request.verify();</code></pre></dd>
@@ -2527,6 +2715,7 @@ request.verify();</code></pre></dd>
       <h1>travisStatus</h1>
       <dl>
         <dt>fetches current repo without storing by default</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testResult = {};
 gitChecker = new GitStatusChecker();
@@ -2546,6 +2735,7 @@ return travisStatus().then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>fetches current repo and stores if interactive</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testResult = {};
 gitChecker = new GitStatusChecker();
@@ -2566,6 +2756,7 @@ return travisStatus({ interactive: true }).then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>fetches options.repo</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testResult = {};
 gitChecker = new GitStatusChecker();
@@ -2584,6 +2775,7 @@ return travisStatus({ repo: testSlug }).then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>fetches and stores options.storeRepo</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testResult = {};
 gitChecker = new GitStatusChecker();
@@ -2603,6 +2795,7 @@ return travisStatus({ storeRepo: testSlug }).then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>fetches options.repo, stores options.storeRepo</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testSlug2 = &#x27;baz/quux&#x27;;
 const testResult = {};
@@ -2624,6 +2817,7 @@ return travisStatus(options).then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>fetches named branch for options.branch</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testBranch = &#x27;branch1&#x27;;
 const testResult = {};
@@ -2646,6 +2840,7 @@ return travisStatus(options).then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>fetches current branch for true options.branch</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testBranch = &#x27;branch1&#x27;;
 const testResult = {};
@@ -2669,6 +2864,7 @@ return travisStatus(options).then((result) =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>resolves combined result for same commit hash</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
@@ -2713,6 +2909,7 @@ return testP.then(() =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>resolves combined result for matching commit name</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
@@ -2757,6 +2954,7 @@ return testP.then(() =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>rejects with Error for same commit hash</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
@@ -2801,6 +2999,7 @@ return testP.then(() =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>rejects with Error for matching commit name</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testHash = &#x27;692064aac95441e2dae7f1780fccc536143a0863&#x27;;
 const apiHash = isSameHash ? testHash : &#x60;${testHash.slice(0, -1)}0&#x60;;
@@ -2845,6 +3044,7 @@ return testP.then(() =&#x3E; {
   travisCheckerMock.verify();
 });</code></pre></dd>
         <dt>rejects with TypeError for non-object options</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>travisStatus(true)
     .then(
       sinon.mock().never(),
@@ -2854,12 +3054,14 @@ return testP.then(() =&#x3E; {
       },
     )</code></pre></dd>
         <dt>throws TypeError for non-function callback</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>assert.throws(
   () =&#x3E; { travisStatus({}, true); },
   TypeError,
   /\bcallback\b/,
 );</code></pre></dd>
         <dt>rejects with InvalidSlugError for invalid options.repo</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;storeSlug&#x27;).never();
@@ -2878,6 +3080,7 @@ return travisStatus({ repo: &#x27;invalid&#x27; }).then(
   },
 );</code></pre></dd>
         <dt>rejects with InvalidSlugError for invalid options.storeRepo</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;storeSlug&#x27;).never();
@@ -2896,6 +3099,7 @@ return travisStatus({ storeRepo: &#x27;invalid&#x27; }).then(
   },
 );</code></pre></dd>
         <dt>yields result to callback without returning Promise</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>const testSlug = &#x27;foo/bar&#x27;;
 const testResult = {};
 gitChecker = new GitStatusChecker();
@@ -2918,6 +3122,7 @@ const retVal = travisStatus((err, result) =&#x3E; {
 });
 assert.strictEqual(retVal, undefined);</code></pre></dd>
         <dt>yields Error to callback without returning Promise</dt>
+        <dt>/home/kevin/src/node-projects/travis-status/test/travis-status.js</dt>
         <dd><pre><code>gitChecker = new GitStatusChecker();
 const gitCheckerMock = sinon.mock(gitChecker);
 gitCheckerMock.expects(&#x27;storeSlug&#x27;).never();

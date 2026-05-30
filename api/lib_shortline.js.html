@@ -44,24 +44,23 @@ const EOF_MESSAGE = 'The input stream is exhausted.';
  * This class is intended to be similar to {@link http://highline.rubyforge.org
  * Highline}, although it is currently missing nearly all of its functionality.
  *
- * @constructor
+ * @class
  * @param {{
- *  input: stream.Readable|undefined,
- *  output: stream.Writable|undefined
+ *  input: module:stream.Readable|undefined,
+ *  output: module:stream.Writable|undefined
  * }=} options Options to control the input source and output destination.
  */
 function Shortline(options) {
-  const self = this;
-
-  self._input = (options &amp;&amp; options.input) || process.stdin;
-  self._output = (options &amp;&amp; options.output) || process.stderr;
+  this._input = (options &amp;&amp; options.input) || process.stdin;
+  this._output = (options &amp;&amp; options.output) || process.stderr;
 
   /** Most recent error emitted by the input stream.
+   *
    * @type {Error}
    */
-  self.inputError = null;
-  self._input.on('end', () => {
-    self.inputError = new EOFError(EOF_MESSAGE);
+  this.inputError = undefined;
+  this._input.on('end', () => {
+    this.inputError = new EOFError(EOF_MESSAGE);
   });
   // Note:  Can't listen for 'error' since it changes behavior if there are no
   // other listeners.  Listen for it only when reading from input (since that
@@ -70,7 +69,7 @@ function Shortline(options) {
 
 /** Options for {@link Shortline#ask}.
  *
- * @ template ReturnType
+ * @template ReturnType
  * @typedef {{
  *  convert: ((function(string): ReturnType)|undefined),
  *  default: string|undefined,
@@ -93,9 +92,10 @@ function Shortline(options) {
 
 /** Asks the user a "yes or no" question.
  *
+ * @template ReturnType
  * @param {string} question Question to ask the user.
- * @param {ShortlineAskOptions=} options Options.
- * @return {!Promise&lt;ReturnType>} Promise with result of
+ * @param {ShortlineAskOptions&lt;ReturnType>=} options Options.
+ * @returns {!Promise&lt;ReturnType>} Promise with result of
  * &lt;code>options.convert&lt;/code> applied to the user-entered text, or Error.
  * @private
  */
@@ -104,7 +104,7 @@ Shortline.prototype.agree = function agree(question, options) {
     convert: function agreeToBoolean(answer) {
       return answer.charAt(0).toLowerCase() === 'y';
     },
-    validate: /^y(?:es)?|no?$/i,
+    validate: /no?$|^y(?:es)?/i,
     ...options,
   };
   options.responses = {
@@ -116,28 +116,24 @@ Shortline.prototype.agree = function agree(question, options) {
 
 /** Asks the user to provide input.
  *
- * @ template ReturnType
+ * @template ReturnType
  * @param {string} question Question to ask the user.
  * @param {ShortlineAskOptions=} options Options.
- * @return {!Promise&lt;ReturnType>} Promise with result of
+ * @returns {!Promise&lt;ReturnType>} Promise with result of
  * &lt;code>options.convert&lt;/code> applied to the user-entered text, or Error.
  * @private
  */
 Shortline.prototype.ask = function ask(question, options) {
-  const self = this;
-  options = options || {};
+  options ||= {};
 
   let fullQuestion = question;
   if (options.default) {
-    fullQuestion = question.replace(
-      /\s*$/,
-      (padding) => ` |${options.default}|${padding || ' '}`,
-    );
+    fullQuestion = `${question.trimEnd()} |${options.default}| `;
   }
 
-  return self.prompt(fullQuestion).then((answer) => {
+  return this.prompt(fullQuestion).then((answer) => {
     if (options.default) {
-      answer = answer || options.default;
+      answer ||= options.default;
     }
 
     if (options.trim) {
@@ -146,12 +142,10 @@ Shortline.prototype.ask = function ask(question, options) {
 
     if (options.validate &amp;&amp; !options.validate.test(answer)) {
       let response = options.responses &amp;&amp; options.responses.notValid;
-      if (!response) {
-        response = `Your answer isn't valid (must match ${
-          options.validate.source}).`;
-      }
-      self._output.write(`${response}\n`);
-      return self.ask(question, options);
+      response ||= `Your answer isn't valid (must match ${
+        options.validate.source}).`;
+      this._output.write(`${response}\n`);
+      return this.ask(question, options);
     }
 
     if (options.convert) {
@@ -166,24 +160,23 @@ Shortline.prototype.ask = function ask(question, options) {
  * trimming.
  *
  * @param {string} text Text with which to prompt the user.
- * @return {!Promise&lt;string>} Promise with user-entered text up to (but not
+ * @returns {!Promise&lt;string>} Promise with user-entered text up to (but not
  * including) the first newline or Error.
  * @private
  */
 Shortline.prototype.prompt = function prompt(text) {
-  const self = this;
-  const input = self._input;
-  const output = self._output;
+  const input = this._input;
+  const output = this._output;
 
   output.write(text);
 
-  if (self.inputError) {
-    return Promise.reject(self.inputError);
+  if (this.inputError) {
+    return Promise.reject(this.inputError);
   }
 
-  function onError(err) {
-    self.inputError = err;
-  }
+  const onError = (err) => {
+    this.inputError = err;
+  };
   input.once('error', onError);
   return readTo(input, '\n').then(
     (result) => {
@@ -213,13 +206,13 @@ module.exports = Shortline;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-travis-status.html">travis-status</a></li></ul><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Apr 02 2020 10:17:21 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 16:10:46 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

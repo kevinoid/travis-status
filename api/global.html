@@ -153,7 +153,7 @@ From lib/travis/client/states.rb#color.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_state-info.js.html">lib/state-info.js</a>, <a href="lib_state-info.js.html#line13">line 13</a>
+        <a href="lib_state-info.js.html">lib/state-info.js</a>, <a href="lib_state-info.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -226,7 +226,7 @@ From lib/travis/client/states.rb#pending?.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_state-info.js.html">lib/state-info.js</a>, <a href="lib_state-info.js.html#line30">line 30</a>
+        <a href="lib_state-info.js.html">lib/state-info.js</a>, <a href="lib_state-info.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
@@ -299,7 +299,7 @@ From lib/travis/client/states.rb#unsuccessful?.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_state-info.js.html">lib/state-info.js</a>, <a href="lib_state-info.js.html#line42">line 42</a>
+        <a href="lib_state-info.js.html">lib/state-info.js</a>, <a href="lib_state-info.js.html#line45">line 45</a>
     </li></ul></dd>
     
 
@@ -327,7 +327,7 @@ From lib/travis/client/states.rb#unsuccessful?.
     
 
     
-    <h4 class="name" id="checkBuildCommit"><span class="type-signature"></span>checkBuildCommit<span class="signature">(build<span class="signature-attributes">non-null</span>, localCommit<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Object}</span></h4>
+    <h4 class="name" id="TravisStatusHttp"><span class="type-signature"></span>TravisStatusHttp<span class="signature">(endpoint<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -335,204 +335,16 @@ From lib/travis/client/states.rb#unsuccessful?.
 
 
 <div class="description">
-    Checks that a build has an expected commit hash.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>build</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Build (or branch) object returned
-by the Travis CI API.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>localCommit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Expected commit
-information.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Throws:</h5>
-
-        
-
-    <div class="param-desc">
-    
-        AssertionError If <code>build.commit.sha</code> is not equal to
-<code>expected</code>.
-    
-    </div>
-
-
-    
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <code>build</code>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="travisStatus"><span class="type-signature"></span>travisStatus<span class="signature">(options<span class="signature-attributes">opt, nullable</span>, callback<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"> &rarr; {!Promise.&lt;!Object>|undefined}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Gets the current Travis CI status of a repo/branch.
+    Creates an instance of the travis-ci HTTP agent with a given endpoint
+and request options.
+
+This class has the following features above <code>TravisHttp</code>:
+- Uses a newer version of request (for gzip and proxy support)
+- Supports caller-specified API endpoints (e.g. for enterprise or local use)
+- Supports caller-specified request options (e.g. pooling, strictSSL, proxy,
+  tunnel, timeouts, etc.)
+- Improved error values which are real Error instances and include the
+  HTTP response information, regardless of content.
 </div>
 
 
@@ -570,13 +382,13 @@ information.</td>
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>endpoint</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">TravisStatusOptions</span>
+<span class="param-type">string</span>
 
 
             
@@ -589,8 +401,6 @@ information.</td>
                 
 
                 
-                    &lt;nullable><br>
-                
 
                 
                 </td>
@@ -598,20 +408,21 @@ information.</td>
 
             
 
-            <td class="description last">Options.</td>
+            <td class="description last">Travis CI API endpoint (base URL).
+(default: module:travis-status.TravisStatusChecker.ORG_URI)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>callback</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">object</span>
 
 
             
@@ -624,8 +435,6 @@ information.</td>
                 
 
                 
-                    &lt;nullable><br>
-                
 
                 
                 </td>
@@ -633,9 +442,8 @@ information.</td>
 
             
 
-            <td class="description last">Callback function called
-with the current build information from the Travis CI API, or an
-<code>Error</code> if it could not be retrieved.</td>
+            <td class="description last">Options to pass to the <code>request</code>
+constructor.</td>
         </tr>
 
     
@@ -676,7 +484,7 @@ with the current build information from the Travis CI API, or an
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line92">line 92</a>
+        <a href="lib_travis-status-http.js.html">lib/travis-status-http.js</a>, <a href="lib_travis-status-http.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -701,34 +509,6 @@ with the current build information from the Travis CI API, or an
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    If <code>callback</code> is not given,
-a <code>Promise</code> with the current build information from the Travis CI
-API, or <code>Error</code> if it could not be retrieved.
-Otherwise <code>undefined</code>.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">!Promise.&lt;!Object></span>
-|
-
-<span class="param-type">undefined</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -823,7 +603,7 @@ Otherwise <code>undefined</code>.
             <td class="type">
             
                 
-<span class="param-type">CommandOptions</span>
+<span class="param-type"><a href="global.html#CommandOptions">CommandOptions</a></span>
 
 
             
@@ -878,7 +658,8 @@ Otherwise <code>undefined</code>.
 
             
 
-            <td class="description last">Callback for the exit code or an <code>Error</code>.</td>
+            <td class="description last">Callback for the exit code or
+an <code>Error</code>.</td>
         </tr>
 
     
@@ -919,7 +700,7 @@ Otherwise <code>undefined</code>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bin_travis-status.js.html">bin/travis-status.js</a>, <a href="bin_travis-status.js.html#line56">line 56</a>
+        <a href="bin_travis-status.js.html">bin/travis-status.js</a>, <a href="bin_travis-status.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -981,199 +762,6 @@ a <code>Promise</code> with the exit code or <code>Error</code>.
     
 
     
-    <h4 class="name" id="TravisStatusHttp"><span class="type-signature"></span>TravisStatusHttp<span class="signature">(endpoint<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Creates an instance of the travis-ci HTTP agent with a given endpoint
-and request options.
-
-This class has the following features above <code>TravisHttp</code>:
-- Uses a newer version of request (for gzip and proxy support)
-- Supports caller-specified API endpoints (e.g. for enterprise or local use)
-- Supports caller-specified request options (e.g. pooling, strictSSL, proxy,
-  tunnel, timeouts, etc.)
-- Improved error values which are real Error instances and include the
-  HTTP response information, regardless of content.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>endpoint</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Travis CI API endpoint (base URL).
-(default: <a href="TravisStatusChecker.html#.ORG_URI">TravisStatusChecker.ORG_URI</a>)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Options to pass to the <code>request</code>
-constructor.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_travis-status-http.js.html">lib/travis-status-http.js</a>, <a href="lib_travis-status-http.js.html#line42">line 42</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
     <h4 class="name" id="trimSlash"><span class="type-signature"></span>trimSlash<span class="signature">(string)</span><span class="type-signature"> &rarr; {ArgType}</span></h4>
     
 
@@ -1183,7 +771,6 @@ constructor.</td>
 
 <div class="description">
     Trims a single slash from the end of a string, if present.
-@ template ArgType
 </div>
 
 
@@ -1276,7 +863,7 @@ constructor.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_trim-slash.js.html">lib/trim-slash.js</a>, <a href="lib_trim-slash.js.html#line16">line 16</a>
+        <a href="lib_trim-slash.js.html">lib/trim-slash.js</a>, <a href="lib_trim-slash.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -1335,6 +922,1034 @@ Otherwise, <code>string</code> unmodified.
     
 
     
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id="CommandOptions">CommandOptions</h4>
+
+
+
+
+<div class="description">
+    Options for command entry points.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>in</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">module:stream.Readable</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Stream from which input is read.
+(default: <code>process.stdin</code>)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">module:stream.Writable</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Stream to which output is written.
+(default: <code>process.stdout</code>)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">module:stream.Writable</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Stream to which errors (and
+non-output status messages) are written.
+(default: <code>process.stderr</code>)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="bin_travis-status.js.html">bin/travis-status.js</a>, <a href="bin_travis-status.js.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="GitStatusCheckerOptions">GitStatusCheckerOptions</h4>
+
+
+
+
+<div class="description">
+    Options for <a href="GitStatusChecker.html">GitStatusChecker</a>.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">module:stream.Writable</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Stream to which errors (and
+non-output status messages) are written.
+(default: <code>process.stderr</code>)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>in</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">module:stream.Readable</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Stream from which input is read.
+(default: <code>process.stdin</code>)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interactive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Be interactive and colorful</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>out</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">module:stream.Writable</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Stream to which output is written.
+(default: <code>process.stdout</code>)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_git-status-checker.js.html">lib/git-status-checker.js</a>, <a href="lib_git-status-checker.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="ShortlineAskOptions">ShortlineAskOptions</h4>
+
+
+
+
+<div class="description">
+    Options for Shortline#ask.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>convert</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Type conversion used to
+create the return value from the trimmed and validated user input.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>default</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Default value used in place of empty user input.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>responses</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Responses to various user
+input.  <code>notValid</code> is printed if the input does not validate.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>trim</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Right-trim user input?</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Prompt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">RegExp</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">repeatedly until the trimmed user input matches a
+given RegExp.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_shortline.js.html">lib/shortline.js</a>, <a href="lib_shortline.js.html#line42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="TravisStatusCheckerOptions">TravisStatusCheckerOptions</h4>
+
+
+
+
+<div class="description">
+    Options for <a href="TravisStatusChecker.html">TravisStatusChecker</a>.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>apiEndpoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Travis API server to talk to</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>requestOpts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Options for Travis CI API requests (suitable
+for the <a href="https://www.npmjs.com/package/request">request module</a>).
+Callers are encouraged to pass the <code>agent</code> or
+<code>forever</code> options to leverage TCP keep-alive across requests.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>token</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">access token to use for Travis CI API requests</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_travis-status-checker.js.html">lib/travis-status-checker.js</a>, <a href="lib_travis-status-checker.js.html#line30">line 30</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id="TravisStatusQueryOptions">TravisStatusQueryOptions</h4>
+
+
+
+
+<div class="description">
+    Options for <a href="global.html#TravisStatusQueryOptions">TravisStatusQueryOptions</a>.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>wait</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The maximum amount of time during which to retry
+while the response is pending (in milliseconds). (default: no retry)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_travis-status-checker.js.html">lib/travis-status-checker.js</a>, <a href="lib_travis-status-checker.js.html#line80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+    
 
     
 </article>
@@ -1347,13 +1962,13 @@ Otherwise, <code>string</code> unmodified.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-travis-status.html">travis-status</a></li></ul><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Apr 02 2020 10:17:21 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 16:10:46 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

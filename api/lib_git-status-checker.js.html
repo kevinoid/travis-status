@@ -33,19 +33,21 @@
 
 'use strict';
 
-const Chalk = require('chalk').Instance;
-const util = require('util');
+const { debuglog } = require('node:util');
 
-const InvalidSlugError = require('./invalid-slug-error');
-const Shortline = require('./shortline');
-const SlugDetectionError = require('./slug-detection-error');
-const git = require('./git');
+const { Chalk } = require('chalk'); // eslint-disable-line unicorn/import-style
 
-const debug = util.debuglog('travis-status:git-status-checker');
+const git = require('./git.js');
+const InvalidSlugError = require('./invalid-slug-error.js');
+const Shortline = require('./shortline.js');
+const SlugDetectionError = require('./slug-detection-error.js');
+
+const debug = debuglog('travis-status:git-status-checker');
 
 /** Gets the right-trimmed stdout result of &lt;code>execFileP&lt;/code>.
+ *
  * @param {!Array&lt;string>} result Result Array from &lt;code>execFileP&lt;/code>
- * @return {string} The first element of &lt;code>result&lt;/code>, right-trimed.
+ * @returns {string} The first element of &lt;code>result&lt;/code>, right-trimed.
  * @private
  */
 function getTrimmedStdout(result) {
@@ -55,24 +57,25 @@ function getTrimmedStdout(result) {
 /** Options for {@link GitStatusChecker}.
  *
  * @typedef {{
- *   err: stream.Writable|undefined,
- *   in: stream.Readable|undefined,
+ *   err: module:stream.Writable|undefined,
+ *   in: module:stream.Readable|undefined,
  *   interactive: boolean|undefined,
- *   out: stream.Writable|undefined
+ *   out: module:stream.Writable|undefined
  * }} GitStatusCheckerOptions
- * @property {stream.Writable=} err Stream to which errors (and non-output
- * status messages) are written. (default: &lt;code>process.stderr&lt;/code>)
- * @property {stream.Readable=} in Stream from which input is read. (default:
- * &lt;code>process.stdin&lt;/code>)
+ * @property {module:stream.Writable=} err Stream to which errors (and
+ * non-output status messages) are written.
+ * (default: &lt;code>process.stderr&lt;/code>)
+ * @property {module:stream.Readable=} in Stream from which input is read.
+ * (default: &lt;code>process.stdin&lt;/code>)
  * @property {boolean=} interactive Be interactive and colorful
- * @property {stream.Writable=} out Stream to which output is written.
+ * @property {module:stream.Writable=} out Stream to which output is written.
  * (default: &lt;code>process.stdout&lt;/code>)
  */
 // var GitStatusCheckerOptions;
 
 /** Creates a status checker for the current git repository.
  *
- * @constructor
+ * @class
  * @param {GitStatusCheckerOptions=} options Options.
  */
 function GitStatusChecker(options) {
@@ -108,7 +111,8 @@ function GitStatusChecker(options) {
 }
 
 /** Message returned when the repository slug is invalid.
- * @const
+ *
+ * @constant
  */
 GitStatusChecker.SLUG_INVALID =
   'GitHub repo name is invalid, it should be on the form \'owner/repo\'';
@@ -117,18 +121,21 @@ GitStatusChecker.SLUG_INVALID =
  * Note:  travis.rb only checks for a '/' character, but GitHub currently
  * requires only ASCII letters, numbers, '.', and '-'.  Choose a middle ground
  * which catches likely erroneous names.
- * @const
+ *
+ * @constant
  */
 GitStatusChecker.SLUG_VALID_RE = /^[^\s/]+\/[^\s/]+$/;
 
 /** Git configuration option name in which the Travis CI slug is stored.
- * @const
+ *
+ * @constant
  */
 GitStatusChecker.SLUG_CONFIG_NAME = 'travis.slug';
 
 /** Checks that a repository slug has the correct format.
+ *
  * @param {string} slug Slug to check.
- * @return {string} &lt;code>slug&lt;/code>.
+ * @returns {string} &lt;code>slug&lt;/code>.
  * @throws {InvalidSlugError} If &lt;code>slug&lt;/code> does not have the correct
  * format.
  * @private
@@ -143,9 +150,10 @@ GitStatusChecker.checkSlugFormat = function checkSlugFormat(slug) {
 };
 
 /** Resolves a named git commit to its hash id.
+ *
  * @param {string} commitName Name of the commit (branch, tag, etc.) for which
  * to get the hash.  Can be a hash, which resolves to itself.
- * @return {!Promise&lt;string>} Hash for &lt;code>commitName&lt;/code>, or Error if
+ * @returns {!Promise&lt;string>} Hash for &lt;code>commitName&lt;/code>, or Error if
  * &lt;code>commitName&lt;/code> does not name a commit.
  * @private
  */
@@ -156,8 +164,9 @@ GitStatusChecker.prototype.resolveHash = function resolveHash(commitName) {
 
 /** Stores a repository slug as &lt;code>travis.slug&lt;/code> in the local git
  * config.
+ *
  * @param {string} slug Slug to store.
- * @return {!Promise&lt;string>} Promise with &lt;code>slug&lt;/code>.
+ * @returns {!Promise&lt;string>} Promise with &lt;code>slug&lt;/code>.
  * @private
  */
 GitStatusChecker.prototype.storeSlug = function storeSlug(slug) {
@@ -173,8 +182,9 @@ GitStatusChecker.prototype.storeSlug = function storeSlug(slug) {
 
 /** Tries to store a repository slug as &lt;code>travis.slug&lt;/code> in the local
  * git config, prints an error on failure.
+ *
  * @param {string} slug Slug to store.
- * @return {!Promise&lt;string>} Promise with &lt;code>slug&lt;/code>, never
+ * @returns {!Promise&lt;string>} Promise with &lt;code>slug&lt;/code>, never
  * &lt;code>Error&lt;/code>.
  * @private
  */
@@ -188,8 +198,9 @@ GitStatusChecker.prototype.tryStoreSlug = function tryStoreSlug(slug) {
 };
 
 /** Prompts the user to confirm that a repository slug is correct.
+ *
  * @param {string} slug Slug to prompt about.
- * @return {!Promise&lt;string>} Promise with correct &lt;code>slug&lt;/code>.
+ * @returns {!Promise&lt;string>} Promise with correct &lt;code>slug&lt;/code>.
  * @private
  */
 GitStatusChecker.prototype.confirmSlug = function confirmSlug(slug) {
@@ -219,7 +230,8 @@ GitStatusChecker.prototype.confirmSlug = function confirmSlug(slug) {
 };
 
 /** Detects the current branch the current repository.
- * @return {!Promise&lt;string>} The name of the current branch in the current
+ *
+ * @returns {!Promise&lt;string>} The name of the current branch in the current
  * repository, or Error.
  * @private
  */
@@ -230,34 +242,35 @@ GitStatusChecker.prototype.detectBranch = function detectBranch() {
       (err) => {
         const errMsg = `Unable to determine current branch: ${
           err.stderr || 'detached HEAD'}`;
-        return Promise.reject(new Error(errMsg));
+        throw new Error(errMsg);
       },
     );
 };
 
 /** Gets the pathname portion of a git URL.
+ *
  * @param {string} gitUrl Git URL to parse.
- * @return {string} Pathname portion of the URL.
+ * @returns {string} Pathname portion of the URL.
  * @private
  */
 function gitUrlPathname(gitUrl) {
   // Strip explicit transport from "foreign URL"
   // See https://git-scm.com/docs/git-remote-helpers
   // Matches parsing in transport_get in transport.c
-  gitUrl = gitUrl.replace(/^([A-Za-z0-9][A-Za-z0-9+.-]*)::/, '');
+  gitUrl = gitUrl.replace(/^[A-Za-z0-9][A-Za-z0-9+.-]*::/, '');
 
   // Try parsing as a typical URL
   try {
     return new URL(gitUrl).pathname;
-  } catch (err) {
+  } catch {
     // Invalid URL, continue
   }
 
   // Try SCP-like syntax.  Host can be wrapped in [] to disambiguate path.
   // See parse_connect_url and host_end in connect.c
-  const scpParts = /^([^@/]+)@(\[[^]\/]+\]|[^:/]+):(.*)$/.exec(gitUrl);
+  const scpParts = /^[^@/]+@(?:\[[\s\S]\/\]{2,}|[^:/]+):(.*)$/.exec(gitUrl);
   if (scpParts) {
-    return scpParts[3];
+    return scpParts[1];
   }
 
   // Assume URL is a local path
@@ -265,11 +278,11 @@ function gitUrlPathname(gitUrl) {
 }
 
 /** Detects the repository slug for the current repository.
- * @return {!Promise&lt;string>} The slug value for the current repository.
+ *
+ * @returns {!Promise&lt;string>} The slug value for the current repository.
  * @private
  */
 GitStatusChecker.prototype.detectSlug = function detectSlug() {
-  const self = this;
   const slugP = this.detectBranch()
     .then((branch) => {
       const configName = `branch.${branch}.remote`;
@@ -285,15 +298,15 @@ GitStatusChecker.prototype.detectSlug = function detectSlug() {
       .then((remoteUrl) => {
         // ls-remote prints its argument when it doesn't have a URL
         if (remoteUrl === remoteName) {
-          return Promise.reject(new SlugDetectionError(
+          throw new SlugDetectionError(
             `No URL for '${remoteName}' remote`,
-          ));
+          );
         }
         return remoteUrl;
       }))
     .then((remoteUrl) => {
       const path = gitUrlPathname(remoteUrl);
-      const match = /([^/]+\/[^/]+?)(?:\/?\.git)?$/.exec(path);
+      const match = /^\/?([^/]+\/[^/]+?)(?:\/?\.git)?$/.exec(path);
       return match
         ? match[1]
         : Promise.reject(new SlugDetectionError(
@@ -302,18 +315,19 @@ GitStatusChecker.prototype.detectSlug = function detectSlug() {
     });
 
   return slugP.then((slug) => {
-    if (self._options.interactive) {
-      return self.confirmSlug(slug);
+    if (this._options.interactive) {
+      return this.confirmSlug(slug);
     }
 
-    self._options.err.write(`detected repository as ${
-      self._chalk.bold(slug)}\n`);
+    this._options.err.write(`detected repository as ${
+      this._chalk.bold(slug)}\n`);
     return slug;
   });
 };
 
 /** Loads the repository slug from &lt;code>travis.slug&lt;/code> in the git config.
- * @return {!Promise&lt;?string>} The slug value for the current repository, or
+ *
+ * @returns {!Promise&lt;?string>} The slug value for the current repository, or
  * &lt;code>null&lt;/code> if not configured.
  * @private
  */
@@ -322,6 +336,8 @@ GitStatusChecker.prototype.loadSlug = function loadSlug() {
     .then(
       getTrimmedStdout,
       // git config exits with code 1 if the configuration value is not set
+      // Note: Use null to preserve current API.
+      // eslint-disable-next-line unicorn/no-null
       (err) => (err.code === 1 ? null : Promise.reject(err)),
     );
 };
@@ -329,20 +345,19 @@ GitStatusChecker.prototype.loadSlug = function loadSlug() {
 /** Finds the repository slug for the current repository by either loading it
  * from the stored configuration or detecting it from the current repository,
  * stores it if confirmed interactively.
- * @return {!Promise&lt;string>} The slug value for the current repository.
+ *
+ * @returns {!Promise&lt;string>} The slug value for the current repository.
  * @private
  */
 GitStatusChecker.prototype.findSlug = function findSlug() {
-  const self = this;
   return this.loadSlug().then((slug) => {
     if (slug) {
       return slug;
     }
 
-    return self.detectSlug();
+    return this.detectSlug();
   });
 };
-
 
 module.exports = GitStatusChecker;
 </code></pre>
@@ -355,13 +370,13 @@ module.exports = GitStatusChecker;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-travis-status.html">travis-status</a></li></ul><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Apr 02 2020 10:17:21 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 16:10:46 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -27,28 +27,31 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @copyright Copyright 2016 Kevin Locke &lt;kevin@kevinlocke.name>
+ * @copyright Copyright 2016-2020 Kevin Locke &lt;kevin@kevinlocke.name>
  * @license MIT
+ * @module travis-status
  */
 
 'use strict';
 
-const assert = require('assert');
-const http = require('http');
-const https = require('https');
+const assert = require('node:assert');
+const http = require('node:http');
+const https = require('node:https');
+
 const nodeify = require('promise-nodeify');
 
-const GitStatusChecker = require('./lib/git-status-checker');
-const TravisStatusChecker = require('./lib/travis-status-checker');
+const GitStatusChecker = require('./lib/git-status-checker.js');
+const TravisStatusChecker = require('./lib/travis-status-checker.js');
 
 /** Checks that a build has an expected commit hash.
+ *
  * @param {!{commit:!{sha: string}}} build Build (or branch) object returned
  * by the Travis CI API.
  * @param {!{sha: string, name: ?string}} localCommit Expected commit
  * information.
- * @return {!Object} &lt;code>build&lt;/code>
- * @throws AssertionError If &lt;code>build.commit.sha&lt;/code> is not equal to
- * &lt;code>expected&lt;/code>.
+ * @returns {!object} &lt;code>build&lt;/code>
+ * @throws {module:assert.AssertionError} If &lt;code>build.commit.sha&lt;/code> is
+ * not equal to &lt;code>expected&lt;/code>.
  */
 function checkBuildCommit(build, localCommit) {
   const buildCommit = build.commit;
@@ -72,11 +75,11 @@ function checkBuildCommit(build, localCommit) {
  *   apiEndpoint: string|undefined,
  *   branch: string|boolean|undefined,
  *   commit: string|undefined,
- *   err: stream.Writable|undefined,
- *   in: stream.Readable|undefined,
- *   out: stream.Writable|undefined,
+ *   err: module:stream.Writable|undefined,
+ *   in: module:stream.Readable|undefined,
+ *   out: module:stream.Writable|undefined,
  *   repo: string|undefined,
- *   requestOpts: Object|undefined,
+ *   requestOpts: object|undefined,
  *   storeRepo: string|undefined,
  *   token: string|undefined,
  *   wait: number|undefined
@@ -86,15 +89,16 @@ function checkBuildCommit(build, localCommit) {
  * @property {(string|boolean)=} branch query latest build for named branch,
  * or the current branch
  * @property {string=} commit require build to be for a specific commit
- * @property {stream.Writable=} err Stream to which errors (and non-output
- * status messages) are written. (default: &lt;code>process.stderr&lt;/code>)
- * @property {stream.Readable=} in Stream from which input is read. (default:
- * &lt;code>process.stdin&lt;/code>)
- * @property {stream.Writable=} out Stream to which output is written.
+ * @property {module:stream.Writable=} err Stream to which errors (and
+ * non-output status messages) are written.
+ * (default: &lt;code>process.stderr&lt;/code>)
+ * @property {module:stream.Readable=} in Stream from which input is read.
+ * (default: &lt;code>process.stdin&lt;/code>)
+ * @property {module:stream.Writable=} out Stream to which output is written.
  * (default: &lt;code>process.stdout&lt;/code>)
  * @property {string=} repo repository to use (default: will try to detect from
  * current git clone)
- * @property {Object=} requestOpts Options for Travis CI API requests (suitable
+ * @property {object=} requestOpts Options for Travis CI API requests (suitable
  * for the {@link https://www.npmjs.com/package/request request module}).
  * Callers are encouraged to pass the &lt;code>agent&lt;/code> or
  * &lt;code>forever&lt;/code> options to leverage TCP keep-alive across requests.
@@ -109,10 +113,10 @@ function checkBuildCommit(build, localCommit) {
 /** Gets the current Travis CI status of a repo/branch.
  *
  * @param {?TravisStatusOptions=} options Options.
- * @param {?function(Error, Object=)=} callback Callback function called
+ * @param {?function(Error, object=)=} callback Callback function called
  * with the current build information from the Travis CI API, or an
  * &lt;code>Error&lt;/code> if it could not be retrieved.
- * @return {!Promise&lt;!Object>|undefined} If &lt;code>callback&lt;/code> is not given,
+ * @returns {!Promise&lt;!object>|undefined} If &lt;code>callback&lt;/code> is not given,
  * a &lt;code>Promise&lt;/code> with the current build information from the Travis CI
  * API, or &lt;code>Error&lt;/code> if it could not be retrieved.
  * Otherwise &lt;code>undefined&lt;/code>.
@@ -120,7 +124,7 @@ function checkBuildCommit(build, localCommit) {
 function travisStatus(options, callback) {
   if (!callback &amp;&amp; typeof options === 'function') {
     callback = options;
-    options = null;
+    options = undefined;
   }
 
   if (callback &amp;&amp; typeof callback !== 'function') {
@@ -132,7 +136,7 @@ function travisStatus(options, callback) {
     if (options &amp;&amp; typeof options !== 'object') {
       throw new TypeError('options must be an object');
     }
-    options = options || {};
+    options ||= {};
 
     if (options.repo) {
       GitStatusChecker.checkSlugFormat(options.repo);
@@ -146,25 +150,23 @@ function travisStatus(options, callback) {
     // function, but not after completion, which callers may not expect.
     let { requestOpts } = options;
     if (!requestOpts
-        || (requestOpts.agent === undefined
-         &amp;&amp; requestOpts.agentClass === undefined
-         &amp;&amp; requestOpts.agentOptions === undefined
-         &amp;&amp; requestOpts.forever === undefined
-         &amp;&amp; requestOpts.pool === undefined)) {
+      || (requestOpts.agent === undefined
+        &amp;&amp; requestOpts.agentClass === undefined
+        &amp;&amp; requestOpts.agentOptions === undefined
+        &amp;&amp; requestOpts.forever === undefined
+        &amp;&amp; requestOpts.pool === undefined)) {
       const apiUrl =
         new URL(options.apiEndpoint || TravisStatusChecker.ORG_URI);
       const Agent = apiUrl.protocol === 'https:' ? https.Agent
         : apiUrl.protocol === 'http:' ? http.Agent
-          : null;
+          : undefined;
       if (Agent) {
         agent = new Agent({ keepAlive: true });
         // .destroy() and keepAlive added to Agent in 0.11.4, nodejs@9fc9b874
         // If Agent doesn't support keepAlive/destroy, we don't need/want it.
         if (typeof agent.destroy === 'function') {
-          requestOpts = { ...requestOpts };
-          requestOpts.agent = agent;
-          options = { ...options };
-          options.requestOpts = requestOpts;
+          requestOpts = { ...requestOpts, agent };
+          options = { ...options, requestOpts };
         } else {
           agent = undefined;
         }
@@ -254,7 +256,7 @@ function travisStatus(options, callback) {
   if (agent) {
     cleanupP = checkedResultP.then(
       (result) => { agent.destroy(); return result; },
-      (err) => { agent.destroy(); return Promise.reject(err); },
+      (err) => { agent.destroy(); throw err; },
     );
   } else {
     cleanupP = checkedResultP;
@@ -278,13 +280,13 @@ module.exports.TravisStatusChecker = TravisStatusChecker;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#checkBuildCommit">checkBuildCommit</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatus">travisStatus</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-travis-status.html">travis-status</a></li></ul><h3>Classes</h3><ul><li><a href="GitStatusChecker.html">GitStatusChecker</a></li><li><a href="InvalidSlugError.html">InvalidSlugError</a></li><li><a href="Shortline.html">Shortline</a></li><li><a href="SlugDetectionError.html">SlugDetectionError</a></li><li><a href="TravisStatusChecker.html">TravisStatusChecker</a></li></ul><h3>Global</h3><ul><li><a href="global.html#TravisStatusHttp">TravisStatusHttp</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#isPending">isPending</a></li><li><a href="global.html#isUnsuccessful">isUnsuccessful</a></li><li><a href="global.html#travisStatusCmd">travisStatusCmd</a></li><li><a href="global.html#trimSlash">trimSlash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Apr 02 2020 10:17:21 GMT-0600 (Mountain Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Sat May 30 2026 16:10:46 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
