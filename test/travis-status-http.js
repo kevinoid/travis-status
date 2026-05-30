@@ -271,6 +271,7 @@ describe('TravisStatusHttp', () => {
       Object.assign(response, errProps);
       request = sinon.mock().once().yields(null, response, testBodyStr);
       status.request('GET', '/repos', (err, body) => {
+        assert.ifError(err);
         assert.deepEqual(body, testBody);
       });
       request.verify();
