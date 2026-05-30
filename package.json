@@ -67,7 +67,7 @@
     "@kevinoid/eslint-config": "^34.0.0",
     "ansi-styles": "^5.0.0",
     "c8": "^11.0.0",
-    "chai": "^4.0.0",
+    "chai": "^6.0.0",
     "eslint": "^9.35.0",
     "globals": "^17.0.0",
     "has-ansi": "^6.0.0",
