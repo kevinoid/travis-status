@@ -1,6 +1,6 @@
 {
   "name": "travis-status",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "An implementation of the status subcommand of The Travis Client in Node.js, with a few extra features.",
   "keywords": [
     "ci",
