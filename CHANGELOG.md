@@ -1,3 +1,22 @@
+# [6.0.0](https://github.com/kevinoid/travis-status/compare/v5.0.0...v6.0.0) (2026-05-30)
+
+### BREAKING CHANGES
+
+* **deps:** Require Node.js ^20.19 || >=22.12.
+* package.json: Declare exports ([90f33af](https://github.com/kevinoid/travis-status/commit/90f33afbd3e58c65ea2f818a8d91817548f529c0))
+
+### Bug Fixes
+
+* anchor RegExp to avoid super-linear search ([975da98](https://github.com/kevinoid/travis-status/commit/975da98bb6ce90e8cc1c8a5059eb6687a15005e3))
+* **package:** use git+https for repository.url ([50b6e64](https://github.com/kevinoid/travis-status/commit/50b6e64cef705c9d27313168bb0b06fda681a3e5))
+
+### Features
+
+* implement trusted publishing from GitHub ([6669df9](https://github.com/kevinoid/travis-status/commit/6669df9843ea86e9f674f06347580bafd9395836))
+* **deps:** bump commander from 14.0.0 to 15.0.0 ([dc42a4d](https://github.com/kevinoid/travis-status/commit/dc42a4da322064bfbcc8cdba90d09f3d6c8f1e16))
+* switch from nyc to c8 for native V8 coverage ([d72a313](https://github.com/kevinoid/travis-status/commit/d72a3136254166eda40fb56c550283758c25ac1f))
+
+
 ## [5.0.0](https://github.com/kevinoid/travis-status/compare/v4.0.1...v5.0.0) (2020-04-02)
 
 ### BREAKING CHANGES
