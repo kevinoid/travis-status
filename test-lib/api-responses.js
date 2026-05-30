@@ -13,6 +13,8 @@ const apiResponses = {};
 // Use null to match values returned by the Travis CI API
 /* eslint-disable unicorn/no-null */
 
+// Continue using assignment export convention.
+// eslint-disable-next-line unicorn/no-immediate-mutation
 apiResponses.branch = function branch(opts) {
   opts ||= {};
   const sha = opts.sha || '692064aac95441e2dae7f1780fccc536143a0863';
