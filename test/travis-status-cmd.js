@@ -7,7 +7,7 @@
 
 const stream = require('node:stream');
 
-const ansiStyles = require('ansi-styles');
+const { default: ansiStyles } = require('ansi-styles');
 const { assert } = require('chai');
 const hasAnsi = require('has-ansi');
 const proxyquire = require('proxyquire');
