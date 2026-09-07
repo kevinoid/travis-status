@@ -24,7 +24,7 @@ const { Chalk } = require('chalk'); // eslint-disable-line unicorn/import-style
 const { Command } = require('commander');
 
 // https://github.com/import-js/eslint-plugin-import/issues/2844
-// eslint-disable-next-line import/extensions
+// eslint-disable-next-line import-x/extensions
 const travisStatus = require('..');
 const {
   colors: stateColors,

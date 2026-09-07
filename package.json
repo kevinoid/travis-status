@@ -65,11 +65,11 @@
     "travis-ci": "2.2.0"
   },
   "devDependencies": {
-    "@kevinoid/eslint-config": "^34.0.0",
+    "@kevinoid/eslint-config": "^35.1.0",
     "ansi-styles": "^6.0.0",
     "c8": "^12.0.0",
     "chai": "^6.0.0",
-    "eslint": "^9.35.0",
+    "eslint": "^10.8.1",
     "globals": "^17.0.0",
     "has-ansi": "^6.0.0",
     "jsdoc": "^4.0.0",
