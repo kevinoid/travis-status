@@ -540,7 +540,7 @@ describe('GitStatusChecker', function() {
     after(() => git('checkout', defaultBranch));
 
     for (const branchName of Object.keys(BRANCH_REMOTES)) {
-      const remoteName = BRANCH_REMOTES[branchName].split('/')[0];
+      const remoteName = BRANCH_REMOTES[branchName].split('/', 1)[0];
       const remoteSlug = REMOTE_SLUGS[remoteName];
       if (remoteSlug) {
         it(`resolves ${remoteSlug} for ${branchName}`, () => {
