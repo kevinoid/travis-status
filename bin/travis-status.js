@@ -26,7 +26,11 @@ const { Command } = require('commander');
 // https://github.com/import-js/eslint-plugin-import/issues/2844
 // eslint-disable-next-line import/extensions
 const travisStatus = require('..');
-const stateInfo = require('../lib/state-info.js');
+const {
+  colors: stateColors,
+  isPending: stateIsPending,
+  isUnsuccessful: stateIsUnsuccessful,
+} = require('../lib/state-info.js');
 const packageJson = require('../package.json');
 
 const debug = debuglog('travis-status');
@@ -292,7 +296,7 @@ function travisStatusCmd(args, options, callback) {
     const state = build.repo ? build.repo.last_build_state : build.branch.state;
 
     if (!cmdOpts.quiet) {
-      const color = stateInfo.colors[state] || 'yellow';
+      const color = stateColors[state] || 'yellow';
       const number =
         build.repo ? build.repo.last_build_number : build.branch.number;
       options.out.write(`build #${number} ${chalk[color](state)
@@ -300,8 +304,8 @@ function travisStatusCmd(args, options, callback) {
     }
 
     let code = 0;
-    if ((cmdOpts.exitCode && stateInfo.isUnsuccessful[state])
-      || (cmdOpts.failPending && stateInfo.isPending[state])) {
+    if ((cmdOpts.exitCode && stateIsUnsuccessful[state])
+      || (cmdOpts.failPending && stateIsPending[state])) {
       code = 1;
     }
 

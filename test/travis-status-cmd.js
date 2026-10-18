@@ -14,7 +14,7 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
 const SlugDetectionError = require('../lib/slug-detection-error.js');
-const stateInfo = require('../lib/state-info.js');
+const { colors: stateColors } = require('../lib/state-info.js');
 const apiResponses = require('../test-lib/api-responses.js');
 
 const { match } = sinon;
@@ -319,8 +319,8 @@ describe('travis-status command', () => {
     });
   }
 
-  for (const state of Object.keys(stateInfo.colors)) {
-    const color = stateInfo.colors[state];
+  for (const state of Object.keys(stateColors)) {
+    const color = stateColors[state];
     it(`prints ${state} in ${color} if interactive`, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
