@@ -304,8 +304,8 @@ function travisStatusCmd(args, options, callback) {
     }
 
     let code = 0;
-    if ((cmdOpts.exitCode && stateIsUnsuccessful[state])
-      || (cmdOpts.failPending && stateIsPending[state])) {
+    if ((cmdOpts.exitCode && Object.hasOwn(stateIsUnsuccessful, state))
+      || (cmdOpts.failPending && Object.hasOwn(stateIsPending, state))) {
       code = 1;
     }
 
