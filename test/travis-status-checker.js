@@ -34,9 +34,7 @@ describe('TravisStatusChecker', () => {
         if (travisHttpMock) {
           travisHttp = travisHttpMock;
         } else {
-          travisHttp = Object.create(TravisStatusHttp);
-          travisHttp =
-            TravisStatusHttp.apply(travisHttp, args) || travisHttp;
+          travisHttp = new TravisStatusHttp(...args);
         }
         if (travisRequestMock) {
           travisHttp.request = travisRequestMock;
