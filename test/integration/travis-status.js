@@ -113,6 +113,7 @@ describe('travisStatus integration', () => {
     apiMock.restore();
   });
 
+  /* eslint-disable unicorn/no-global-object-property-assignment */
   let realClearTimeout;
   let realSetTimeout;
   beforeEach(() => {
@@ -127,6 +128,7 @@ describe('travisStatus integration', () => {
     globalThis.clearTimeout = realClearTimeout;
     globalThis.setTimeout = realSetTimeout;
   });
+  /* eslint-enable unicorn/no-global-object-property-assignment */
 
   it('fetches branch state', async () => {
     const testSlug = 'foo/bar';

@@ -145,6 +145,7 @@ before('setup test repository', async function() {
      @stylistic/function-paren-newline */
 
 before('run from test repository', () => {
+  // eslint-disable-next-line unicorn/no-top-level-assignment-in-function
   origCWD = process.cwd();
   process.chdir(TEST_REPO_PATH);
 });

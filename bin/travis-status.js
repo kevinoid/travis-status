@@ -126,6 +126,7 @@ function travisStatusCmd(args, options, callback) {
   const stdout = options.out || process.stdout;
   const stderr = options.err || process.stderr;
 
+  /* eslint-disable unicorn/no-this-outside-of-class */
   const command = new Command()
     .exitOverride()
     .configureOutput({
@@ -199,6 +200,7 @@ function travisStatusCmd(args, options, callback) {
       'wait if build is pending (timeout in seconds)',
     )
     .version(packageJson.version);
+  /* eslint-enable unicorn/no-this-outside-of-class */
 
   try {
     command.parse(args);

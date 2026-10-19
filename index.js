@@ -152,6 +152,9 @@ function travisStatus(options, callback) {
     return nodeify(errResult, callback);
   }
 
+  // TODO: Convert to async/await.
+  /* eslint-disable unicorn/prefer-await */
+
   let repoSlugP;
   if (options.storeRepo) {
     const storedSlugP = gitChecker.tryStoreSlug(options.storeRepo);
@@ -233,6 +236,8 @@ function travisStatus(options, callback) {
   } else {
     cleanupP = checkedResultP;
   }
+
+  /* eslint-enable unicorn/prefer-await */
 
   return nodeify(cleanupP, callback);
 }
