@@ -319,8 +319,7 @@ describe('travis-status command', () => {
     });
   }
 
-  for (const state of Object.keys(stateColors)) {
-    const color = stateColors[state];
+  for (const [state, color] of Object.entries(stateColors)) {
     it(`prints ${state} in ${color} if interactive`, (done) => {
       travisStatus = sinon.stub();
       const outStream = new stream.PassThrough();
