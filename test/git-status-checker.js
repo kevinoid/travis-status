@@ -526,8 +526,8 @@ describe('GitStatusChecker', function() {
   describe('#detectSlug()', () => {
     after(() => git('checkout', defaultBranch));
 
-    for (const branchName of Object.keys(BRANCH_REMOTES)) {
-      const remoteName = BRANCH_REMOTES[branchName].split('/', 1)[0];
+    for (const [branchName, upstream] of Object.entries(BRANCH_REMOTES)) {
+      const remoteName = upstream.split('/', 1)[0];
       const remoteSlug = REMOTE_SLUGS[remoteName];
       if (remoteSlug) {
         it(`resolves ${remoteSlug} for ${branchName}`, async () => {
