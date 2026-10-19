@@ -5,6 +5,7 @@
 
 'use strict';
 
+const { rejects: assertRejects } = require('node:assert');
 const stream = require('node:stream');
 
 const { default: ansiStyles } = require('ansi-styles');
@@ -497,7 +498,7 @@ describe('travis-status command', () => {
     assert(result instanceof Promise);
   });
 
-  it('returned Promise is resolved with exit code', () => {
+  it('returned Promise is resolved with exit code', async () => {
     travisStatus = sinon.stub();
     const options = {
       out: new stream.PassThrough(),
@@ -508,17 +509,15 @@ describe('travis-status command', () => {
       null,
       apiResponses.repo(),
     );
-    return result.then((code) => {
-      assert.strictEqual(code, 0);
-    });
+    const code = await result;
+    assert.strictEqual(code, 0);
   });
 
-  it('returned Promise is rejected with Error', () => {
+  it('returned Promise is rejected with Error', async () => {
     travisStatus = sinon.stub();
-    const result = travisStatusCmd(RUNTIME_ARGS, true);
-    return result.then(
-      sinon.mock().never(),
-      (err) => { assert.instanceOf(err, TypeError); },
+    await assertRejects(
+      travisStatusCmd(RUNTIME_ARGS, true),
+      TypeError,
     );
   });
 });

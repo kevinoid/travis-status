@@ -5,6 +5,8 @@
 
 'use strict';
 
+const { rejects: assertRejects } = require('node:assert');
+
 const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
@@ -37,7 +39,7 @@ describe('travisStatus', () => {
     travisChecker = null;
   });
 
-  it('fetches current repo without storing by default', () => {
+  it('fetches current repo without storing by default', async () => {
     const testSlug = 'foo/bar';
     const testResult = {};
     gitChecker = new GitStatusChecker();
@@ -51,14 +53,13 @@ describe('travisStatus', () => {
       .once().withArgs(testSlug).returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
-    return travisStatus().then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus();
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
-  it('fetches current repo and stores if interactive', () => {
+  it('fetches current repo and stores if interactive', async () => {
     const testSlug = 'foo/bar';
     const testResult = {};
     gitChecker = new GitStatusChecker();
@@ -73,14 +74,13 @@ describe('travisStatus', () => {
       .once().withArgs(testSlug).returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
-    return travisStatus({ interactive: true }).then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus({ interactive: true });
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
-  it('fetches options.repo', () => {
+  it('fetches options.repo', async () => {
     const testSlug = 'foo/bar';
     const testResult = {};
     gitChecker = new GitStatusChecker();
@@ -93,14 +93,13 @@ describe('travisStatus', () => {
       .once().withArgs(testSlug).returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
-    return travisStatus({ repo: testSlug }).then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus({ repo: testSlug });
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
-  it('fetches and stores options.storeRepo', () => {
+  it('fetches and stores options.storeRepo', async () => {
     const testSlug = 'foo/bar';
     const testResult = {};
     gitChecker = new GitStatusChecker();
@@ -114,15 +113,14 @@ describe('travisStatus', () => {
       .once().withArgs(testSlug).returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
-    return travisStatus({ storeRepo: testSlug }).then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus({ storeRepo: testSlug });
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
   // This matches travis.rb behavior
-  it('fetches options.repo, stores options.storeRepo', () => {
+  it('fetches options.repo, stores options.storeRepo', async () => {
     const testSlug = 'foo/bar';
     const testSlug2 = 'baz/quux';
     const testResult = {};
@@ -138,14 +136,13 @@ describe('travisStatus', () => {
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
     const options = { repo: testSlug, storeRepo: testSlug2 };
-    return travisStatus(options).then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus(options);
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
-  it('fetches named branch for options.branch', () => {
+  it('fetches named branch for options.branch', async () => {
     const testSlug = 'foo/bar';
     const testBranch = 'branch1';
     const testResult = {};
@@ -162,14 +159,13 @@ describe('travisStatus', () => {
       .returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBuild').never();
     const options = { branch: testBranch, repo: testSlug };
-    return travisStatus(options).then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus(options);
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
-  it('fetches current branch for true options.branch', () => {
+  it('fetches current branch for true options.branch', async () => {
     const testSlug = 'foo/bar';
     const testBranch = 'branch1';
     const testResult = {};
@@ -187,11 +183,10 @@ describe('travisStatus', () => {
       .returns(Promise.resolve(testResult));
     travisCheckerMock.expects('getBuild').never();
     const options = { branch: true, repo: testSlug };
-    return travisStatus(options).then((result) => {
-      assert.deepEqual(result, testResult);
-      gitCheckerMock.verify();
-      travisCheckerMock.verify();
-    });
+    const result = await travisStatus(options);
+    assert.deepEqual(result, testResult);
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
   for (const isSameHash of [true, false]) {
@@ -200,7 +195,7 @@ describe('travisStatus', () => {
         `${isSameHash ? 'resolves combined result' : 'rejects with Error'
         } for ${
           commitIsHash ? 'same commit hash' : 'matching commit name'}`;
-      it(desc, () => {
+      it(desc, async () => {
         const testSlug = 'foo/bar';
         const testHash = '692064aac95441e2dae7f1780fccc536143a0863';
         const apiHash = isSameHash ? testHash : `${testHash.slice(0, -1)}0`;
@@ -224,38 +219,35 @@ describe('travisStatus', () => {
           .once().withArgs(testSlug, testRepo.repo.last_build_id)
           .returns(Promise.resolve(testBuild));
         const statusP = travisStatus({ commit: testCommit, repo: testSlug });
-        let testP;
         if (isSameHash) {
-          testP = statusP.then((result) => {
-            assert.deepEqual(result, { ...testRepo, ...testBuild });
-          });
+          const result = await statusP;
+          assert.deepEqual(result, { ...testRepo, ...testBuild });
         } else {
-          testP = statusP.then(
-            sinon.mock().never(),
+          await assertRejects(
+            statusP,
             (err) => {
               assert.match(err.message, /\bcommit\b/i);
               assert.include(err.message, testCommit);
               assert.include(err.message, testHash);
               assert.include(err.message, apiHash);
+              return true;
             },
           );
         }
-        return testP.then(() => {
-          gitCheckerMock.verify();
-          travisCheckerMock.verify();
-        });
+        gitCheckerMock.verify();
+        travisCheckerMock.verify();
       });
     }
   }
 
-  it('rejects with TypeError for non-object options', () => travisStatus(true)
-    .then(
-      sinon.mock().never(),
-      (err) => {
-        assert.strictEqual(err.name, 'TypeError');
-        assert.match(err.message, /\boptions\b/);
-      },
-    ));
+  it('rejects with TypeError for non-object options', () => assertRejects(
+    travisStatus(true),
+    (err) => {
+      assert.strictEqual(err.name, 'TypeError');
+      assert.match(err.message, /\boptions\b/);
+      return true;
+    },
+  ));
 
   it('throws TypeError for non-function callback', () => {
     assert.throws(
@@ -265,7 +257,7 @@ describe('travisStatus', () => {
     );
   });
 
-  it('rejects with InvalidSlugError for invalid options.repo', () => {
+  it('rejects with InvalidSlugError for invalid options.repo', async () => {
     gitChecker = new GitStatusChecker();
     const gitCheckerMock = sinon.mock(gitChecker);
     gitCheckerMock.expects('storeSlug').never();
@@ -275,17 +267,18 @@ describe('travisStatus', () => {
     travisCheckerMock.expects('getRepo').never();
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
-    return travisStatus({ repo: 'invalid' }).then(
-      sinon.mock().never(),
+    await assertRejects(
+      travisStatus({ repo: 'invalid' }),
       (err) => {
         assert.strictEqual(err.name, 'InvalidSlugError');
-        gitCheckerMock.verify();
-        travisCheckerMock.verify();
+        return true;
       },
     );
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
-  it('rejects with InvalidSlugError for invalid options.storeRepo', () => {
+  it('invalid options.storeRepo rejects with InvalidSlugError', async () => {
     gitChecker = new GitStatusChecker();
     const gitCheckerMock = sinon.mock(gitChecker);
     gitCheckerMock.expects('storeSlug').never();
@@ -295,14 +288,15 @@ describe('travisStatus', () => {
     travisCheckerMock.expects('getRepo').never();
     travisCheckerMock.expects('getBranch').never();
     travisCheckerMock.expects('getBuild').never();
-    return travisStatus({ storeRepo: 'invalid' }).then(
-      sinon.mock().never(),
+    await assertRejects(
+      travisStatus({ storeRepo: 'invalid' }),
       (err) => {
         assert.strictEqual(err.name, 'InvalidSlugError');
-        gitCheckerMock.verify();
-        travisCheckerMock.verify();
+        return true;
       },
     );
+    gitCheckerMock.verify();
+    travisCheckerMock.verify();
   });
 
   it('yields result to callback without returning Promise', (done) => {

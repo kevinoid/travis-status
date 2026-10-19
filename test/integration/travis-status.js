@@ -128,7 +128,7 @@ describe('travisStatus integration', () => {
     globalThis.setTimeout = realSetTimeout;
   });
 
-  it('fetches branch state', () => {
+  it('fetches branch state', async () => {
     const testSlug = 'foo/bar';
     const testBranch = 'branch1';
     const testOpts = { slug: testSlug, branch: testBranch };
@@ -143,14 +143,13 @@ describe('travisStatus integration', () => {
       branch: testBranch,
       repo: testSlug,
     };
-    return travisStatus(options).then((result) => {
-      assert.deepEqual(result, testResult);
-      apiMock.verify();
-      assert.strictEqual(connCount, 1);
-    });
+    const result = await travisStatus(options);
+    assert.deepEqual(result, testResult);
+    apiMock.verify();
+    assert.strictEqual(connCount, 1);
   });
 
-  it('fetches repo state', () => {
+  it('fetches repo state', async () => {
     const testSlug = 'foo/bar';
     const testOpts = { slug: testSlug };
     const testResult = apiResponses.repo(testOpts);
@@ -163,14 +162,13 @@ describe('travisStatus integration', () => {
       apiEndpoint: apiUrl,
       repo: testSlug,
     };
-    return travisStatus(options).then((result) => {
-      assert.deepEqual(result, testResult);
-      apiMock.verify();
-      assert.strictEqual(connCount, 1);
-    });
+    const result = await travisStatus(options);
+    assert.deepEqual(result, testResult);
+    apiMock.verify();
+    assert.strictEqual(connCount, 1);
   });
 
-  it('fetches repo and build for commit', () => {
+  it('fetches repo and build for commit', async () => {
     const testSlug = 'foo/bar';
     const testCommit = '4e2c26acca22601fb54da35485faff7c303084eb';
     const testBuildId = 123456;
@@ -193,18 +191,17 @@ describe('travisStatus integration', () => {
       commit: testCommit,
       repo: testSlug,
     };
-    return travisStatus(options).then((result) => {
-      assert.deepEqual(result, { ...testRepo, ...testBuild });
-      apiMock.verify();
-      // If Agent doesn't have .destroy(), travisStatus can't do keep-alive.
-      // TODO:  Check that travisStatusCmd does.
-      if (typeof new http.Agent().destroy === 'function') {
-        assert.strictEqual(connCount, 1);
-      }
-    });
+    const result = await travisStatus(options);
+    assert.deepEqual(result, { ...testRepo, ...testBuild });
+    apiMock.verify();
+    // If Agent doesn't have .destroy(), travisStatus can't do keep-alive.
+    // TODO:  Check that travisStatusCmd does.
+    if (typeof new http.Agent().destroy === 'function') {
+      assert.strictEqual(connCount, 1);
+    }
   });
 
-  it('fetches repo state with wait', () => {
+  it('fetches repo state with wait', async () => {
     const testSlug = 'foo/bar';
     const pendingResult =
       apiResponses.repo({ slug: testSlug, state: 'started' });
@@ -226,10 +223,8 @@ describe('travisStatus integration', () => {
       repo: testSlug,
       wait: Infinity,
     };
-    const promise = travisStatus(options).then((result) => {
-      assert.deepEqual(result, passedResult);
-      apiMock.verify();
-    });
-    return promise;
+    const result = await travisStatus(options);
+    assert.deepEqual(result, passedResult);
+    apiMock.verify();
   });
 });

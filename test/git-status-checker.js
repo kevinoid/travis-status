@@ -5,6 +5,7 @@
 
 'use strict';
 
+const { rejects: assertRejects } = require('node:assert');
 const { rm } = require('node:fs/promises');
 const path = require('node:path');
 const stream = require('node:stream');
@@ -76,70 +77,68 @@ async function gitInit(repoPath) {
 /* eslint-disable
      @stylistic/function-call-argument-newline,
      @stylistic/function-paren-newline */
-before('setup test repository', function() {
+before('setup test repository', async function() {
   // Some git versions can run slowly on Windows (especially on shared CI)
   this.timeout(isWindows ? 8000 : 4000);
 
-  return rm(TEST_REPO_PATH, { force: true, recursive: true })
-    .then(() => gitInit(TEST_REPO_PATH))
-    // The user name and email must be configured for the later git commands
-    // to work.  On Travis CI (and probably others) there is no global config
-    .then(() => git(
+  await rm(TEST_REPO_PATH, { force: true, recursive: true });
+  await gitInit(TEST_REPO_PATH);
+  // The user name and email must be configured for the later git commands
+  // to work.  On Travis CI (and probably others) there is no global config
+  await git(
+    '-C', TEST_REPO_PATH,
+    'config', 'user.name', 'Test User',
+  );
+  await git(
+    '-C', TEST_REPO_PATH,
+    'config', 'user.email', 'test@example.com',
+  );
+  await git(
+    '-C', TEST_REPO_PATH,
+    'commit',
+    '-q',
+    '-m', 'Initial Commit',
+    '--allow-empty',
+  );
+  await git(
+    '-C', TEST_REPO_PATH,
+    'commit',
+    '-q',
+    '-m', 'Second Commit',
+    '--allow-empty',
+  );
+  // Configure remotes/upstream sequentially
+  // TODO: Can git handle concurrent config modification?
+  /* eslint-disable no-await-in-loop */
+  for (const [remoteName, remoteUrl] of Object.entries(REMOTES)) {
+    await git(
       '-C', TEST_REPO_PATH,
-      'config', 'user.name', 'Test User',
-    ))
-    .then(() => git(
-      '-C', TEST_REPO_PATH,
-      'config', 'user.email', 'test@example.com',
-    ))
-    .then(() => git(
-      '-C', TEST_REPO_PATH,
-      'commit',
-      '-q',
-      '-m', 'Initial Commit',
-      '--allow-empty',
-    ))
-    .then(() => git(
-      '-C', TEST_REPO_PATH,
-      'commit',
-      '-q',
-      '-m', 'Second Commit',
-      '--allow-empty',
-    ))
-    .then(() => Object.keys(REMOTES).reduce((p, remoteName) => p.then(() => {
-      const remoteUrl = REMOTES[remoteName];
-      return git(
+      'remote', 'add', remoteName, remoteUrl,
+    );
+  }
+  for (const [branchName, upstream] of Object.entries(BRANCH_REMOTES)) {
+    await git('-C', TEST_REPO_PATH, 'branch', branchName);
+    if (upstream) {
+      // Note:  Can't use 'git branch -u' without fetching remote
+      const upstreamParts = upstream.split('/');
+      assert.strictEqual(upstreamParts.length, 2);
+      const remoteName = upstreamParts[0];
+      const remoteBranch = upstreamParts[1];
+      const remoteRef = `refs/heads/${remoteBranch}`;
+      const configBranch = `branch.${branchName}`;
+      const configMerge = `${configBranch}.merge`;
+      const configRemote = `${configBranch}.remote`;
+      await git(
         '-C', TEST_REPO_PATH,
-        'remote', 'add', remoteName, remoteUrl,
+        'config', '--add', configRemote, remoteName,
       );
-    }), Promise.resolve()))
-    .then(() => Object.keys(BRANCH_REMOTES)
-      .reduce((p, branchName) => p.then(() => {
-        const upstream = BRANCH_REMOTES[branchName];
-        let gitBranchP = git('-C', TEST_REPO_PATH, 'branch', branchName);
-        if (upstream) {
-          gitBranchP = gitBranchP.then(() => {
-            // Note:  Can't use 'git branch -u' without fetching remote
-            const upstreamParts = upstream.split('/');
-            assert.strictEqual(upstreamParts.length, 2);
-            const remoteName = upstreamParts[0];
-            const remoteBranch = upstreamParts[1];
-            const remoteRef = `refs/heads/${remoteBranch}`;
-            const configBranch = `branch.${branchName}`;
-            const configMerge = `${configBranch}.merge`;
-            const configRemote = `${configBranch}.remote`;
-            return git(
-              '-C', TEST_REPO_PATH,
-              'config', '--add', configRemote, remoteName,
-            )
-              .then(() => git(
-                '-C', TEST_REPO_PATH,
-                'config', '--add', configMerge, remoteRef,
-              ));
-          });
-        }
-        return gitBranchP;
-      }), Promise.resolve()));
+      await git(
+        '-C', TEST_REPO_PATH,
+        'config', '--add', configMerge, remoteRef,
+      );
+    }
+  }
+  /* eslint-enable no-await-in-loop */
 });
 /* eslint-enable
      @stylistic/function-call-argument-newline,
@@ -158,9 +157,14 @@ after('remove test repository', () => {
   return rm(TEST_REPO_PATH, { force: true, recursive: true });
 });
 
-function unsetTravisSlug() {
-  return git('config', '--unset-all', GitStatusChecker.SLUG_CONFIG_NAME)
-    .catch((err) => (err.code === 5 ? null : Promise.reject(err)));
+async function unsetTravisSlug() {
+  try {
+    await git('config', '--unset-all', GitStatusChecker.SLUG_CONFIG_NAME);
+  } catch (err) {
+    if (err.code !== 5) {
+      throw err;
+    }
+  }
 }
 
 describe('GitStatusChecker', function() {
@@ -246,28 +250,24 @@ describe('GitStatusChecker', function() {
 
   describe('#resolveHash()', () => {
     let headHash;
-    it('can resolve the hash of HEAD', () => {
+    it('can resolve the hash of HEAD', async () => {
       const checker = new GitStatusChecker();
-      return checker.resolveHash('HEAD').then((hash) => {
-        assert.match(hash, /^[a-fA-F0-9]{40}$/);
-        headHash = hash;
-      });
+      const hash = await checker.resolveHash('HEAD');
+      assert.match(hash, /^[a-fA-F0-9]{40}$/);
+      headHash = hash;
     });
 
-    it('can resolve a hash to itself', () => {
+    it('can resolve a hash to itself', async () => {
       const checker = new GitStatusChecker();
-      return checker.resolveHash(headHash).then((hash) => {
-        assert.strictEqual(hash, headHash);
-      });
+      const hash = await checker.resolveHash(headHash);
+      assert.strictEqual(hash, headHash);
     });
 
-    it('rejects with Error for unresolvable name', () => {
+    it('rejects with Error for unresolvable name', async () => {
       const checker = new GitStatusChecker();
-      return checker.resolveHash('notabranch').then(
-        sinon.mock().never(),
-        (err) => {
-          assert(err);
-        },
+      await assertRejects(
+        checker.resolveHash('notabranch'),
+        Error,
       );
     });
   });
@@ -275,58 +275,58 @@ describe('GitStatusChecker', function() {
   describe('#storeSlug()', () => {
     afterEach(unsetTravisSlug);
 
-    it('can store a valid slug', () => {
+    it('can store a valid slug', async () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foo/bar';
-      return checker.storeSlug(testSlug).then((slug) => {
-        assert.strictEqual(slug, testSlug);
+      const slug = await checker.storeSlug(testSlug);
+      assert.strictEqual(slug, testSlug);
 
-        return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
-          .then((result) => {
-            const configSlug = result[0].trimEnd();
-            assert.strictEqual(configSlug, testSlug);
-          });
-      });
+      const result =
+        await git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME);
+      const configSlug = result[0].trimEnd();
+      assert.strictEqual(configSlug, testSlug);
     });
 
-    it('returns Error for an invalid slug', () => {
+    it('returns Error for an invalid slug', async () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foobar';
-      return checker.storeSlug(testSlug).then(
-        sinon.mock().never(),
-        (errStore) => {
-          assert.instanceOf(errStore, InvalidSlugError);
-
-          return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
-            .then(
-              (configSlug) => {
-                assert.fail(configSlug, null, 'slug should not be stored');
-              },
-              (errGit) => (errGit.code === 1 ? null : Promise.reject(errGit)),
-            );
-        },
+      await assertRejects(
+        checker.storeSlug(testSlug),
+        InvalidSlugError,
       );
+
+      let configSlug;
+      try {
+        configSlug =
+          await git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME);
+      } catch (errGit) {
+        if (errGit.code === 1) {
+          return;
+        }
+
+        throw errGit;
+      }
+
+      assert.fail(configSlug, null, 'slug should not be stored');
     });
   });
 
   describe('#tryStoreSlug()', () => {
     afterEach(unsetTravisSlug);
 
-    it('can store a valid slug', () => {
+    it('can store a valid slug', async () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foo/bar';
-      return checker.tryStoreSlug(testSlug).then((slug) => {
-        assert.strictEqual(slug, testSlug);
+      const slug = await checker.tryStoreSlug(testSlug);
+      assert.strictEqual(slug, testSlug);
 
-        return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
-          .then((result) => {
-            const configSlug = result[0].trimEnd();
-            assert.strictEqual(configSlug, testSlug);
-          });
-      });
+      const result =
+        await git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME);
+      const configSlug = result[0].trimEnd();
+      assert.strictEqual(configSlug, testSlug);
     });
 
-    it('prints error message for an invalid slug', () => {
+    it('prints error message for an invalid slug', async () => {
       const outStream = new stream.PassThrough();
       const errStream = new stream.PassThrough();
       const checker = new GitStatusChecker({
@@ -334,24 +334,29 @@ describe('GitStatusChecker', function() {
         err: errStream,
       });
       const testSlug = 'foobar';
-      return checker.tryStoreSlug(testSlug).then((slug) => {
-        assert.strictEqual(slug, testSlug);
-        assert.strictEqual(outStream.read(), null);
-        assert.match(String(errStream.read()), /error/i);
+      const slug = await checker.tryStoreSlug(testSlug);
+      assert.strictEqual(slug, testSlug);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(String(errStream.read()), /error/i);
 
-        return git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME)
-          .then(
-            (configSlug) => {
-              assert.fail(configSlug, null, 'slug should not be stored');
-            },
-            (errGit) => (errGit.code === 1 ? null : Promise.reject(errGit)),
-          );
-      });
+      let configSlug;
+      try {
+        configSlug =
+          await git('config', '--get', GitStatusChecker.SLUG_CONFIG_NAME);
+      } catch (errGit) {
+        if (errGit.code === 1) {
+          return;
+        }
+
+        throw errGit;
+      }
+
+      assert.fail(configSlug, null, 'slug should not be stored');
     });
   });
 
   describe('#confirmSlug()', () => {
-    it('prompts user for confirmation', () => {
+    it('prompts user for confirmation', async () => {
       const inStream = new stream.PassThrough();
       const outStream = new stream.PassThrough({ encoding: 'utf8' });
       const errStream = new stream.PassThrough({ encoding: 'utf8' });
@@ -364,22 +369,19 @@ describe('GitStatusChecker', function() {
       const testSlug = 'foo/bar';
       const confirmP = checker.confirmSlug(testSlug);
 
-      return read(errStream)
-        .then((promptMsg) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg, /correct/i);
-          assert.include(promptMsg, testSlug);
-          inStream.write('y\n');
-          return confirmP;
-        })
-        .then((slug) => {
-          assert.strictEqual(slug, testSlug);
-          assert.strictEqual(outStream.read(), null);
-          assert.strictEqual(errStream.read(), null);
-        });
+      const promptMsg = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg, /correct/i);
+      assert.include(promptMsg, testSlug);
+      inStream.write('y\n');
+
+      const slug = await confirmP;
+      assert.strictEqual(slug, testSlug);
+      assert.strictEqual(outStream.read(), null);
+      assert.strictEqual(errStream.read(), null);
     });
 
-    it('prompts user for slug if not confirmed', () => {
+    it('prompts user for slug if not confirmed', async () => {
       const inStream = new stream.PassThrough();
       const outStream = new stream.PassThrough({ encoding: 'utf8' });
       const errStream = new stream.PassThrough({ encoding: 'utf8' });
@@ -393,28 +395,25 @@ describe('GitStatusChecker', function() {
       const testSlug2 = 'baz/quux';
       const confirmP = checker.confirmSlug(testSlug1);
 
-      return read(errStream)
-        .then((promptMsg1) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg1, /correct/i);
-          assert.include(promptMsg1, testSlug1);
-          inStream.write('n\n');
-          return read(errStream);
-        })
-        .then((promptMsg2) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg2, /repository/i);
-          assert.include(promptMsg2, testSlug1);
-          inStream.write(`${testSlug2}\n`);
-          return confirmP;
-        }).then((slug) => {
-          assert.strictEqual(slug, testSlug2);
-          assert.strictEqual(outStream.read(), null);
-          assert.strictEqual(errStream.read(), null);
-        });
+      const promptMsg1 = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg1, /correct/i);
+      assert.include(promptMsg1, testSlug1);
+      inStream.write('n\n');
+
+      const promptMsg2 = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg2, /repository/i);
+      assert.include(promptMsg2, testSlug1);
+      inStream.write(`${testSlug2}\n`);
+
+      const slug = await confirmP;
+      assert.strictEqual(slug, testSlug2);
+      assert.strictEqual(outStream.read(), null);
+      assert.strictEqual(errStream.read(), null);
     });
 
-    it('re-prompts user if slug is invalid', () => {
+    it('re-prompts user if slug is invalid', async () => {
       const inStream = new stream.PassThrough();
       const outStream = new stream.PassThrough({ encoding: 'utf8' });
       const errStream = new stream.PassThrough({ encoding: 'utf8' });
@@ -429,45 +428,37 @@ describe('GitStatusChecker', function() {
       const testSlug3 = 'baz/quux';
       const confirmP = checker.confirmSlug(testSlug1);
 
-      return read(errStream)
-        .then((promptMsg1) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg1, /correct/i);
-          assert.include(promptMsg1, testSlug1);
-          inStream.write('n\n');
-          return read(errStream);
-        })
-        .then((promptMsg2) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg2, /repository/i);
-          assert.include(promptMsg2, testSlug1);
-          inStream.write(`${testSlug2}\n`);
-          return read(errStream);
-        })
-        .then((errorMsg) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(errorMsg, /invalid/i);
-          // Prompt may be part of error message or not
-          if (errorMsg.includes(testSlug1)) {
-            return errorMsg;
-          }
-          return read(errStream);
-        })
-        .then((promptMsg3) => {
-          assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg3, /repository/i);
-          assert.include(promptMsg3, testSlug1);
-          inStream.write(`${testSlug3}\n`);
-          return confirmP;
-        })
-        .then((slug) => {
-          assert.strictEqual(slug, testSlug3);
-          assert.strictEqual(outStream.read(), null);
-          assert.strictEqual(errStream.read(), null);
-        });
+      const promptMsg1 = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg1, /correct/i);
+      assert.include(promptMsg1, testSlug1);
+      inStream.write('n\n');
+
+      const promptMsg2 = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg2, /repository/i);
+      assert.include(promptMsg2, testSlug1);
+      inStream.write(`${testSlug2}\n`);
+
+      const errorMsg = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(errorMsg, /invalid/i);
+
+      // Prompt may be part of error message or not
+      const promptMsg3 = errorMsg.includes(testSlug1) ? errorMsg
+        : await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg3, /repository/i);
+      assert.include(promptMsg3, testSlug1);
+      inStream.write(`${testSlug3}\n`);
+
+      const slug = await confirmP;
+      assert.strictEqual(slug, testSlug3);
+      assert.strictEqual(outStream.read(), null);
+      assert.strictEqual(errStream.read(), null);
     });
 
-    it('rejects with EOFError if input ends', () => {
+    it('rejects with EOFError if input ends', async () => {
       const inStream = new stream.PassThrough();
       const outStream = new stream.PassThrough({ encoding: 'utf8' });
       const errStream = new stream.PassThrough({ encoding: 'utf8' });
@@ -478,61 +469,57 @@ describe('GitStatusChecker', function() {
       });
 
       const testSlug = 'foo/bar';
-      const confirmP = checker.confirmSlug(testSlug)
-        .then(
-          sinon.mock().never(),
-          (err) => {
-            assert.strictEqual(err.name, 'EOFError');
-            // Same message as travis.rb
-            assert.strictEqual(err.message, 'The input stream is exhausted.');
-            // Doesn't print error message itself, but calling code will
-            assert.strictEqual(outStream.read(), null);
-            assert.strictEqual(errStream.read(), null);
-          },
-        );
-      const promptP = read(errStream)
-        .then((promptMsg) => {
+      const confirmP = assertRejects(
+        checker.confirmSlug(testSlug),
+        (err) => {
+          assert.strictEqual(err.name, 'EOFError');
+          // Same message as travis.rb
+          assert.strictEqual(err.message, 'The input stream is exhausted.');
+          // Doesn't print error message itself, but calling code will
           assert.strictEqual(outStream.read(), null);
-          assert.match(promptMsg, /correct/i);
-          assert.include(promptMsg, testSlug);
-          // End without newline (e.g. user hit ^D before return)
-          inStream.end('y');
-        });
-      return Promise.all([confirmP, promptP]);
+          assert.strictEqual(errStream.read(), null);
+          return true;
+        },
+      );
+
+      const promptMsg = await read(errStream);
+      assert.strictEqual(outStream.read(), null);
+      assert.match(promptMsg, /correct/i);
+      assert.include(promptMsg, testSlug);
+      // End without newline (e.g. user hit ^D before return)
+      inStream.end('y');
+
+      await confirmP;
     });
   });
 
   describe('#detectBranch()', () => {
     after(() => git('checkout', defaultBranch));
 
-    it(`resolves master on ${defaultBranch}`, () => {
+    it(`resolves master on ${defaultBranch}`, async () => {
       const checker = new GitStatusChecker();
-      return git('checkout', defaultBranch)
-        .then(() => checker.detectBranch())
-        .then((branch) => {
-          assert.strictEqual(branch, defaultBranch);
-        });
+      await git('checkout', defaultBranch);
+      const branch = await checker.detectBranch();
+      assert.strictEqual(branch, defaultBranch);
     });
 
-    it('resolves branch1 on branch1', () => {
+    it('resolves branch1 on branch1', async () => {
       const checker = new GitStatusChecker();
-      return git('checkout', 'branch1')
-        .then(() => checker.detectBranch())
-        .then((branch) => {
-          assert.strictEqual(branch, 'branch1');
-        });
+      await git('checkout', 'branch1');
+      const branch = await checker.detectBranch();
+      assert.strictEqual(branch, 'branch1');
     });
 
-    it('rejects with Error not on branch', () => {
+    it('rejects with Error not on branch', async () => {
       const checker = new GitStatusChecker();
-      return git('checkout', 'HEAD^')
-        .then(() => checker.detectBranch())
-        .then(
-          sinon.mock().never(),
-          (err) => {
-            assert.match(err.message, /branch/i);
-          },
-        );
+      await git('checkout', 'HEAD^');
+      await assertRejects(
+        checker.detectBranch(),
+        (err) => {
+          assert.match(err.message, /branch/i);
+          return true;
+        },
+      );
     });
   });
 
@@ -543,77 +530,71 @@ describe('GitStatusChecker', function() {
       const remoteName = BRANCH_REMOTES[branchName].split('/', 1)[0];
       const remoteSlug = REMOTE_SLUGS[remoteName];
       if (remoteSlug) {
-        it(`resolves ${remoteSlug} for ${branchName}`, () => {
+        it(`resolves ${remoteSlug} for ${branchName}`, async () => {
           const checker = new GitStatusChecker({
             out: new stream.PassThrough(),
             err: new stream.PassThrough(),
           });
-          return git('checkout', branchName)
-            .then(() => checker.detectSlug())
-            .then((slug) => {
-              assert.strictEqual(slug, remoteSlug);
-            });
+          await git('checkout', branchName);
+          const slug = await checker.detectSlug();
+          assert.strictEqual(slug, remoteSlug);
         });
       }
     }
 
-    it('defaults to origin if branch has no remote', () => {
+    it('defaults to origin if branch has no remote', async () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
         err: new stream.PassThrough(),
       });
-      return git('checkout', defaultBranch)
-        .then(() => checker.detectSlug())
-        .then((slug) => {
-          assert.strictEqual(slug, REMOTE_SLUGS.origin);
-        });
+      await git('checkout', defaultBranch);
+      const slug = await checker.detectSlug();
+      assert.strictEqual(slug, REMOTE_SLUGS.origin);
     });
 
-    it('defaults to origin if not on branch', () => {
+    it('defaults to origin if not on branch', async () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
         err: new stream.PassThrough(),
       });
-      return git('checkout', 'HEAD^')
-        .then(() => checker.detectSlug())
-        .then((slug) => {
-          assert.strictEqual(slug, REMOTE_SLUGS.origin);
-        });
+      await git('checkout', 'HEAD^');
+      const slug = await checker.detectSlug();
+      assert.strictEqual(slug, REMOTE_SLUGS.origin);
     });
 
-    it('rejects with SlugDetectionError for remote with no URL', () => {
+    it('rejects with SlugDetectionError for remote with no URL', async () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
         err: new stream.PassThrough(),
       });
-      return git('checkout', 'branchnourl')
-        .then(() => checker.detectSlug())
-        .then(
-          sinon.mock().never(),
-          (err) => {
-            assert.strictEqual(err.name, 'SlugDetectionError');
-            assert.match(err.message, /remote/i);
-          },
-        );
+      await git('checkout', 'branchnourl');
+      await assertRejects(
+        checker.detectSlug(),
+        (err) => {
+          assert.strictEqual(err.name, 'SlugDetectionError');
+          assert.match(err.message, /remote/i);
+          return true;
+        },
+      );
     });
 
-    it('rejects with SlugDetectionError for remote without slug', () => {
+    it('rejects with SlugDetectionError for remote without slug', async () => {
       const checker = new GitStatusChecker({
         out: new stream.PassThrough(),
         err: new stream.PassThrough(),
       });
-      return git('checkout', 'branchnotslug')
-        .then(() => checker.detectSlug())
-        .then(
-          sinon.mock().never(),
-          (err) => {
-            assert.strictEqual(err.name, 'SlugDetectionError');
-            assert.match(err.message, /URL/i);
-          },
-        );
+      await git('checkout', 'branchnotslug');
+      await assertRejects(
+        checker.detectSlug(),
+        (err) => {
+          assert.strictEqual(err.name, 'SlugDetectionError');
+          assert.match(err.message, /URL/i);
+          return true;
+        },
+      );
     });
 
-    it('prompts for confirmation if interactive', () => {
+    it('prompts for confirmation if interactive', async () => {
       const outStream = new stream.PassThrough();
       const errStream = new stream.PassThrough();
       const checker = new GitStatusChecker({
@@ -626,17 +607,15 @@ describe('GitStatusChecker', function() {
       mock.expects('confirmSlug')
         .once().withExactArgs(REMOTE_SLUGS.origin).returns(testSlug);
 
-      return git('checkout', defaultBranch)
-        .then(() => checker.detectSlug())
-        .then((slug) => {
-          assert.strictEqual(slug, testSlug);
-          // Only output is from prompt (which is mocked)
-          assert.strictEqual(outStream.read(), null);
-          assert.strictEqual(errStream.read(), null);
-        });
+      await git('checkout', defaultBranch);
+      const slug = await checker.detectSlug();
+      assert.strictEqual(slug, testSlug);
+      // Only output is from prompt (which is mocked)
+      assert.strictEqual(outStream.read(), null);
+      assert.strictEqual(errStream.read(), null);
     });
 
-    it('prints result without confirmation if not interactive', () => {
+    it('prints result without confirmation if not interactive', async () => {
       const outStream = new stream.PassThrough();
       const errStream = new stream.PassThrough({ encoding: 'utf8' });
       const checker = new GitStatusChecker({
@@ -646,52 +625,47 @@ describe('GitStatusChecker', function() {
       const mock = sinon.mock(checker);
       mock.expects('confirmSlug').never();
 
-      return git('checkout', defaultBranch)
-        .then(() => checker.detectSlug())
-        .then((slug) => {
-          assert.strictEqual(slug, REMOTE_SLUGS.origin);
-          assert.strictEqual(outStream.read(), null);
-          // From travis.rb
-          const detectMsg = `detected repository as ${slug}\n`;
-          assert.strictEqual(errStream.read(), detectMsg);
-        });
+      await git('checkout', defaultBranch);
+      const slug = await checker.detectSlug();
+      assert.strictEqual(slug, REMOTE_SLUGS.origin);
+      assert.strictEqual(outStream.read(), null);
+      // From travis.rb
+      const detectMsg = `detected repository as ${slug}\n`;
+      assert.strictEqual(errStream.read(), detectMsg);
     });
   });
 
   describe('#loadSlug()', () => {
     afterEach(unsetTravisSlug);
 
-    it('loads slug set by #storeSlug()', () => {
+    it('loads slug set by #storeSlug()', async () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foo/bar';
-      return checker.storeSlug(testSlug)
-        .then(() => checker.loadSlug().then((slug) => {
-          assert.strictEqual(slug, testSlug);
-        }));
+      await checker.storeSlug(testSlug);
+      const slug = await checker.loadSlug();
+      assert.strictEqual(slug, testSlug);
     });
 
-    it('resolves null if slug is not set', () => {
+    it('resolves null if slug is not set', async () => {
       const checker = new GitStatusChecker();
-      return checker.loadSlug().then((slug) => {
-        assert.strictEqual(slug, null);
-      });
+      const slug = await checker.loadSlug();
+      assert.strictEqual(slug, null);
     });
   });
 
   describe('#findSlug()', () => {
-    it('uses #loadSlug() result if non-null', () => {
+    it('uses #loadSlug() result if non-null', async () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foo/bar';
       const mock = sinon.mock(checker);
       mock.expects('loadSlug')
         .once().withExactArgs().returns(Promise.resolve(testSlug));
       mock.expects('detectSlug').never();
-      return checker.findSlug().then((slug) => {
-        assert.strictEqual(slug, testSlug);
-      });
+      const slug = await checker.findSlug();
+      assert.strictEqual(slug, testSlug);
     });
 
-    it('uses #detectSlug() result if #loadSlug() is null', () => {
+    it('uses #detectSlug() result if #loadSlug() is null', async () => {
       const checker = new GitStatusChecker();
       const testSlug = 'foo/bar';
       const mock = sinon.mock(checker);
@@ -699,9 +673,8 @@ describe('GitStatusChecker', function() {
         .once().withExactArgs().returns(Promise.resolve(null));
       mock.expects('detectSlug')
         .once().withExactArgs().returns(Promise.resolve(testSlug));
-      return checker.findSlug().then((slug) => {
-        assert.strictEqual(slug, testSlug);
-      });
+      const slug = await checker.findSlug();
+      assert.strictEqual(slug, testSlug);
     });
   });
 });

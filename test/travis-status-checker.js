@@ -5,6 +5,8 @@
 
 'use strict';
 
+const { rejects: assertRejects } = require('node:assert');
+
 const { assert } = require('chai');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
@@ -92,18 +94,16 @@ describe('TravisStatusChecker', () => {
     pendingResponse,
     passedResponse,
   ) {
-    it('returns Travis CI API resource', () => {
+    it('returns Travis CI API resource', async () => {
       travisRequestMock = sinon.mock()
         .once()
         .withArgs(match(/GET/i), match(travisUrlRe))
         .yields(null, passedResponse);
       const checker = new TravisStatusChecker();
-      const promise = checker[methodName](...args)
-        .then((response) => {
-          assert.deepEqual(response, passedResponse);
-        });
+      const promise = checker[methodName](...args);
       travisRequestMock.verify();
-      return promise;
+      const response = await promise;
+      assert.deepEqual(response, passedResponse);
     });
 
     describe('with options.wait', () => {
@@ -116,78 +116,68 @@ describe('TravisStatusChecker', () => {
         clock = null;
       });
 
-      it('does not wait if state is not pending', () => {
+      it('does not wait if state is not pending', async () => {
         travisRequestMock = sinon.mock()
           .once()
           .withArgs(match(/GET/i), match(travisUrlRe))
           .yields(null, passedResponse);
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: 10000 })
-            .then((response) => {
-              assert.deepEqual(response, passedResponse);
-            });
+        const promise = checker[methodName](...args, { wait: 10000 });
         travisRequestMock.verify();
-        return promise;
+        const response = await promise;
+        assert.deepEqual(response, passedResponse);
       });
 
-      it('retries during wait if state is pending', () => {
+      it('retries during wait if state is pending', async () => {
         travisRequestMock = sinon.mock()
           .twice()
           .withArgs(match(/GET/i), match(travisUrlRe));
         travisRequestMock.onFirstCall().yields(null, pendingResponse);
         travisRequestMock.onSecondCall().yields(null, passedResponse);
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: 10000 })
-            .then((response) => {
-              assert.deepEqual(response, passedResponse);
-            });
+        const promise = checker[methodName](...args, { wait: 10000 });
         for (let i = 1; i < 11; i += 1) {
           clock.tick(1000);
         }
         travisRequestMock.verify();
-        return promise;
+        const response = await promise;
+        assert.deepEqual(response, passedResponse);
       });
 
-      it('returns pending state if wait elapses', () => {
+      it('returns pending state if wait elapses', async () => {
         travisRequestMock = sinon.mock()
           .atLeast(1)
           .withArgs(match(/GET/i), match(travisUrlRe))
           .yields(null, pendingResponse);
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: 10000 })
-            .then((response) => {
-              assert.deepEqual(response, pendingResponse);
-            });
+        const promise = checker[methodName](...args, { wait: 10000 });
         for (let i = 1; i < 11; i += 1) {
           clock.tick(1000);
         }
         travisRequestMock.verify();
-        return promise;
+        const response = await promise;
+        assert.deepEqual(response, pendingResponse);
       });
 
-      it('does not wait after API error', () => {
+      it('does not wait after API error', async () => {
         const errTest = new Error('Test API error');
         travisRequestMock = sinon.mock()
           .once()
           .withArgs(match(/GET/i), match(travisUrlRe))
           .yields(errTest);
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: 30000 })
-            .then(
-              sinon.mock().never(),
-              (err) => {
-                assert.strictEqual(err, errTest);
-              },
-            );
+        const promise = checker[methodName](...args, { wait: 30000 });
         travisRequestMock.verify();
-        return promise;
+        await assertRejects(
+          promise,
+          (err) => {
+            assert.strictEqual(err, errTest);
+            return true;
+          },
+        );
       });
 
-      it('stops waiting after API error', () => {
+      it('stops waiting after API error', async () => {
         const errTest = new Error('Test API error');
         travisRequestMock = sinon.mock()
           .twice()
@@ -195,51 +185,48 @@ describe('TravisStatusChecker', () => {
         travisRequestMock.onFirstCall().yields(null, pendingResponse);
         travisRequestMock.onSecondCall().yields(errTest);
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: 30000 })
-            .then(
-              sinon.mock().never(),
-              (err) => {
-                assert.strictEqual(err, errTest);
-              },
-            );
+        const promise = checker[methodName](...args, { wait: 30000 });
         for (let i = 1; i < 31; i += 1) {
           clock.tick(1000);
         }
         travisRequestMock.verify();
-        return promise;
+        await assertRejects(
+          promise,
+          (err) => {
+            assert.strictEqual(err, errTest);
+            return true;
+          },
+        );
       });
 
-      it('rejects with TypeError for non-number wait', () => {
+      it('rejects with TypeError for non-number wait', async () => {
         travisRequestMock = sinon.mock().never();
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: 'hello' })
-            .then(
-              sinon.mock().never(),
-              (err) => {
-                assert.strictEqual(err.name, 'TypeError');
-                assert.match(err.message, /\bwait\b/);
-              },
-            );
+        const promise = checker[methodName](...args, { wait: 'hello' });
         travisRequestMock.verify();
-        return promise;
+        await assertRejects(
+          promise,
+          (err) => {
+            assert.strictEqual(err.name, 'TypeError');
+            assert.match(err.message, /\bwait\b/);
+            return true;
+          },
+        );
       });
 
-      it('rejects with RangeError for negative wait', () => {
+      it('rejects with RangeError for negative wait', async () => {
         travisRequestMock = sinon.mock().never();
         const checker = new TravisStatusChecker();
-        const promise =
-          checker[methodName](...args, { wait: -5 })
-            .then(
-              sinon.mock().never(),
-              (err) => {
-                assert.strictEqual(err.name, 'RangeError');
-                assert.match(err.message, /\bwait\b/);
-              },
-            );
+        const promise = checker[methodName](...args, { wait: -5 });
         travisRequestMock.verify();
-        return promise;
+        await assertRejects(
+          promise,
+          (err) => {
+            assert.strictEqual(err.name, 'RangeError');
+            assert.match(err.message, /\bwait\b/);
+            return true;
+          },
+        );
       });
     });
   }
